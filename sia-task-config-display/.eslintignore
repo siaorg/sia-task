@@ -1,0 +1,4 @@
+build/*.js
+config/*.js
+src/job-manage/components/*
+static/*

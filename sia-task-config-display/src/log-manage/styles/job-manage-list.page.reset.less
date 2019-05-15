@@ -1,0 +1,123 @@
+.task-manage-list-page.dispatch-system-default{
+    &>.section-container .section-content{
+      .el-table.log-manage-table {
+        .el-table__body-wrapper{
+          height: auto;
+          overflow-y: auto;
+        }
+        .el-table__expanded-cell{
+          .task-info {
+            margin: 15px 0 15px 338px;
+            .task-name {
+              height: 25px;
+              font-size: 14px;
+              color: #000000;
+              font-weight: 600;
+            }
+            .task-name::before {
+              display: inline-block;
+              content: ' ';
+              width: 6px;
+              height: 6px;
+              background: #006EFE;
+              border-radius: 100%;
+              margin-right: 7px;
+              margin-top: -1px;
+              vertical-align: middle;
+            }
+            .task-desc {
+              margin-left: 12px;
+            }
+            .task-desc {
+              span {
+                font-size: 12px;
+                margin-right: 10px;
+                line-height: 20px;
+                &:last-child{
+                  display: block;
+                  i {
+                    display: inline-block;
+                    &:nth-child(1) {
+                      width: 61px;
+                    }
+                    &:nth-child(2) {
+                      vertical-align: top;
+                      width: calc(~'100% - 71px');
+                    }
+                  }
+                }
+                i {
+                  font-weight: 400;
+                  font-style: normal;
+                  &:nth-child(1){
+                    color: #9B9B9B;
+                    margin-right: 5px;
+                  }
+                  &:nth-child(2){
+                    color: #4A4A4A;
+                  }
+                }
+              }
+            }
+          }
+        }
+        th.is-leaf {
+          border-right: none;
+        }
+        td div.cell{
+          white-space: normal;
+          word-break: break-all;
+          .job-detail{
+            font-size: 12px;
+            span {
+              margin-right: 15px;
+              i {
+                font-style: normal;
+                &:nth-child(1){
+                  color: #9B9B9B;
+                  margin-right: 5px;
+                  font-size: 12px;
+                }
+                &:nth-child(2){
+                  color: #4A4A4A;
+                  font-size: 12px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+}
+.select-box-popver {
+  width: 320px;
+  box-shadow: 0 2px 8px 0 #CCCCCC;
+  border-radius: 1px;
+  .el-input {
+    height: 32px;
+    line-height: 32px;
+    margin-bottom: 10px;
+    .el-input__inner {
+      height: 100%;
+      line-height: 30px;
+    }
+  }
+  .el-checkbox, .el-radio{
+    display: block;
+    padding: 5px 0 5px 3px;
+    color: #4A4A4A;
+    margin-right: 0;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+  }
+  .el-radio-group {
+    width: 100%;
+    max-height: 280px;
+    margin-bottom: 15px;
+    overflow: auto;
+  }
+  .el-radio-group::-webkit-scrollbar {width:10px; height:10px; background-color:transparent;} /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+  .el-radio-group::-webkit-scrollbar-track {background-color:#EDFFFD; border-radius:0px; -webkit-box-shadow:inset 0 0 6px rgba(0,0,0,0.3);} /*定义滚动条轨道 内阴影+圆角*/
+  .el-radio-group::-webkit-scrollbar-thumb {background-color:#CEE2E0; border-radius:0px; -webkit-box-shadow:inset 0 0 6px rgba(0,0,0,.3);} /*定义滑块 内阴影+圆角*/
+}

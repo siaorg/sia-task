@@ -1,0 +1,76 @@
+@import '../../common/styles/global.less';
+.home-page{
+  .search-box {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 65px;
+    height: 30px;
+    .el-select {
+      margin-right: 10px;
+      background: pink;
+      .el-input {
+        .el-input__inner {
+          border-radius: 0px;
+          height: 30px;
+          line-height: 30px;
+          color: #9B9B9B;
+          font-size: 12px;
+          border: 1px solid #DDDCDD;
+          border-radius: 2px;
+        }
+        .el-select__caret {
+            height: 30px;
+            line-height: 30px;
+        }
+      }
+    }
+    .el-range-editor {
+      height: 30px;
+      border: 1px solid #DDDCDD;
+      border-radius: 2px;
+      .el-range-input {
+        font-size: 12px;
+        color: #9B9B9B;
+      }
+      .el-range__icon,.el-range__close-icon,.el-range-separator {
+        height: 30px;
+      }
+    }
+  }
+  .home-table-box {
+    padding: 10px;
+    background: #fff;
+    margin-top: 15px;
+    .el-table.home-table {
+      color: @default-font-color;
+      background-color: #F4F8FB;
+      th {
+        padding: 8px 0;
+        background-color:#E0E9F0;
+        border-bottom: 1px solid #E7E8EA;
+        color: rgba(0,0,0,0.85);
+      }
+      td {
+        padding: 7px 0;
+        border-bottom: 1px solid #E7E8EA;
+        font-size: 12px;
+        color: @default-font-color;
+      }
+      tr {
+        background-color: #F4F8FB;
+      }
+      .el-table__body-wrapper {
+        max-height: 300px;
+        overflow: auto;
+      }
+      .emails-list{
+        span{
+          display: block;
+        }
+      }
+      .el-table__body-wrapper::-webkit-scrollbar {width:10px; height:10px; background-color:transparent;} /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+      .el-table__body-wrapper::-webkit-scrollbar-track {background-color:#EDFFFD; border-radius:0px; -webkit-box-shadow:inset 0 0 6px rgba(0,0,0,0.3);} /*定义滚动条轨道 内阴影+圆角*/
+      .el-table__body-wrapper::-webkit-scrollbar-thumb {background-color:#CEE2E0; border-radius:0px; -webkit-box-shadow:inset 0 0 6px rgba(0,0,0,.3);} /*定义滑块 内阴影+圆角*/
+    }
+  }
+}

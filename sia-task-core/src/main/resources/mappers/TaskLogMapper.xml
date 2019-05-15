@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sia.core.mapper.TaskLogMapper" >
+  <resultMap id="BaseResultMap" type="com.sia.core.entity.TaskLog" >
+    <id column="task_log_id" property="taskLogId" jdbcType="INTEGER" />
+    <result column="job_log_id" property="jobLogId" jdbcType="INTEGER" />
+    <result column="job_key" property="jobKey" jdbcType="VARCHAR" />
+    <result column="task_key" property="taskKey" jdbcType="VARCHAR" />
+    <result column="task_msg" property="taskMsg" jdbcType="VARCHAR" />
+    <result column="task_status" property="taskStatus" jdbcType="VARCHAR" />
+    <result column="task_handle_time" property="taskHandleTime" jdbcType="TIMESTAMP" />
+    <result column="task_finished_time" property="taskFinishedTime" jdbcType="TIMESTAMP" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+<!--schedulerMapper-->
+  <sql id="Base_Column_List" >
+    task_log_id, job_log_id, job_key, task_key, task_msg, task_status, task_handle_time,
+    task_finished_time, create_time
+  </sql>
+
+  <select id="selectByJobLogId" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    tl.*
+    FROM skyworld_task_log tl
+    where
+      tl.job_log_id = #{jobLogId,jdbcType=INTEGER}
+  </select>
+
+  <insert id="insertSelective" parameterType="com.sia.core.entity.TaskLog" >
+    insert into skyworld_task_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="taskLogId != null" >
+        task_log_id,
+      </if>
+      <if test="jobLogId != null" >
+        job_log_id,
+      </if>
+      <if test="jobKey != null" >
+        job_key,
+      </if>
+      <if test="taskKey != null" >
+        task_key,
+      </if>
+      <if test="taskMsg != null" >
+        task_msg,
+      </if>
+      <if test="taskStatus != null" >
+        task_status,
+      </if>
+      <if test="taskHandleTime != null" >
+        task_handle_time,
+      </if>
+      <if test="taskFinishedTime != null" >
+        task_finished_time,
+      </if>
+      create_time
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="taskLogId != null" >
+        #{taskLogId,jdbcType=INTEGER},
+      </if>
+      <if test="jobLogId != null" >
+        #{jobLogId,jdbcType=INTEGER},
+      </if>
+      <if test="jobKey != null" >
+        #{jobKey,jdbcType=VARCHAR},
+      </if>
+      <if test="taskKey != null" >
+        #{taskKey,jdbcType=VARCHAR},
+      </if>
+      <if test="taskMsg != null" >
+        #{taskMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="taskStatus != null" >
+        #{taskStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="taskHandleTime != null" >
+        #{taskHandleTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="taskFinishedTime != null" >
+        #{taskFinishedTime,jdbcType=TIMESTAMP},
+      </if>
+      NOW()
+    </trim>
+  </insert>
+
+  <delete id="deleteTaskLogByDate" parameterType="java.lang.String" >
+    delete from skyworld_task_log
+    where create_time &lt;= str_to_date(#{create_time,jdbcType=TIMESTAMP},'%Y-%m-%d %H:%i:%s')
+  </delete>
+
+</mapper>

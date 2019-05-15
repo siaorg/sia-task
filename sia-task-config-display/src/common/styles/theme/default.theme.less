@@ -1,0 +1,68 @@
+@import './../global.less';
+.dispatch-system-default {
+  color: @default-font-color;
+  overflow: auto;
+  border: 0;
+  width: 100%;
+  height: 100%; 
+  .frame-container {
+    background-color: @default-frame-background;
+    .dispatch-system-default{
+      padding: 15px;
+    }
+  }
+  .section-container {
+    width: 100%;
+    height: 100%;
+    .section-header {
+      // height: 60px;
+      display: flex;
+      align-items: center;
+      .title {
+        font-size: 18px;
+      }
+      // input label 字体样式
+      span.label {
+        font-size: 12px;
+        margin: 0 10px 0 5px;
+        color: #9B9B9B;
+      }
+      // input  大小限制
+      .el-input {
+        .el-input__inner {
+          border: 1px solid #DDDDDD;
+          height: 32px;
+          line-height: 32px;
+        }
+        .el-input__icon {
+          line-height: 30px;
+        }
+      }
+      .btn-ml-auto {
+        margin-left: auto;
+      }
+    }
+    .section-content {
+      height: calc(~"100% - 126px");
+      .el-table {
+        color: @default-font-color;
+        background-color: #F4F8FB;
+        th {
+          padding: 8px 0;
+          background-color:#E0E9F0;
+          border-bottom: 1px solid #E7E8EA;
+          color: rgba(0,0,0,0.85);
+        }
+        td {
+          padding: 9px 0;
+          border-bottom: 1px solid #E7E8EA;
+          font-size: 12px;
+          color: @default-font-color;
+        }
+        tr {
+          background-color: #F4F8FB;
+        }
+      }
+    }
+  }
+}

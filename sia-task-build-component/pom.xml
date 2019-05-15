@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <artifactId>sia-task-build-component</artifactId>
+    <groupId>com.sia</groupId>
+    <version>1.0.0</version>
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>../sia-task-config</module>
+        <module>../sia-task-core</module>
+        <module>../sia-task-scheduler</module>
+        <module>../sia-task-hunter</module>
+    </modules>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jasig.maven</groupId>
+                <artifactId>maven-notice-plugin</artifactId>
+                <version>1.0.6.1</version>
+                <configuration>
+                    <generateChildNotices>false</generateChildNotices>
+                    <noticeTemplate>https://source.jasig.org/licenses/NOTICE.template</noticeTemplate>
+                    <licenseMapping>
+                        <param>https://source.jasig.org/licenses/license-mappings.xml</param>
+                    </licenseMapping>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <echo>Building sia Task START....</echo>
+                                <delete dir="target/build" />
+                                <mkdir dir="target/build" />
+                                <mkdir dir="target/build/logs" />
+                                <mkdir dir="target/build/bin" />
+
+                                <mkdir dir="target/build/thirdparty" />
+
+                                <copy todir="target/build/bin" >
+                                    <fileset file="../sia-task-config/target/sia-task-config-1.0.0.jar" ></fileset>
+                                </copy>
+
+                                <copy todir="target/build/bin" >
+                                    <fileset file="../sia-task-scheduler/target/sia-task-scheduler-1.0.0.jar" ></fileset>
+                                </copy>
+
+                                <copy todir="target/build/config" >
+                                    <fileset dir="config" ></fileset>
+                                    <fileset file="config/*.yml"></fileset>
+                                </copy>
+
+                                <copy todir="target/build/bin" >
+                                    <fileset dir="bin" ></fileset>
+                                    <fileset file="bin/*.*"></fileset>
+                                </copy>
+
+                                <copy todir="target/tempbuild/task" >
+                                    <fileset dir="target/build"></fileset>
+                                </copy>
+
+                                <tstamp>
+                                    <format property="current.date.time" pattern="yyyyMMddHHmmss"/>
+                                </tstamp>
+
+                                <zip destfile="target/task_${version}_${current.date.time}.zip">
+                                    <zipfileset dir="target/tempbuild"></zipfileset>
+                                </zip>
+
+                                <checksum file="target/task_${version}_${current.date.time}.zip" forceOverwrite="yes" algorithm="MD5" fileext=".MD5"></checksum>
+
+                                <delete dir="target/tempbuild" />
+
+                                <echo>Building sia Task END</echo>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jasig.maven</groupId>
+                <artifactId>maven-notice-plugin</artifactId>
+                <version>1.0.6.1</version>
+                <configuration>
+                    <generateChildNotices>false</generateChildNotices>
+                    <noticeTemplate>https://source.jasig.org/licenses/NOTICE.template</noticeTemplate>
+                    <licenseMapping>
+                        <param>license-mappings.xml</param>
+                        <param>https://source.jasig.org/licenses/license-mappings.xml</param>
+                    </licenseMapping>
+                </configuration>
+            </plugin>
+        </plugins>
+
+    </build>
+</project>

@@ -1,0 +1,132 @@
+
+List of third-party dependencies grouped by their license type.
+
+    Apache 2.0:
+
+        * druid (com.alibaba:druid:1.1.0 - https://github.com/alibaba/druid)
+        * druid-spring-boot-starter (com.alibaba:druid-spring-boot-starter:1.1.0 - https://github.com/alibaba/druid)
+        * ClassMate (com.fasterxml:classmate:1.3.4 - http://github.com/FasterXML/java-classmate)
+        * Caffeine cache (com.github.ben-manes.caffeine:caffeine:2.3.5 - https://github.com/ben-manes/caffeine)
+        * JSQLParser library (com.github.jsqlparser:jsqlparser:1.0 - https://github.com/JSQLParser/JSqlParser)
+        * Guava: Google Core Libraries for Java (com.google.guava:guava:18.0 - http://code.google.com/p/guava-libraries/guava)
+        * sia-task-core (com.sia:sia-task-core:1.0.0 - no url defined)
+        * sia-task-hunter (com.sia:sia-task-hunter:1.0.0 - no url defined)
+        * HikariCP-java6 (com.zaxxer:HikariCP-java6:2.3.13 - https://github.com/brettwooldridge/HikariCP)
+        * HikariCP (com.zaxxer:HikariCP-java7:2.4.13 - https://github.com/brettwooldridge/HikariCP)
+        * The Netty Project (io.netty:netty:3.7.0.Final - http://netty.io/)
+        * Bean Validation API (javax.validation:validation-api:1.1.0.Final - http://beanvalidation.org)
+        * Curator Client (org.apache.curator:curator-client:2.11.1 - http://curator.apache.org/curator-client)
+        * Curator Framework (org.apache.curator:curator-framework:2.11.1 - http://curator.apache.org/curator-framework)
+        * Curator Recipes (org.apache.curator:curator-recipes:2.11.1 - http://curator.apache.org/curator-recipes)
+        * tomcat-annotations-api (org.apache.tomcat:tomcat-annotations-api:8.5.29 - http://tomcat.apache.org/)
+        * tomcat-jdbc (org.apache.tomcat:tomcat-jdbc:8.5.29 - http://tomcat.apache.org/)
+        * tomcat-juli (org.apache.tomcat:tomcat-juli:8.5.29 - http://tomcat.apache.org/)
+        * tomcat-embed-core (org.apache.tomcat.embed:tomcat-embed-core:8.5.29 - http://tomcat.apache.org/)
+        * tomcat-embed-el (org.apache.tomcat.embed:tomcat-embed-el:8.5.29 - http://tomcat.apache.org/)
+        * tomcat-embed-websocket (org.apache.tomcat.embed:tomcat-embed-websocket:8.5.29 - http://tomcat.apache.org/)
+        * Jackson (org.codehaus.jackson:jackson-core-asl:1.9.13 - http://jackson.codehaus.org)
+        * Data Mapper for Jackson (org.codehaus.jackson:jackson-mapper-asl:1.9.13 - http://jackson.codehaus.org)
+        * Hibernate Validator Engine (org.hibernate:hibernate-validator:5.3.6.Final - http://hibernate.org/validator/hibernate-validator)
+        * Javassist (org.javassist:javassist:3.21.0-GA - http://www.javassist.org/)
+        * mybatis (org.mybatis:mybatis:3.4.1 - http://www.mybatis.org/mybatis-3)
+        * mybatis-spring (org.mybatis:mybatis-spring:1.3.0 - http://www.mybatis.org/spring/)
+        * mybatis-spring-boot-autoconfigure (org.mybatis.spring.boot:mybatis-spring-boot-autoconfigure:1.3.0 - http://www.mybatis.org/spring-boot-starter/mybatis-spring-boot-autoconfigure/)
+        * mybatis-spring-boot-starter (org.mybatis.spring.boot:mybatis-spring-boot-starter:1.3.0 - http://www.mybatis.org/spring-boot-starter/mybatis-spring-boot-starter/)
+        * quartz (org.quartz-scheduler:quartz:2.3.0 - http://www.quartz-scheduler.org/quartz)
+        * quartz (org.quartz-scheduler:quartz:2.3.1 - http://www.quartz-scheduler.org/quartz)
+        * Spring AOP (org.springframework:spring-aop:4.3.15.RELEASE - https://github.com/spring-projects/spring-framework)
+        * Spring Beans (org.springframework:spring-beans:4.3.15.RELEASE - https://github.com/spring-projects/spring-framework)
+        * Spring Context (org.springframework:spring-context:4.3.15.RELEASE - https://github.com/spring-projects/spring-framework)
+        * Spring Context Support (org.springframework:spring-context-support:4.3.15.RELEASE - https://github.com/spring-projects/spring-framework)
+        * Spring Core (org.springframework:spring-core:4.3.15.RELEASE - https://github.com/spring-projects/spring-framework)
+        * Spring Expression Language (SpEL) (org.springframework:spring-expression:4.3.15.RELEASE - https://github.com/spring-projects/spring-framework)
+        * Spring JDBC (org.springframework:spring-jdbc:4.3.15.RELEASE - https://github.com/spring-projects/spring-framework)
+        * Spring Transaction (org.springframework:spring-tx:4.3.15.RELEASE - https://github.com/spring-projects/spring-framework)
+        * Spring Web (org.springframework:spring-web:4.3.15.RELEASE - https://github.com/spring-projects/spring-framework)
+        * Spring Web MVC (org.springframework:spring-webmvc:4.3.15.RELEASE - https://github.com/spring-projects/spring-framework)
+        * Spring Boot (org.springframework.boot:spring-boot:1.5.11.RELEASE - http://projects.spring.io/spring-boot/)
+        * Spring Boot AutoConfigure (org.springframework.boot:spring-boot-autoconfigure:1.5.11.RELEASE - http://projects.spring.io/spring-boot/)
+        * Spring Boot Starter (org.springframework.boot:spring-boot-starter:1.5.11.RELEASE - http://projects.spring.io/spring-boot/)
+        * Spring Boot Cache Starter (org.springframework.boot:spring-boot-starter-cache:1.5.11.RELEASE - http://projects.spring.io/spring-boot/)
+        * Spring Boot JDBC Starter (org.springframework.boot:spring-boot-starter-jdbc:1.5.11.RELEASE - http://projects.spring.io/spring-boot/)
+        * Spring Boot Logging Starter (org.springframework.boot:spring-boot-starter-logging:1.5.11.RELEASE - http://projects.spring.io/spring-boot/)
+        * Spring Boot Tomcat Starter (org.springframework.boot:spring-boot-starter-tomcat:1.5.11.RELEASE - http://projects.spring.io/spring-boot/)
+        * Spring Boot Web Starter (org.springframework.boot:spring-boot-starter-web:1.5.11.RELEASE - http://projects.spring.io/spring-boot/)
+        * SnakeYAML (org.yaml:snakeyaml:1.17 - http://www.snakeyaml.org)
+
+    Apache License, version 2.0:
+
+        * JBoss Logging 3 (org.jboss.logging:jboss-logging:3.3.2.Final - http://www.jboss.org)
+
+    Apache Software Licenses:
+
+        * Log4j Implemented Over SLF4J (org.slf4j:log4j-over-slf4j:1.7.25 - http://www.slf4j.org)
+
+    BSD:
+
+        * JLine (jline:jline:0.9.94 - http://jline.sourceforge.net)
+        * Hamcrest Core (org.hamcrest:hamcrest-core:1.3 - https://github.com/hamcrest/JavaHamcrest/hamcrest-core)
+        * Reflections (org.reflections:reflections:0.9.11 - http://github.com/ronmamo/reflections)
+
+    CDDL:
+
+        * JavaBeans Activation Framework (JAF) (javax.activation:activation:1.1 - http://java.sun.com/products/javabeans/jaf/index.jsp)
+        * JavaMail API (javax.mail:mail:1.4 - https://glassfish.dev.java.net/javaee5/mail/)
+        * Java Servlet API (javax.servlet:javax.servlet-api:3.1.0 - http://servlet-spec.java.net)
+
+    Eclipse Public License - v 1.0:
+
+        * Logback Classic Module (ch.qos.logback:logback-classic:1.1.11 - http://logback.qos.ch/logback-classic)
+        * Logback Core Module (ch.qos.logback:logback-core:1.1.11 - http://logback.qos.ch/logback-core)
+        * AspectJ weaver (org.aspectj:aspectjweaver:1.8.13 - http://www.aspectj.org)
+        * AspectJ weaver (org.aspectj:aspectjweaver:1.9.1 - http://www.aspectj.org)
+
+    Eclipse Public License 1.0:
+
+        * JUnit (junit:junit:4.12 - http://junit.org)
+
+    Eclipse Public License, Version 1.0:
+
+        * mchange-commons-java (com.mchange:mchange-commons-java:0.2.11 - https://github.com/swaldman/mchange-commons-java)
+        * mchange-commons-java (com.mchange:mchange-commons-java:0.2.15 - https://github.com/swaldman/mchange-commons-java)
+
+    GNU Lesser General Public License:
+
+        * Logback Classic Module (ch.qos.logback:logback-classic:1.1.11 - http://logback.qos.ch/logback-classic)
+        * Logback Core Module (ch.qos.logback:logback-core:1.1.11 - http://logback.qos.ch/logback-core)
+
+    LGPL:
+
+        * JSQLParser library (com.github.jsqlparser:jsqlparser:1.0 - https://github.com/JSQLParser/JSqlParser)
+        * mchange-commons-java (com.mchange:mchange-commons-java:0.2.11 - https://github.com/swaldman/mchange-commons-java)
+        * mchange-commons-java (com.mchange:mchange-commons-java:0.2.15 - https://github.com/swaldman/mchange-commons-java)
+        * Javassist (org.javassist:javassist:3.21.0-GA - http://www.javassist.org/)
+
+    MIT:
+
+        * Project Lombok (org.projectlombok:lombok:1.16.10 - https://projectlombok.org)
+        * JCL 1.2 implemented over SLF4J (org.slf4j:jcl-over-slf4j:1.7.25 - http://www.slf4j.org)
+        * JUL to SLF4J bridge (org.slf4j:jul-to-slf4j:1.7.25 - http://www.slf4j.org)
+        * SLF4J API Module (org.slf4j:slf4j-api:1.7.25 - http://www.slf4j.org)
+
+    MPL:
+
+        * Javassist (org.javassist:javassist:3.21.0-GA - http://www.javassist.org/)
+
+    The GNU General Public License, Version 2:
+
+        * MySQL java connector (mysql:mysql-connector-java:5.1.35 - http://dev.mysql.com/usingmysql/java/)
+
+    The MIT License (MIT):
+
+        * pagehelper 5 (com.github.pagehelper:pagehelper:5.0.3 - https://github.com/pagehelper/Mybatis-PageHelper)
+        * pagehelper-spring-boot-autoconfigure (com.github.pagehelper:pagehelper-spring-boot-autoconfigure:1.1.2 - https://github.com/pagehelper/pagehelper-boot-starter/pagehelper-spring-boot-autoconfigure/)
+        * pagehelper-spring-boot-starter (com.github.pagehelper:pagehelper-spring-boot-starter:1.1.2 - https://github.com/pagehelper/pagehelper-boot-starter/pagehelper-spring-boot-starter/)
+
+    Unknown License:
+
+        * zookeeper (org.apache.zookeeper:zookeeper:3.4.6 - no url defined)
+
+    WTFPL:
+
+        * Reflections (org.reflections:reflections:0.9.11 - http://github.com/ronmamo/reflections)

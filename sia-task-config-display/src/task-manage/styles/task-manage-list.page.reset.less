@@ -1,0 +1,41 @@
+.task-manage-list-page{
+    &>.section-container {
+      .section-content {
+        .el-collapse {
+          height: 100%;
+        }
+      }
+    }
+}
+.select-box-popver {
+  width: 320px;
+  box-shadow: 0 2px 8px 0 #CCCCCC;
+  border-radius: 1px;
+  .el-input {
+    height: 32px;
+    line-height: 32px;
+    margin-bottom: 10px;
+    .el-input__inner {
+      height: 100%;
+      line-height: 30px;
+    }
+  }
+  .el-checkbox, .el-radio{
+    display: block;
+    padding: 5px 0 5px 3px;
+    color: #4A4A4A;
+    margin-right: 0;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+  }
+  .el-radio-group {
+    width: 100%;
+    max-height: 280px;
+    margin-bottom: 15px;
+    overflow: auto;
+  }
+  .el-radio-group::-webkit-scrollbar {width:10px; height:10px; background-color:transparent;} /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+  .el-radio-group::-webkit-scrollbar-track {background-color:#EDFFFD; border-radius:0px; -webkit-box-shadow:inset 0 0 6px rgba(0,0,0,0.3);} /*定义滚动条轨道 内阴影+圆角*/
+  .el-radio-group::-webkit-scrollbar-thumb {background-color:#CEE2E0; border-radius:0px; -webkit-box-shadow:inset 0 0 6px rgba(0,0,0,.3);} /*定义滑块 内阴影+圆角*/
+}

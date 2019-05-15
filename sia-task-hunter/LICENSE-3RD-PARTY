@@ -1,0 +1,57 @@
+
+List of third-party dependencies grouped by their license type.
+
+    Apache 2.0:
+
+        * Guava: Google Core Libraries for Java (com.google.guava:guava:18.0 - http://code.google.com/p/guava-libraries/guava)
+        * The Netty Project (io.netty:netty:3.7.0.Final - http://netty.io/)
+        * Curator Client (org.apache.curator:curator-client:2.11.1 - http://curator.apache.org/curator-client)
+        * Curator Framework (org.apache.curator:curator-framework:2.11.1 - http://curator.apache.org/curator-framework)
+        * Curator Recipes (org.apache.curator:curator-recipes:2.11.1 - http://curator.apache.org/curator-recipes)
+        * Jackson (org.codehaus.jackson:jackson-core-asl:1.9.13 - http://jackson.codehaus.org)
+        * Data Mapper for Jackson (org.codehaus.jackson:jackson-mapper-asl:1.9.13 - http://jackson.codehaus.org)
+        * Javassist (org.javassist:javassist:3.21.0-GA - http://www.javassist.org/)
+        * Spring AOP (org.springframework:spring-aop:4.3.15.RELEASE - https://github.com/spring-projects/spring-framework)
+        * Spring Beans (org.springframework:spring-beans:4.3.15.RELEASE - https://github.com/spring-projects/spring-framework)
+        * Spring Context (org.springframework:spring-context:4.3.15.RELEASE - https://github.com/spring-projects/spring-framework)
+        * Spring Core (org.springframework:spring-core:4.3.15.RELEASE - https://github.com/spring-projects/spring-framework)
+        * Spring Expression Language (SpEL) (org.springframework:spring-expression:4.3.15.RELEASE - https://github.com/spring-projects/spring-framework)
+        * Spring Web (org.springframework:spring-web:4.3.15.RELEASE - https://github.com/spring-projects/spring-framework)
+
+    BSD:
+
+        * JLine (jline:jline:0.9.94 - http://jline.sourceforge.net)
+        * Hamcrest Core (org.hamcrest:hamcrest-core:1.3 - https://github.com/hamcrest/JavaHamcrest/hamcrest-core)
+        * Reflections (org.reflections:reflections:0.9.11 - http://github.com/ronmamo/reflections)
+
+    CDDL:
+
+        * Java Servlet API (javax.servlet:javax.servlet-api:3.1.0 - http://servlet-spec.java.net)
+
+    Eclipse Public License - v 1.0:
+
+        * AspectJ weaver (org.aspectj:aspectjweaver:1.9.1 - http://www.aspectj.org)
+
+    Eclipse Public License 1.0:
+
+        * JUnit (junit:junit:4.12 - http://junit.org)
+
+    LGPL:
+
+        * Javassist (org.javassist:javassist:3.21.0-GA - http://www.javassist.org/)
+
+    MIT:
+
+        * SLF4J API Module (org.slf4j:slf4j-api:1.7.25 - http://www.slf4j.org)
+
+    MPL:
+
+        * Javassist (org.javassist:javassist:3.21.0-GA - http://www.javassist.org/)
+
+    Unknown License:
+
+        * zookeeper (org.apache.zookeeper:zookeeper:3.4.6 - no url defined)
+
+    WTFPL:
+
+        * Reflections (org.reflections:reflections:0.9.11 - http://github.com/ronmamo/reflections)

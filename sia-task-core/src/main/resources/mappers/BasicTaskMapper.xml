@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sia.core.mapper.BasicTaskMapper">
+    <resultMap id="BaseResultMap" type="com.sia.core.entity.BasicTask">
+        <id column="task_id" property="taskId" jdbcType="INTEGER"/>
+        <result column="task_key" property="taskKey" jdbcType="VARCHAR"/>
+        <result column="task_group_name" property="taskGroupName" jdbcType="VARCHAR"/>
+        <result column="task_app_name" property="taskAppName" jdbcType="VARCHAR"/>
+        <result column="task_app_http_path" property="taskAppHttpPath" jdbcType="VARCHAR"/>
+        <result column="task_app_ip_port" property="taskAppIpPort" jdbcType="VARCHAR"/>
+        <result column="param_count" property="paramCount" jdbcType="INTEGER"/>
+        <result column="taskDesc" property="taskDesc" jdbcType="VARCHAR"/>
+        <result column="task_source" property="taskSource" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="DATE"/>
+    </resultMap>
+
+    <resultMap id="GroupMap" type="com.sia.core.entity.BasicTask">
+        <result column="task_key" property="taskKey" jdbcType="VARCHAR"/>
+        <result column="task_group_name" property="taskGroupName" jdbcType="VARCHAR"/>
+        <result column="task_app_name" property="taskAppName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="JobMTaskResultMap" type="com.sia.core.entity.JobMTask">
+        <result column="job_id" property="jobId" jdbcType="INTEGER"/>
+        <result column="job_key" property="jobKey" jdbcType="VARCHAR"/>
+        <result column="job_group" property="jobGroup" jdbcType="VARCHAR"/>
+        <result column="pre_task_key" property="preTaskKey" jdbcType="VARCHAR"/>
+        <result column="input_type" property="inputType" jdbcType="VARCHAR"/>
+        <result column="input_value" property="inputValue" jdbcType="VARCHAR"/>
+        <result column="route_strategy" property="routeStrategy" jdbcType="VARCHAR"/>
+        <result column="failover" property="failover" jdbcType="VARCHAR"/>
+
+        <result column="fix_ip" property="fixIp" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="task_key" property="taskKey" jdbcType="VARCHAR"/>
+        <result column="task_id" property="taskId" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <resultMap id="GroupCountMap" type="java.util.Map">
+        <result column="task_group_name" property="taskGroupName" jdbcType="VARCHAR"/>
+        <result column="group_task_num" property="groupTaskNum" jdbcType="INTEGER"/>
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+    task_id, task_key, task_group_name, task_app_name, task_app_http_path, task_app_ip_port, param_count,
+    taskDesc, task_source, create_time, update_time
+    </sql>
+
+    <select id="selectAuth" resultMap="GroupMap" parameterType="java.util.List">
+        SELECT bt.task_group_name,GROUP_CONCAT(distinct bt.task_app_name SEPARATOR ',') as task_app_name, GROUP_CONCAT(bt.task_key SEPARATOR ',') as task_key
+        FROM skyworld_basic_task bt
+        WHERE 1=1
+        <if test="list != null and list.size() > 0">
+              and bt.task_group_name IN
+            <foreach item="roleNames" collection="list" separator="," open="(" close=")" index="">
+                  #{roleNames, jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        group by bt.task_group_name,bt.task_app_name
+    </select>
+
+    <select id="selectCountbasicTasks" resultType="java.lang.Integer" parameterType="java.util.HashMap" >
+        select count(*)
+        from skyworld_basic_task
+        WHERE
+        1=1
+        <if test="roleNames != null and roleNames.size() > 0">
+            and task_group_name IN
+            <foreach item="roleNames" collection="roleNames" separator="," open="(" close=")" index="">
+                #{roleNames, jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="taskAppName != null and taskAppName!= '' ">
+            and task_app_name = #{taskAppName,jdbcType=VARCHAR}
+        </if>
+        <if test="taskGroupName != null and taskGroupName != '' ">
+            and task_group_name = #{taskGroupName,jdbcType=VARCHAR}
+        </if>
+        <if test="taskKey != null and taskKey != '' ">
+            and task_key LIKE CONCAT('%',#{taskKey,jdbcType=VARCHAR},'%')
+        </if>
+    </select>
+
+    <select id="selectGroupAndCountI" resultMap="GroupCountMap" parameterType="java.util.HashMap" >
+        select
+          task_group_name,
+          count(task_group_name) as group_task_num
+        from skyworld_basic_task
+        WHERE
+        1=1
+        <if test="roleNames != null and roleNames.size() > 0">
+            and task_group_name IN
+            <foreach item="roleNames" collection="roleNames" separator="," open="(" close=")" index="">
+                #{roleNames, jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="taskGroupName != null and taskGroupName != '' ">
+            and task_group_name = #{taskGroupName,jdbcType=VARCHAR}
+        </if>
+        group by task_group_name
+    </select>
+
+
+    <select id="selectTasksByAppNameOrGroupNameL" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM skyworld_basic_task
+            WHERE
+             1=1
+        <if test="roleNames != null and roleNames.size() > 0">
+            and task_group_name IN
+            <foreach item="roleNames" collection="roleNames" separator="," open="(" close=")" index="">
+                #{roleNames, jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="taskAppName != null and taskAppName!= '' ">
+              and task_app_name = #{taskAppName,jdbcType=VARCHAR}
+        </if>
+        <if test="taskGroupName != null and taskGroupName != '' ">
+              and task_group_name = #{taskGroupName,jdbcType=VARCHAR}
+        </if>
+        <if test="taskKey != null and taskKey != '' ">
+              and task_key  LIKE CONCAT('%',#{taskKey,jdbcType=VARCHAR},'%')
+        </if>
+        group by task_key
+    </select>
+
+    <select id="selectTaskInJob" resultMap="JobMTaskResultMap">
+        select tmj.* from task_mapping_job tmj
+          inner join skyworld_basic_task sbt on sbt.task_id = tmj.task_id
+        where sbt.task_app_name = #{taskAppName,jdbcType=VARCHAR}
+          and sbt.task_group_name = #{taskGroupName,jdbcType=VARCHAR}
+          and sbt.task_key = #{taskKey,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectAppsByGroup" resultType="java.lang.String">
+        select DISTINCT sbt.task_app_name from skyworld_basic_task sbt
+        where sbt.task_group_name = #{groupName,jdbcType=VARCHAR}
+    </select>
+    <select id="selectTaskKeysByGroupAndApp" resultType="java.lang.String">
+        select DISTINCT sbt.task_key from skyworld_basic_task sbt
+        where sbt.task_group_name = #{groupName,jdbcType=VARCHAR}
+        <if test="appName != null and appName!= '' ">
+            and sbt.task_app_name = #{appName,jdbcType=VARCHAR}
+        </if>
+    </select>
+    <select id="selectGroupsByAuth" resultType="java.lang.String" parameterType="java.util.List">
+        SELECT DISTINCT bt.task_group_name
+        FROM skyworld_basic_task bt
+        WHERE 1=1
+        <if test="list != null and list.size() > 0">
+            and bt.task_group_name IN
+            <foreach item="roleNames" collection="list" separator="," open="(" close=")" index="">
+                #{roleNames, jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        group by bt.task_group_name,bt.task_app_name
+    </select>
+
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from skyworld_basic_task
+    where task_group_name = #{taskGroupName,jdbcType=VARCHAR}
+    AND task_app_name = #{taskAppName,jdbcType=VARCHAR}
+    AND task_key = #{taskKey,jdbcType=VARCHAR}
+  </delete>
+
+    <insert id="insertSelective" parameterType="com.sia.core.entity.BasicTask">
+        insert ignore into skyworld_basic_task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="taskKey != null">
+                task_key,
+            </if>
+            <if test="taskGroupName != null">
+                task_group_name,
+            </if>
+            <if test="taskAppName != null">
+                task_app_name,
+            </if>
+            <if test="taskAppHttpPath != null">
+                task_app_http_path,
+            </if>
+            <if test="taskAppIpPort != null">
+                task_app_ip_port,
+            </if>
+            <if test="paramCount != null">
+                param_count,
+            </if>
+            <if test="taskDesc != null">
+                taskDesc,
+            </if>
+            <if test="taskSource != null">
+                task_source,
+            </if>
+            update_time,
+            create_time
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="taskKey != null">
+                #{taskKey,jdbcType=VARCHAR},
+            </if>
+            <if test="taskGroupName != null">
+                #{taskGroupName,jdbcType=VARCHAR},
+            </if>
+            <if test="taskAppName != null">
+                #{taskAppName,jdbcType=VARCHAR},
+            </if>
+            <if test="taskAppHttpPath != null">
+                #{taskAppHttpPath,jdbcType=VARCHAR},
+            </if>
+            <if test="taskAppIpPort != null">
+                #{taskAppIpPort,jdbcType=VARCHAR},
+            </if>
+            <if test="paramCount != null">
+                #{paramCount,jdbcType=INTEGER},
+            </if>
+            <if test="taskDesc != null">
+                #{taskDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="taskSource != null">
+                #{taskSource,jdbcType=VARCHAR},
+            </if>
+            NOW(),
+            NOW()
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.sia.core.entity.BasicTask">
+        update skyworld_basic_task
+        <set>
+            <if test="taskKey != null">
+                task_key = #{taskKey,jdbcType=VARCHAR},
+            </if>
+            <if test="taskGroupName != null">
+                task_group_name = #{taskGroupName,jdbcType=VARCHAR},
+            </if>
+            <if test="taskAppName != null">
+                task_app_name = #{taskAppName,jdbcType=VARCHAR},
+            </if>
+            <if test="taskAppHttpPath != null">
+                task_app_http_path = #{taskAppHttpPath,jdbcType=VARCHAR},
+            </if>
+            <if test="taskAppIpPort != null">
+                task_app_ip_port = #{taskAppIpPort,jdbcType=VARCHAR},
+            </if>
+            <if test="paramCount != null">
+                param_count = #{paramCount,jdbcType=INTEGER},
+            </if>
+            <if test="taskDesc != null">
+                taskDesc = #{taskDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="taskSource != null">
+                task_source = #{taskSource,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=DATE},
+            </if>
+        </set>
+        where task_id = #{taskId,jdbcType=INTEGER}
+    </update>
+
+    <insert id="insertOrUpdateByTaskKey" parameterType="com.sia.core.entity.BasicTask">
+        insert into skyworld_basic_task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="taskKey != null">
+                task_key,
+            </if>
+            <if test="taskGroupName != null">
+                task_group_name,
+            </if>
+            <if test="taskAppName != null">
+                task_app_name,
+            </if>
+            <if test="taskAppHttpPath != null">
+                task_app_http_path,
+            </if>
+            <if test="taskAppIpPort != null">
+                task_app_ip_port,
+            </if>
+            <if test="paramCount != null">
+                param_count,
+            </if>
+            <if test="taskDesc != null">
+                taskDesc,
+            </if>
+            <if test="taskSource != null">
+                task_source,
+            </if>
+            update_time,
+            create_time
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+        <if test="taskKey != null">
+            #{taskKey,jdbcType=VARCHAR},
+        </if>
+        <if test="taskGroupName != null">
+            #{taskGroupName,jdbcType=VARCHAR},
+        </if>
+        <if test="taskAppName != null">
+            #{taskAppName,jdbcType=VARCHAR},
+        </if>
+        <if test="taskAppHttpPath != null">
+            #{taskAppHttpPath,jdbcType=VARCHAR},
+        </if>
+        <if test="taskAppIpPort != null">
+            #{taskAppIpPort,jdbcType=VARCHAR},
+        </if>
+        <if test="paramCount != null">
+            #{paramCount,jdbcType=INTEGER},
+        </if>
+        <if test="taskDesc != null">
+            #{taskDesc,jdbcType=VARCHAR},
+        </if>
+        <if test="taskSource != null">
+            #{taskSource,jdbcType=VARCHAR},
+        </if>
+        NOW(),
+        NOW()
+        </trim>
+        ON DUPLICATE KEY UPDATE
+        param_count = #{paramCount,jdbcType=INTEGER},
+        taskDesc = #{taskDesc,jdbcType=VARCHAR},
+        task_app_ip_port = #{taskAppIpPort,jdbcType=VARCHAR},
+        update_time = NOW()
+    </insert>
+
+    <!--schedulerMapper-->
+
+    <select id="selectTasksByAppNameOrGroupName" resultMap="BaseResultMap" parameterType="com.sia.core.entity.BasicTask">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM skyworld_basic_task
+        WHERE
+        <if test="taskKey != null and taskKey != '' ">
+            task_key  = #{taskKey,jdbcType=VARCHAR}
+        </if>
+        <if test="taskAppName != null and taskAppName!= '' ">
+            and task_app_name = #{taskAppName,jdbcType=VARCHAR}
+        </if>
+        <if test="taskGroupName != null and taskGroupName != '' ">
+            and task_group_name = #{taskGroupName,jdbcType=VARCHAR}
+        </if>
+
+    </select>
+
+    <!--
+    ZK专用 没有ID 只能通过TaskKey
+    -->
+    <update id="updateByTaskKey" parameterType="com.sia.core.entity.BasicTask">
+        update skyworld_basic_task
+        set
+        task_app_ip_port = #{taskAppIpPort,jdbcType=VARCHAR},
+        param_count = #{paramCount,jdbcType=INTEGER},
+        taskDesc = #{taskDesc,jdbcType=VARCHAR},
+        update_time = NOW()
+        where task_key = #{taskKey,jdbcType=VARCHAR} and task_group_name = #{taskGroupName,jdbcType=VARCHAR}
+    </update>
+</mapper>

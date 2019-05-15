@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.sia</groupId>
+    <artifactId>sia-task</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0.0</version>
+
+    <modules>
+        <module>sia-task-config</module>
+        <module>sia-task-core</module>
+        <module>sia-task-hunter</module>
+        <module>sia-task-scheduler</module>
+    </modules>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring.version>4.3.15.RELEASE</spring.version>
+        <spring.boot.version>1.5.11.RELEASE</spring.boot.version>
+        <spring.cloud.version>Dalston.SR5</spring.cloud.version>
+        <curator-version>2.11.1</curator-version>
+        <main.basedir>${project.basedir}</main.basedir>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <dependency>
+                <!-- Import dependency management from Spring Boot -->
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-parent</artifactId>
+                <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring.cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+
+    <!--确保所有协议都是Apache 2.0协议-->
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
+
+        <!--以下查件子模块自动继承，不必引入-->
+        <plugins>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>1.13</version>
+                <configuration>
+                    <!-- config for license:aggregate-add-third-party -->
+                    <outputDirectory>${main.basedir}</outputDirectory>
+                    <thirdPartyFilename>LICENSE-3RD-PARTY</thirdPartyFilename>
+                    <fileTemplate>/org/codehaus/mojo/license/third-party-file-groupByLicense.ftl</fileTemplate>
+                    <useMissingFile>true</useMissingFile>
+                    <missingFile>${main.basedir}/LICENSE-3RD-PARTY.properties</missingFile>
+                    <aggregateMissingLicensesFile>${main.basedir}/LICENSE-3RD-PARTY.properties</aggregateMissingLicensesFile>
+                    <licenseMerges>
+                        <licenseMerge>Apache 2.0|ASL, version 2|http://www.apache.org/licenses/LICENSE-2.0.txt|http://asm.ow2.org/license.html|The Apache License, Version 2.0|Apache License|Apache License Version 2|Apache License Version 2.0|Apache Software License - Version 2.0|Apache 2.0 License|Apache License 2.0|ASL|Apache 2|Apache-2.0|the Apache License, ASL Version 2.0|The Apache Software License, Version 2.0|Apache License, Version 2.0|Apache Public License 2.0</licenseMerge>
+                        <licenseMerge>BSD|The BSD 3-Clause License|The BSD License|Modified BSD License|New BSD License|New BSD license|Two-clause BSD-style license|BSD licence|BSD New|The New BSD License|BSD 3-Clause|BSD 3-clause</licenseMerge>
+                        <licenseMerge>MIT|MIT License|The MIT License</licenseMerge>
+                        <licenseMerge>LGPL|LGPL, version 2.1|GNU Library or Lesser General Public License (LGPL) V2.1|GNU Lesser General Public License (LGPL), Version 2.1|GNU Lesser General Public License, Version 2.1|LGPL 2.1</licenseMerge>
+                        <licenseMerge>CDDL|CDDL+GPL|CDDL+GPL License|CDDL + GPLv2 with classpath exception|CDDL License|CDDL 1.0|CDDL 1.1|COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0|Common Development and Distribution License (CDDL) v1.0</licenseMerge>
+                        <licenseMerge>EPL|Eclipse Public License - Version 1.0</licenseMerge>
+                        <licenseMerge>GPL|GPL2 w/ CPE|GPLv2+CE|GNU General Public Library</licenseMerge>
+                        <licenseMerge>MPL|MPL 1.1</licenseMerge>
+                        <licenseMerge>Public Domain</licenseMerge>
+                        <licenseMerge>Common Public License|Common Public License Version 1.0</licenseMerge>
+                        <licenseMerge>CC0|CC0 1.0 Universal|Public Domain, per Creative Commons CC0</licenseMerge>
+                        <licenseMerge>Unknown License|Unknown license</licenseMerge>
+                    </licenseMerges>
+
+                    <!-- config for license:aggregate-download-licenses -->
+                    <aggregateDownloadLicenses.executeOnlyOnRootModule>true</aggregateDownloadLicenses.executeOnlyOnRootModule>
+                    <!--<licensesConfigFile>${main.basedir}/lic/config/licenses.xml</licensesConfigFile>-->
+                    <licensesOutputFile>${main.basedir}/lic/licenses.xml</licensesOutputFile>
+                    <licensesOutputDirectory>${main.basedir}/lic/licenses/</licensesOutputDirectory>
+
+                    <!-- config for license:update-file-header -->
+                    <licenseName>apache_v2</licenseName>
+                    <inceptionYear>2019</inceptionYear>
+                    <organizationName>sia</organizationName>
+                    <projectName>task</projectName>
+                    <roots>
+                        <root>src/main/java</root>
+                        <root>src/test/java</root>
+                        <!--<root>webapp</root>-->
+                    </roots>
+                    <includes>
+                        <include>**/*.java</include>
+                        <include>**/*.xml</include>
+                        <include>**/*.sh</include>
+                        <include>**/*.py</include>
+                        <include>**/*.properties</include>
+                        <include>**/*.sql</include>
+                        <include>**/*.html</include>
+                        <include>**/*.less</include>
+                        <include>**/*.css</include>
+                        <include>**/*.js</include>
+                        <include>**/*.json</include>
+                    </includes>
+                    <extraExtensions>
+                        <scala>java</scala>
+                    </extraExtensions>
+                    <canUpdateCopyright>true</canUpdateCopyright>
+                    <canUpdateDescription>true</canUpdateDescription>
+                    <addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
+                    <emptyLineAfterHeader>true</emptyLineAfterHeader>
+                    <processStartTag>&lt;&lt;</processStartTag>
+                    <processEndTag>&gt;&gt;</processEndTag>
+                    <sectionDelimiter>==</sectionDelimiter>
+
+                    <!-- config for mvn license:update-project-license -->
+                    <licenseFile>${main.basedir}/LICENSE</licenseFile>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jasig.maven</groupId>
+                <artifactId>maven-notice-plugin</artifactId>
+                <version>1.0.6.1</version>
+                <configuration>
+                    <generateChildNotices>false</generateChildNotices>
+                    <noticeTemplate>https://source.jasig.org/licenses/NOTICE.template</noticeTemplate>
+                    <licenseMapping>
+                        <param>https://source.jasig.org/licenses/license-mappings.xml</param>
+                    </licenseMapping>
+                </configuration>
+            </plugin>
+
+
+        </plugins>
+
+    </build>
+
+</project>

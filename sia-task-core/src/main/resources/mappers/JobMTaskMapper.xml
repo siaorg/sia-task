@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sia.core.mapper.JobMTaskMapper">
+    <resultMap id="BaseResultMap" type="com.sia.core.entity.JobMTask">
+        <result column="job_id" property="jobId" jdbcType="INTEGER"/>
+        <result column="job_key" property="jobKey" jdbcType="VARCHAR"/>
+        <result column="job_group" property="jobGroup" jdbcType="VARCHAR"/>
+        <result column="pre_task_key" property="preTaskKey" jdbcType="VARCHAR"/>
+        <result column="input_type" property="inputType" jdbcType="VARCHAR"/>
+        <result column="input_value" property="inputValue" jdbcType="VARCHAR"/>
+        <result column="route_strategy" property="routeStrategy" jdbcType="VARCHAR"/>
+        <result column="failover" property="failover" jdbcType="VARCHAR"/>
+        <result column="fix_ip" property="fixIp" jdbcType="VARCHAR"/>
+        <result column="read_timeout" property="readTimeout" jdbcType="INTEGER"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="task_key" property="taskKey" jdbcType="VARCHAR"/>
+        <result column="task_id" property="taskId" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <resultMap id="selectTaskMJobAndIPListByJobGroupAndKeyVO" type="com.sia.core.web.vo.JobMTaskVO">
+        <result column="task_app_ip_port" property="ipAndPortList" jdbcType="VARCHAR"/>
+        <result column="job_id" property="jobId" jdbcType="INTEGER"/>
+        <result column="job_key" property="jobKey" jdbcType="VARCHAR"/>
+        <result column="job_group" property="jobGroup" jdbcType="VARCHAR"/>
+        <result column="pre_task_key" property="preTaskKey" jdbcType="VARCHAR"/>
+        <result column="input_type" property="inputType" jdbcType="VARCHAR"/>
+        <result column="input_value" property="inputValue" jdbcType="VARCHAR"/>
+        <result column="route_strategy" property="routeStrategy" jdbcType="VARCHAR"/>
+        <result column="failover" property="failover" jdbcType="VARCHAR"/>
+        <result column="fix_ip" property="fixIp" jdbcType="VARCHAR"/>
+        <result column="read_timeout" property="readTimeout" jdbcType="INTEGER"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="task_key" property="taskKey" jdbcType="VARCHAR"/>
+        <result column="task_id" property="taskId" jdbcType="INTEGER"/>
+    </resultMap>
+
+
+
+    <resultMap id="selectActuatorsAndJobCount"   type="java.util.Map">
+        <result property="groupCount" column="group_count" />
+        <result property="jobCount" column="job_count" />
+    </resultMap>
+
+    <resultMap id="selectJobGroupDetails"   type="java.util.Map">
+        <result property="jobGroup" column="groups" />
+        <result property="taskCount" column="task_count" />
+        <result property="jobCount" column="job_count" />
+        <result property="Emails" column="Emails" />
+
+    </resultMap>
+
+    <!--schedulerMapper-->
+    <resultMap id="selectTaskMJobAndIPListByJobGroupAndKey" type="com.sia.core.entity.JobMTask">
+        <result column="task_app_ip_port" property="ipAndPortList" jdbcType="VARCHAR"/>
+        <result column="job_id" property="jobId" jdbcType="INTEGER"/>
+        <result column="job_key" property="jobKey" jdbcType="VARCHAR"/>
+        <result column="job_group" property="jobGroup" jdbcType="VARCHAR"/>
+        <result column="task_key" property="taskKey" jdbcType="VARCHAR"/>
+        <result column="task_id" property="taskId" jdbcType="INTEGER"/>
+        <result column="pre_task_key" property="preTaskKey" jdbcType="VARCHAR"/>
+        <result column="input_type" property="inputType" jdbcType="VARCHAR"/>
+        <result column="input_value" property="inputValue" jdbcType="VARCHAR"/>
+        <result column="route_strategy" property="routeStrategy" jdbcType="VARCHAR"/>
+        <result column="failover" property="failover" jdbcType="VARCHAR"/>
+        <result column="fix_ip" property="fixIp" jdbcType="VARCHAR"/>
+        <result column="job_alarm_email" property="jobAlarmEmail" jdbcType="VARCHAR"/>
+        <result column="read_timeout" property="readTimeout" jdbcType="INTEGER"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <update id="updateByPrimaryKey" parameterType="com.sia.core.entity.JobMTask">
+        update task_mapping_job
+        set
+          pre_task_key = #{preTaskKey,jdbcType=VARCHAR},
+          input_type = #{inputType,jdbcType=VARCHAR},
+          input_value = #{inputValue,jdbcType=VARCHAR},
+          route_strategy = #{routeStrategy,jdbcType=VARCHAR},
+          failover = #{failover,jdbcType=VARCHAR},
+          fix_ip = #{fixIp,jdbcType=VARCHAR},
+          update_time =NOW()
+        where
+          job_key = #{jobKey,jdbcType=VARCHAR} and job_group = #{jobGroup,jdbcType=VARCHAR} and task_key = #{taskKey,jdbcType=VARCHAR}
+    </update>
+
+    <sql id="Base_Column_List">
+    job_id,task_key,job_key, job_group,task_key,task_id, pre_task_key, input_type,input_value, route_strategy, failover,fix_ip,
+    update_time, create_time
+  </sql>
+
+    <select id="selectByJobGroupAndKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from task_mapping_job
+        where job_key = #{jobKey,jdbcType=VARCHAR} and job_group = #{jobGroup,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectJobMTaskTaskKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from task_mapping_job
+        where task_key = #{taskKey,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectTaskMJobAndIPListByJobGroupAndKeyVO" resultMap="selectTaskMJobAndIPListByJobGroupAndKeyVO"
+            parameterType="java.lang.String">
+    select
+    sbt.task_app_ip_port, tmj.*
+    from task_mapping_job tmj
+    inner join skyworld_basic_task sbt on sbt.task_id = tmj.task_id
+    where job_key = #{jobKey,jdbcType=VARCHAR} and job_group = #{jobGroup,jdbcType=VARCHAR}
+  </select>
+
+    <select id="selectActuatorsAndJobCount"
+            parameterType="java.lang.String" resultType="java.util.Map">
+       SELECT count(distinct sbk.task_group_name) as group_count ,  count(distinct sbj.job_id) job_count
+       FROM skyworld_basic_job sbj ,skyworld_basic_task sbk;
+    </select>
+
+    <delete id="deleteByJobKeyAndJobGroup" parameterType="java.lang.String">
+    delete from task_mapping_job
+    where job_key = #{jobKey,jdbcType=VARCHAR} and job_group = #{jobGroup,jdbcType=VARCHAR}
+  </delete>
+
+
+    <insert id="insertSelective" parameterType="com.sia.core.entity.JobMTask">
+        insert into task_mapping_job
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="jobId != null">
+                job_id,
+            </if>
+            <if test="jobKey != null">
+                job_key,
+            </if>
+            <if test="jobGroup != null">
+                job_group,
+            </if>
+            <if test="preTaskKey != null">
+                pre_task_key,
+            </if>
+            <if test="inputType != null">
+                input_type,
+            </if>
+            <if test="inputValue != null">
+                input_value,
+            </if>
+            <if test="routeStrategy != null">
+                route_strategy,
+            </if>
+            <if test="failover != null">
+                failover,
+            </if>
+            <if test="fixIp != null">
+                fix_ip,
+            </if>
+            <if test="readTimeout != null">
+                read_timeout,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+                create_time,
+            <if test="taskKey != null">
+                task_key,
+            </if>
+            <if test="taskId != null">
+                task_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="jobId != null">
+                #{jobId,jdbcType=INTEGER},
+            </if>
+            <if test="jobKey != null">
+                #{jobKey,jdbcType=VARCHAR},
+            </if>
+            <if test="jobGroup != null">
+                #{jobGroup,jdbcType=VARCHAR},
+            </if>
+            <if test="preTaskKey != null">
+                #{preTaskKey,jdbcType=VARCHAR},
+            </if>
+            <if test="inputType != null">
+                #{inputType,jdbcType=VARCHAR},
+            </if>
+            <if test="inputValue != null">
+                #{inputValue,jdbcType=VARCHAR},
+            </if>
+            <if test="routeStrategy != null">
+                #{routeStrategy,jdbcType=VARCHAR},
+            </if>
+            <if test="failover != null">
+                #{failover,jdbcType=VARCHAR},
+            </if>
+            <if test="fixIp != null">
+                #{fixIp,jdbcType=VARCHAR},
+            </if>
+            <if test="readTimeout != null">
+                #{readTimeout,jdbcType=INTEGER},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=VARCHAR},
+            </if>
+            NOW(),
+            <if test="taskKey != null">
+                #{taskKey,jdbcType=VARCHAR},
+            </if>
+            <if test="taskId != null">
+                #{taskId,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectJobGroupDetails" resultMap="selectJobGroupDetails"
+            parameterType="java.lang.String">
+        SELECT
+        sbk.task_group_name AS groups,
+        COUNT(DISTINCT sbk.task_id) AS task_count ,
+        COUNT(DISTINCT sbj.job_id) job_count,
+        GROUP_CONCAT(DISTINCT(sbj.job_alarm_email)) AS Emails
+        FROM skyworld_basic_job sbj
+        RIGHT JOIN  skyworld_basic_task sbk
+        ON sbk.task_group_name = sbj.job_group
+        WHERE
+        1=1
+        <if test="roleNames != null and roleNames.size() > 0">
+            and sbj.job_group IN
+            <foreach item="roleNames" collection="roleNames" separator="," open="(" close=")" index="">
+                #{roleNames, jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        GROUP BY groups;
+    </select>
+
+<!--schedulerMapper-->
+    <select id="selectTaskMJobAndIPListByJobGroupAndKey" resultMap="selectTaskMJobAndIPListByJobGroupAndKey"
+            parameterType="java.lang.String">
+        select
+        sbt.task_app_ip_port, tmj.*, sbj.job_alarm_email
+        from task_mapping_job tmj
+        inner join skyworld_basic_task sbt on sbt.task_id = tmj.task_id
+        inner join skyworld_basic_job sbj on sbj.job_id = tmj.job_id
+        where tmj.job_key = #{jobKey,jdbcType=VARCHAR} and tmj.job_group = #{jobGroup,jdbcType=VARCHAR}
+    </select>
+
+</mapper>

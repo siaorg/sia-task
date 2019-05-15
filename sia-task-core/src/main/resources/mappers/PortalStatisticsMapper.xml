@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sia.core.mapper.PortalStatisticsMapper" >
+
+    <resultMap id="jobLogResultMap" type="java.util.Map">
+        <result column="scheduler" property="scheduler" jdbcType="VARCHAR"/>
+        <result column="job_call_count" property="job_call_count" jdbcType="INTEGER"/>
+        <result column="job_exception_count" property="job_exception_count" jdbcType="INTEGER"/>
+        <result column="job_finished_count" property="job_finished_count" jdbcType="INTEGER"/>
+        <result column="task_call_count" property="task_call_count" jdbcType="INTEGER"/>
+        <result column="task_exception_count" property="task_exception_count" jdbcType="INTEGER"/>
+        <result column="task_finished_count" property="task_finished_count" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <resultMap id="jobCallStatisMap" type="java.util.Map">
+        <result column="scheduler" property="scheduler" jdbcType="VARCHAR"/>
+        <result column="job_call_count" property="job_call_count" jdbcType="INTEGER"/>
+        <result column="task_call_count" property="task_call_count" jdbcType="INTEGER"/>
+        <result column="times" property="times" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="jobStatisticsMap" type="java.util.Map">
+        <result column="times"  property="times" jdbcType="VARCHAR"/>
+        <result column="successJobTotal"  property="successJobTotal" jdbcType="INTEGER"/>
+        <result column="failJobTotal"  property="failJobTotal" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <resultMap id="taskStatisticsMap" type="java.util.Map">
+        <result column="times"  property="times" jdbcType="VARCHAR"/>
+        <result column="successTaskTotal"  property="successTaskTotal" jdbcType="INTEGER"/>
+        <result column="failTaskTotal"  property="failTaskTotal" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <select id="getNearestTime" resultType="java.util.Date">
+      select max(last_time) from skyworld_portal_stat;
+    </select>
+
+    <select id="selectCallExpFinFromJobLog" resultMap="jobLogResultMap" parameterType="java.util.HashMap" >
+        select
+        sjl.job_trigger_msg as scheduler,
+        count(distinct sjl.job_log_id) as job_call_count,
+        count(distinct case when sjl.job_handle_code='FAIL' then sjl.job_log_id else null end) as job_exception_count,
+        count(distinct case when sjl.job_handle_code='SUCCESS' then sjl.job_log_id else null end) as job_finished_count,
+        count(distinct case when stl.task_key!="endTask" then stl.task_log_id else null end) as task_call_count,
+        count(distinct case when stl.task_status='FAIL' and stl.task_key!="endTask" then stl.task_log_id else null end) as task_exception_count,
+        count(distinct case when stl.task_status='SUCCESS' and stl.task_key!="endTask" then stl.task_log_id else null end) as task_finished_count
+        from skyworld_job_log sjl left join skyworld_task_log stl
+        on stl.job_log_id=sjl.job_log_id
+        where sjl.job_handle_finished_time >= str_to_date(#{startTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+                  and sjl.job_handle_finished_time &lt; str_to_date(#{endTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+        group by scheduler;
+    </select>
+
+    <insert id="insertPortalStatistics" parameterType="java.util.HashMap" >
+        insert ignore into skyworld_portal_stat
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="scheduler != null" >
+                scheduler,
+            </if>
+            <if test="job_call_count != null" >
+                job_call_count,
+            </if>
+            <if test="task_call_count != null" >
+                task_call_count,
+            </if>
+            <if test="job_exception_count != null" >
+                job_exception_count,
+            </if>
+            <if test="job_finished_count != null" >
+                job_finished_count,
+            </if>
+            <if test="task_exception_count != null" >
+                task_exception_count,
+            </if>
+            <if test="task_finished_count != null" >
+                task_finished_count,
+            </if>
+            <if test="last_time != null" >
+                last_time,
+            </if>
+            create_time
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="scheduler != null" >
+                #{scheduler,jdbcType=VARCHAR},
+            </if>
+            <if test="job_call_count != null" >
+                #{job_call_count,jdbcType=INTEGER},
+            </if>
+            <if test="task_call_count != null" >
+                #{task_call_count,jdbcType=INTEGER},
+            </if>
+            <if test="job_exception_count != null" >
+                #{job_exception_count,jdbcType=INTEGER},
+            </if>
+            <if test="job_finished_count != null" >
+                #{job_finished_count,jdbcType=INTEGER},
+            </if>
+            <if test="task_exception_count != null" >
+                #{task_exception_count,jdbcType=INTEGER},
+            </if>
+            <if test="task_finished_count != null" >
+                #{task_finished_count,jdbcType=INTEGER},
+            </if>
+            <if test="last_time != null" >
+                #{last_time,jdbcType=VARCHAR},
+            </if>
+            NOW()
+        </trim>
+    </insert>
+
+    <select id="getJobCallStatistics" resultMap="jobCallStatisMap" parameterType="java.util.HashMap">
+        select
+        scheduler,
+        job_call_count,
+        task_call_count,
+        DATE_FORMAT(last_time,'%Y-%m-%d %H:%i:%s') as times
+        from skyworld_portal_stat
+        where last_time >= str_to_date(#{startTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+                  and last_time &lt;= str_to_date(#{endTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+        <if test="scheduler != null and scheduler != '' ">
+            and scheduler = #{scheduler,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <select id="getJobStatistics" resultMap="jobStatisticsMap" parameterType="java.util.HashMap">
+        set @success := 0;
+        set @fail := 0;
+        select  DATE_FORMAT(last_time,'%Y-%m-%d %H:%i:%s') as times,
+        max(@success := @success + job_finished_count) as successJobTotal,
+        max(@fail := @fail + job_exception_count) as failJobTotal
+        from
+        (select
+        job_exception_count, job_finished_count, last_time
+        from skyworld_portal_stat
+        where last_time >= str_to_date(#{startTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+            and last_time &lt;= str_to_date(#{endTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+        <if test="scheduler != null and scheduler != '' ">
+            and scheduler = #{scheduler,jdbcType=VARCHAR}
+        </if>
+        order by last_time) t
+        group by last_time
+    </select>
+
+    <select id="getTaskStatistics" resultMap="taskStatisticsMap" parameterType="java.util.HashMap">
+        set @success := 0;
+        set @fail := 0;
+        select  DATE_FORMAT(last_time,'%Y-%m-%d %H:%i:%s') as times,
+        max(@success := @success + task_finished_count) as successTaskTotal,
+        max(@fail := @fail + task_exception_count) as failTaskTotal
+        from
+        (select
+        task_exception_count, task_finished_count, last_time
+        from skyworld_portal_stat
+        where last_time >= str_to_date(#{startTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+        and last_time &lt;= str_to_date(#{endTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+        <if test="scheduler != null and scheduler != '' ">
+            and scheduler = #{scheduler,jdbcType=VARCHAR}
+        </if>
+        order by last_time) t
+        group by last_time
+    </select>
+
+    <select id="selectAllJobLogs" resultType="java.lang.Integer">
+        select
+          max(job_log_id)
+          from skyworld_job_log
+    </select>
+
+    <select id="getDbTime" resultType="java.lang.String">
+        select DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s') as times;
+    </select>
+
+</mapper>
