@@ -28,6 +28,7 @@
           <el-dropdown-menu size="small" slot="dropdown">
               <el-dropdown-item command="other">关闭其他</el-dropdown-item>
               <el-dropdown-item command="all">关闭所有</el-dropdown-item>
+              <el-dropdown-item command="logout">退出</el-dropdown-item>
           </el-dropdown-menu>
       </el-dropdown>
     </div>
@@ -72,12 +73,19 @@ export default {
       this.$emit('showKeepLiveList', this.tagsList)
     },
     handleTags: function (command) {
-      command === 'other' ? this.closeOther() : this.closeAll()
+      if (command === 'other') {
+        this.closeOther()
+      } else if (command === 'all') {
+        this.closeAll()
+      } else {
+        sessionStorage.removeItem('login')
+        this.$router.push({path: '/login'})
+      }
     },
     // 关闭全部标签
     closeAll: function () {
       this.tagsList = []
-      this.$router.push('/')
+      this.$router.push('/home')
     },
     // 关闭其他标签
     closeOther: function () {

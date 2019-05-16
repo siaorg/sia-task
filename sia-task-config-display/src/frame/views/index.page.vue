@@ -44,7 +44,7 @@ export default {
 </style>
 
 <style lang="less">
-@import '../../common/styles/transition.less';
-@import '../../common/styles/theme.less'; // [ext] inject config.less as global setting
+// @import '../../common/styles/transition.less';
+// @import '../../common/styles/theme.less'; // [ext] inject config.less as global setting
 @import '../../common/fonts/iconfont.less';
 </style>

@@ -163,7 +163,6 @@ export default {
     changeSearchTakkeyVlaue: function () {
       this.leftMenuList = this.leftMenuTotalList
       if (this.searchTakkeyVlaue !== '') {
-        console.log(this.leftMenuTotalList)
         this.leftMenuList = this.leftMenuTotalList.filter((ele) => ele.taskKey.indexOf(this.searchTakkeyVlaue) !== -1)
       }
     },
@@ -223,7 +222,6 @@ export default {
               }
             })
             // self.jsPlumbJson delete jsessionid
-            console.log(self.jsPlumbJson, 'oooooooooooooooooooo')
             // self.removeAllJsPlumb()
             // self.jsPlumbInstance()
             self.$message({message: res.data.message, type: 'error'})
@@ -408,7 +406,6 @@ export default {
             },
             events: {
               click: function (labelOverlay, originalEvent) {
-                console.log('click on label overlay for :' + labelOverlay.component)
               }
             }
           }]
@@ -543,14 +540,11 @@ export default {
           //   return false;
           // })
           // valTaget为点击项的数据
-          console.log($(e.target).attr('id'), '---------------------------eeeicon')
           if (e.target.tagName === 'SPAN') {
             if ($(e.target).attr('class').indexOf('delete-dom') !== -1) {
-              console.log('删除节点:', $(e.target).attr('id'))
               for (var k = 0; k < _slef.jsPlumbJson.length; k++) {
                 if (_slef.jsPlumbJson[k].taskId === $(e.target).attr('id')) {
                   _slef.jsPlumbJson.splice(k, 1)
-                  console.log(_slef.jsPlumbJson, '_slef.jsPlumbJsonshanchu--------删除')
                   break
                 }
               }
@@ -599,9 +593,7 @@ export default {
       instance.bind('click', function (conn, e) {
         e.preventDefault()
         e.stopPropagation()
-        // _slef.delConnection(conn);
-        // console.log(jsPlumb)
-        jsPlumb.deleteConnection(conn)
+        // jsPlumb.deleteConnection(conn)
         // _slef.delConnection(conn)
       })
       // 监听新建连接事件
@@ -634,7 +626,6 @@ export default {
       })
       // 监听连接线移除事件(注意：此监听事件并不监听连接线两头的端点变更)
       instance.bind('connectionDetached', function (conn) {
-        console.log('删除连线')
         _slef.delConnection(conn)
       })
       // 监听连接线移动端点事件
@@ -654,7 +645,6 @@ export default {
                   'icon_ID': _slef.jsPlumbJson[i].taskId, // 节点IconID
                   'icon_preTaskKey': _slef.jsPlumbJson[i].preTaskKey
                 }
-                console.log(data, '==================data连线')
                 _slef.editIconAjax(data, i)
                 break
               }
@@ -684,7 +674,6 @@ export default {
     // 删除连接线处理
     delConnection: function (conn) {
       // 循环查找jsPlumbJson中对应的数据，删除对应数据
-      console.log(conn.sourceId, '----------------------conn.sourceId', this.jsPlumbJson)
       for (var i = 0; i < this.jsPlumbJson.length; i++) {
         if (conn.targetId === this.jsPlumbJson[i].taskId) {
           // var num = null
@@ -721,8 +710,6 @@ export default {
     removeJsPlumbIcon: function (id) {
       // 释放事件
       $('#' + id).unbind()
-      console.log(id, this.instanceArray, this.instanceArray, '-------------------this.instanceArray')
-      console.log(this.iconSourceArray, this.targetSourceArray[this.iconSourceArray[id]], '-------------this.targetSourceArray[this.iconSourceArray[id]]')
       // 删除对应的端点
       // if (this.instanceArray.length !== this.instanceArray.length) {
       this.instanceArray[this.instanceArray.length - 1].deleteEndpoint(this.endpointSourceArray[this.iconSourceArray[id]])
@@ -731,12 +718,10 @@ export default {
       // }
     },
     editIconAjax: function (data, num) {
-      console.log(data, '----------------data')
     },
     showHiddenAddtask (type, val, isShow) {
       this.addTaskShowConfig = isShow
       if (type === 2) {
-        console.log(val, '------------------------val')
         this.jsPlumbJson.forEach((ele) => {
           if (ele.taskKey === val.taskKey) {
             ele.inputType = val.taskParamsType
@@ -756,7 +741,6 @@ export default {
         // task——选取实例策略
         // task_调用失败策略
         // 选取实例
-        console.log(this.jsPlumbJson, 'ppppppppppppppppppppppppppppppp')
       }
     },
     // 左侧列表添加点击事件
