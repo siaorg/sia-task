@@ -35,7 +35,7 @@
       </div>
     </div>
     <div class="run-status" v-show="initShowCount">
-      <span class="title"><i><img src="../images/home-title-icon.png" alt=""></i>调度次数</span>
+      <span class="title"><i><img src="../images/home-title-icon.png" alt=""></i>调度器调度趋势图</span>
       <div class="search-box">
         <el-select placeholder="请选择执行器" v-model="schedulerNumberTag">
           <el-option v-for="(item,index) in schedulerNumberList" :key="index" :label="item" :value="item"></el-option>
@@ -55,7 +55,7 @@
       </div>
     </div>
     <div class="run-status" v-show="initShowCount">
-      <span class="title"><i><img src="../images/home-title-icon.png" alt=""></i>任务调度详情</span>
+      <span class="title"><i><img src="../images/home-title-icon.png" alt=""></i>任务调度状态统计</span>
       <div class="search-box">
         <el-select placeholder="请选择执行器" v-model="schedulerTag">
           <el-option v-for="(item,index) in schedulerList" :key="index" :label="item" :value="item"></el-option>
@@ -78,7 +78,7 @@
       </div>
     </div>
     <div class="home-table-box" v-show="initShowStatus">
-      <span class="title title-table"><i><img src="../images/home-title-icon.png" alt=""></i>对接项目总数详情</span>
+      <span class="title title-table"><i><img src="../images/home-title-icon.png" alt=""></i>对接项目详情</span>
       <el-table :data="projectCountData" class="home-table">
         <el-table-column property="jobGroup" label="jobGroup"></el-table-column>
         <el-table-column property="jobCount" label="JOB数量"></el-table-column>
@@ -458,8 +458,6 @@ export default {
       myChartN.clear()
       let option = {
         dataZoom: [{
-          startValue: '2018-07-03 10:00:00',
-          // backgroundColor: 'red', // 组件的背景颜色
           left: '5%',
           right: '5%',
           bottom: '30px'

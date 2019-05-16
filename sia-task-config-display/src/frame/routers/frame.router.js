@@ -11,7 +11,7 @@ const frameRouter = {}
 let _routerArray = [
   {
     path: '/',
-    redirect: '/home'
+    redirect: '/login'
   }
 ]
 

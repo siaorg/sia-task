@@ -16,12 +16,19 @@ axios.interceptors.request.use(
 
 axios.interceptors.response.use(
   res => {
-    return res
+    if (res.data.code !== 0) {
+      appRouters.replace({
+        path: '/login'
+      })
+      return res
+    } else {
+      return res
+    }
   },
   err => {
     if (err.message && err.message.indexOf('Network Error') > -1) {
       appRouters.replace({
-        path: '/401'
+        path: '/login'
       })
       return Promise.reject(err)
     }
@@ -45,7 +52,7 @@ http.get = function (url, params) {
 }
 
 http.post = function (url, obj) {
-  obj.jsessionid = JSON.parse(sessionStorage.getItem('jsessionid'))['jsessionid']
+  // obj.jsessionid = JSON.parse(sessionStorage.getItem('jsessionid'))['jsessionid']
   let config = {
     method: 'POST',
     url: url,

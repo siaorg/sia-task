@@ -39,7 +39,7 @@
                 <span class="el-icon-warning info-icon"></span>
               </el-tooltip>
             </el-form-item>-->
-
+            
             <el-form-item v-if="taskAddViewModel.jobType === 'TRIGGER_TYPE_CRON'" label="Job类型值" prop="jobTypeValue">
               <el-input type="text" @change="changeInputValue" auto-complete="off" placeholder="请输入Job类型值" v-model="taskAddViewModel.jobTypeValue">
               </el-input>
@@ -110,8 +110,8 @@ export default {
     var checkBlur = (rule, value, callback) => {
       switch (rule.field) {
         case 'emailWarning':
-          // if (!new RegExp(/^(([a-zA-Z0-9_.-])+@((********)+.)+(cn)+(,){0,1}){0,}$/).test(value)) {
-          //   return callback(new Error('邮箱格式为xxx@********.cn'))
+          // if (!new RegExp(/^(([a-zA-Z0-9_.-])+@((creditease)+.)+(cn)+(,){0,1}){0,}$/).test(value)) {
+          //   return callback(new Error('邮箱格式为xxx@creditease.cn'))
           // }
           break
         case 'jobDescribe':

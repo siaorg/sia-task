@@ -285,7 +285,6 @@ export default {
                 },
                 events: {
                   click: function (labelOverlay, originalEvent) {
-                  console.log('click on label overlay for :' + labelOverlay.component)
                   }
                 }
               }]
@@ -310,7 +309,6 @@ export default {
       for(var i=0; i<this.jsPlumbJson.length; i++){
         if(this.jsPlumbJson[i].preTaskKey.length > 0){
           for(var j=0; j<this.jsPlumbJson[i].preTaskKey.length; j++){
-            console.log(this.jsPlumbJson[i].taskId, this.jsPlumbJson[i].preTaskKey[j])
             this.connectArray[num] = instance.connect({uuids: [this.jsPlumbJson[i].preTaskKey[j]+"BottomCenter", this.jsPlumbJson[i].taskId+"TopCenter"], editable: true});
             num++;
           }

@@ -23,7 +23,6 @@ frameStore.mutations = {
   },
   'CHANGE_MENU_WIDTH' (state, leftMeunWidth) {
     state.leftMeunWidth = leftMeunWidth
-    console.log(state.leftMeunWidth)
   }
 }
 
