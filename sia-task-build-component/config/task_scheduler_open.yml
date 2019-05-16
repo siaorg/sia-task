@@ -20,9 +20,9 @@ zooKeeperHosts: 127.0.0.1:2181
 spring:
     datasource:
         name: test
-        url: jdbc:mysql://127.0.0.1:3306/skyworld_scheduler_dev?useUnicode=true&characterEncoding=utf8
-        username: ***
-        password: ***
+        url: jdbc:mysql://127.0.0.1:3306/skyworld_task?useUnicode=true&characterEncoding=utf8
+        username: ****
+        password: ****
         # 使用druid数据源
         type: com.alibaba.druid.pool.DruidDataSource
         driver-class-name: com.mysql.jdbc.Driver
@@ -44,9 +44,9 @@ mybatis:
   mapper-locations: classpath:mappers/*.xml
   type-aliases-package: com.sia.core.entity
 
-# TODO 预警邮件配置
+# 预警邮件配置
 SKYTRAIN_DEFAULT_EMAIL:
-#邮件服务地址：127.0.0.1:12026
+# 邮件服务地址：127.0.0.1:12026
 EMAIL_SERVICE_REQUESTPATH: http://127.0.0.1:12026/v1/sendEmail
 
 # 调度器执行的JOB个数阈值，超过则通知添加资源

@@ -6,7 +6,7 @@ spring.application.cnname: 任务编排中心
 management.security.enabled: false
 endpoints.health.sensitive: false
 
-#TODO 测试临时添加,后期会修改URL配置
+# 跳转登录地址
 gantryUrl: http://10.143.131.134:9000/
 
 #zooKeeperHosts: 127.0.0.1:12181
@@ -15,7 +15,7 @@ zooKeeperHosts: 127.0.0.1:2181
 spring:
     datasource:
         name: test
-        url: jdbc:mysql://127.0.0.1:3306/skyworld_scheduler_dev?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
+        url: jdbc:mysql://127.0.0.1:3306/skyworld_task?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
         username: ****
         password: ****
         # 使用druid数据源

@@ -1,1 +1,7 @@
-微服务任务调度框架SIA-TASK部署手册  初始化
+* [微服务任务调度平台部署指南](docs/install-readme.md)
+  * [1.1 Mysql部署](docs/init-mysql-source.md)
+  * [1.2 Zookeeper部署](docs/install-zookeeper-source.md)
+  * [1.3 前端代码打包](docs/install-front-end.md)
+  * [1.4 编排中心与调度中心部署](docs/install.md)
+    * [1.4.1 1windows平台](docs/install-windows-dev.md)
+    * [1.4.2 linux](docs/install-linux-test.md)

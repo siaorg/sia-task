@@ -29,7 +29,7 @@ eureka.instance.instance-id: ${spring.cloud.client.ipAddress}:${server.port}
 spring:
     datasource:
         name: test
-        url: jdbc:mysql://127.0.0.1:3306/skyworld_scheduler_dev?useUnicode=true&characterEncoding=utf8
+        url: jdbc:mysql://127.0.0.1:3306/skyworld_task?useUnicode=true&characterEncoding=utf8
         username: ****
         password: ****
         # 使用druid数据源
@@ -53,7 +53,7 @@ mybatis:
   mapper-locations: classpath:mappers/*.xml
   type-aliases-package: com.sia.core.entity
 
-# TODO 预警邮件配置
+# 预警邮件配置
 SKYTRAIN_DEFAULT_EMAIL:
 #邮件服务地址：127.0.0.1:12026
 EMAIL_SERVICE_REQUESTPATH: http://127.0.0.1:12026/v1/sendEmail
