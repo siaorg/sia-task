@@ -7,6 +7,12 @@
             <img src="../../common/images/no-data.png" alt="">
             <span>暂无数据！</span>
           </div>
+          <!--<div class="search-box">
+            <el-select placeholder="请选择执行器" v-model="dispatchSelectTag">
+              <el-option v-for="(item,index) in dispatchListData" :key="index" :label="item" :value="item"></el-option>
+            </el-select>
+            <el-button class="btn-large edit-btn" @click="handleClickTransfer"> 一键漂移 </el-button>
+          </div>-->
           <el-table  v-show="!showNoDataBox" :data="echartsData" style="width: calc(100% - 44px);margin-left:14px" class="dispatch-table">
             <el-table-column prop="jobId" label="Job_ID" align="center" width="80">
             </el-table-column>
@@ -25,6 +31,39 @@
             <el-table-column show-overflow-tooltip prop="jobAlarmEmail" label="预警邮箱" align="center">
             </el-table-column>
             <el-table-column show-overflow-tooltip prop="jobDesc" label="描述" align="center">
+            </el-table-column>
+            <template slot="empty">
+              <p class="no-data">
+                <img src="../../common/images/no-data.png" alt="">
+                <span>暂无数据！</span>
+              </p>
+            </template>
+          </el-table>
+          <el-table  v-show="!showNoDataBox"
+            :span-method="objectSpanMethod"
+            border
+            :data="transferListsData.list" style="width: calc(100% - 44px);margin-left:14px" class="transfer-table">
+            <el-table-column prop="jobKey" label="jobKey">
+            </el-table-column>
+            <el-table-column show-overflow-tooltip label="Job漂移情况">
+              <template slot-scope="scope">
+                <p class="is-success-job" v-if="scope.row.isSuccess!=='' && scope.row.isSuccess !== null">成功漂移Job({{transferListsData.transSuccessCount}}个):</p>
+                <p class="is-success-job" v-if="scope.row.isSuccess!=='' && scope.row.isSuccess !== null">
+                  <span v-for="(item,index) in scope.row.isSuccess" :key="index" :label="item">{{item}}</span>
+                </p>
+                <p class="is-fail-job" v-if="scope.row.isFail!=='' && scope.row.isFail !== null">失败漂移Job({{transferListsData.transFailCount}}个):</p>
+                <p class="is-fail-job" v-if="scope.row.isFail!=='' && scope.row.isFail !== null">
+                  <span v-for="(item,index) in scope.row.isFail" :key="index" :label="item">{{item}}</span>
+                </p>
+              </template>
+            </el-table-column>
+            <el-table-column show-overflow-tooltip label="运行中job">
+              <template slot-scope="scope">
+                <p class="is-running-job">运行中Job({{scope.row.isRunning.length}}个):</p>
+                <p class="is-running-job" v-if="scope.row.isRunning!=='' && scope.row.isRunning !== null">
+                  <span v-for="(item,index) in scope.row.isRunning" :key="index" :label="item">{{item}}</span>
+                </p>
+              </template>
             </el-table-column>
             <template slot="empty">
               <p class="no-data">
@@ -146,7 +185,20 @@ export default {
       moveLineList: [],
       nameBlackList: [],
       echartsData: [],
-      showNoDataBox: false
+      showNoDataBox: false,
+      // 选中调度器列表
+      dispatchSelectTag: '',
+      // 调度器列表
+      dispatchListData: [],
+      // 漂移调度器信息
+      transferListData: {
+        'jobKeyList': [],
+        'runningJobList': [],
+        'jobKeyCount': 0,
+        'transSuccessCount': 0,
+        'transFailedList': []
+      },
+      transferListsData: {}
     }
   },
   filters: {
@@ -159,6 +211,109 @@ export default {
     this.getDispatchData()
   },
   methods: {
+    objectSpanMethod ({ row, column, rowIndex, columnIndex }) {
+      if (columnIndex === 1) {
+        if (this.transferListsData.transSuccessCount > 0) {
+          if (rowIndex === 0) {
+            return {
+              rowspan: this.transferListsData.transSuccessCount,
+              colspan: 1
+            }
+          }
+        }
+        if (rowIndex === this.transferListsData.transSuccessCount) {
+          return {
+            rowspan: this.transferListsData.transFailCount,
+            colspan: 1
+          }
+        } else {
+          return {
+            rowspan: 0,
+            colspan: 0
+          }
+        }
+      } else if (columnIndex === 2) {
+        if (rowIndex === 0) {
+          return {
+            rowspan: this.transferListsData.jobKeyCount,
+            colspan: 1
+          }
+        } else {
+          return {
+            rowspan: 0,
+            colspan: 0
+          }
+        }
+      }
+    },
+    handleClickTransfer: function () {
+      this.setTransferList(this.dispatchSelectTag)
+    },
+    // 设置漂移调度器信息
+    setTransferList: function (val) {
+      let self = this
+      let params = val === undefined ? '' : val
+      self.$http.postNoObj(self.$api.getApiAddress('/jobapi/batchJobTransfer', 'CESHI_API_HOST'), params).then((res) => {
+        if (res.data.code === 0) {
+          this.setTransferListData(res.data.data)
+        } else {
+          self.$message({message: res.data.message, type: 'error'})
+        }
+      }).catch(() => {
+        self.$message({message: '服务器未响应！', type: 'error'})
+      })
+    },
+    // 获取漂移调度器信息
+    getTransferListData: function (val) {
+      let self = this
+      let params = val === undefined ? '' : val
+      self.$http.get(self.$api.getApiAddress('/jobapi/JobTransferInfo', 'CESHI_API_HOST'), {
+        scheduler: params
+      }).then((res) => {
+        if (res.data.code === 0) {
+          if (res.data.data !== null) {
+            let data = JSON.parse(res.data.data)
+            this.setTransferListData(data)
+          }
+        } else {
+          self.$message({message: res.data.message, type: 'error'})
+        }
+      }).catch(() => {
+        self.$message({message: '服务器未响应！', type: 'error'})
+      })
+    },
+    // 处理漂移job数据
+    setTransferListData: function (params) {
+      let data = {
+        jobKeyCount: params.jobKeyCount,
+        transSuccessCount: params.transSuccessCount,
+        transFailCount: params.jobKeyCount - params.transSuccessCount,
+        list: []
+      }
+      let success = []
+      params.jobKeyList.forEach((ele) => {
+        if (params.transFailedList.indexOf(ele) === -1) {
+          success.push(ele)
+        }
+      })
+      success.forEach((eleSu) => {
+        data.list.push({
+          jobKey: eleSu,
+          isSuccess: success,
+          isFail: '',
+          isRunning: params.runningJobList
+        })
+      })
+      params.transFailedList.forEach((eleFail) => {
+        data.list.push({
+          jobKey: eleFail,
+          isSuccess: '',
+          isFail: params.transFailedList,
+          isRunning: params.runningJobList
+        })
+      })
+      this.transferListsData = data
+    },
     // 获取资源分配详情列表
     getEchartsData (val) {
       let self = this
@@ -412,6 +567,7 @@ export default {
       let self = this
       self.$http.get(self.$api.getApiAddress('/monitor/schedulerInfo', 'CESHI_API_HOST')).then((res) => {
         if (res.data.code === 0) {
+          this.dispatchListData = Object.keys(res.data.data)
           self.dispatchInfo(res.data.data)
         } else {
           self.$message({message: res.data.message, type: 'error'})
@@ -428,6 +584,7 @@ export default {
       let seriesData3 = []
       if (parmasList.length !== 0) {
         this.getEchartsData(parmasList[0])
+        this.getTransferListData(parmasList[0])
         this.showNoDataBox = false
         this.showDispatchInfo = true
         parmasList.forEach(function (val) {
@@ -555,9 +712,11 @@ export default {
         if (params.componentType === 'xAxis') {
           data = params.value
           self.getEchartsData(params.value)
+          self.getTransferListData(params.value)
         } else {
           data = params.name
           self.getEchartsData(params.name)
+          self.getTransferListData(params.name)
         }
         // 点击时柱状图变色
         myChart.setOption({

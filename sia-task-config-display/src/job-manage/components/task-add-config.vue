@@ -138,7 +138,6 @@ export default {
     this.getIpPortList()
     this.getPreTaskKey()
     this.showParamsCount = this.addTaskTagValue.taskListTag[this.addTaskTagValue.valTaget.taskKey]['paramCount']
-    console.log(this.addTaskTagValue.taskListTag[this.addTaskTagValue.valTaget.taskKey]['paramCount'])
   },
   methods: {
     getPreTaskKey: function () {

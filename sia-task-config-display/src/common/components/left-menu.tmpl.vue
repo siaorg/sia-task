@@ -59,14 +59,10 @@ export default {
     }
   },
   created () {
-    let self = this
-    let roleList = sessionStorage.getItem('selectAuth')
-    if (roleList !== null) {
-      if (JSON.stringify(roleList).indexOf('admin') !== -1) {
-        self.showAdminMeun = true
-      } else {
-        self.showAdminMeun = false
-      }
+    if (sessionStorage.getItem('isAdmin') === 'admin') {
+      this.showAdminMeun = true
+    } else {
+      this.showAdminMeun = false
     }
   },
   methods: {

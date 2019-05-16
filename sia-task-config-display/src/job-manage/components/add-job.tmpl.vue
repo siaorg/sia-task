@@ -105,8 +105,8 @@ export default {
     var checkBlur = (rule, value, callback) => {
       switch (rule.field) {
         case 'emailWarning':
-          // if (!new RegExp(/^(([a-zA-Z0-9_.-])+@((********)+.)+(cn)+(,){0,1}){0,}$/).test(value)) {
-          //   return callback(new Error('邮箱格式为xxx@********.cn'))
+          // if (!new RegExp(/^(([a-zA-Z0-9_.-])+@((creditease)+.)+(cn)+(,){0,1}){0,}$/).test(value)) {
+          //   return callback(new Error('邮箱格式为xxx@creditease.cn'))
           // }
           break
         case 'jobKey':
@@ -261,7 +261,7 @@ export default {
                 default:
                   // self.$message({message: 'Job_Key已存在！', type: 'error'})
                   self.$message({message: res.data.message, type: 'error'})
-                  self.$emit('showHiddenAddJob', false, jobListParams)
+                  // self.$emit('showHiddenAddJob', false, jobListParams)
                   break
               }
             })

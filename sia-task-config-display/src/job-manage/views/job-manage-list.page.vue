@@ -92,7 +92,7 @@
                       <el-dropdown-item v-for="(item, index) in jobStatusList" :key="index" :disabled="item.disabled" :command="composeValue(item.status, scope.row)">{{item.status}}</el-dropdown-item>
                     </el-dropdown-menu>
                   </el-dropdown>
-                  <el-button class="btn-radius edit-btn ml" @click="handleClickSetCasca(scope.row)"> 级联设置 </el-button>
+                  <el-button class="btn-radius edit-btn ml" @click="handleClickSetCasca(scope.row, item.jobNum)"> 级联设置 </el-button>
                 </template>
               </el-table-column>
               <template slot="empty">
@@ -531,12 +531,22 @@ export default {
       this.setCascaShow = val
     },
     // 设置级联job
-    handleClickSetCasca: function (val) {
-      this.jobKeyListCasca = {
-        jobMsg: val,
-        jobKeyList: this.viewJobManageList
-      }
-      this.setCascaShow = true
+    handleClickSetCasca: function (val, num) {
+      let self = this
+      let jonKey = ''
+      self.$http.get(self.$api.getApiAddress('/jobapi/selectjobs?jobGroupName=' + this.activeNames + '&' + 'jobKey=' + jonKey + '&' + 'pageSize=' + num + '&' + 'currentPage=1', 'CESHI_API_HOST')).then((res) => {
+        if (res.data.code === 0) {
+          this.jobKeyListCasca = {
+            jobMsg: val,
+            jobKeyList: res.data.data.items
+          }
+          this.setCascaShow = true
+        } else {
+          self.$message({message: res.data.message, type: 'error'})
+        }
+      }).catch(() => {
+        self.$message({message: '服务未响应！', type: 'error'})
+      })
     },
     handleClickEditJob: function (val) {
       this.getJobStatus(val).then((params) => {

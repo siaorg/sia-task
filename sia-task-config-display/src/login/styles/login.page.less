@@ -1,0 +1,54 @@
+@import "../../common/styles/global";
+.login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  background-size: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #11255A url('../images/bg.png') no-repeat center bottom;
+  .login-msg {
+    width: 500px;
+    height: 550px;
+    .title {
+      display: flex;
+      justify-content: center;
+      align-self: center;
+      span {
+        &:nth-child(1) {
+          width: 70px;
+          height: 70px;
+          img {
+            width: 100%;
+            height: 100%;
+          }
+        }
+        &:nth-child(2) {
+          font-size: 26px;
+          color: #FFFFFF;
+          line-height: 70px;
+          margin-left: 15px;
+        }
+      }
+    }
+  }
+}
+#app {
+  .el-button.submit {
+    margin-top: 35px;
+    font-size: 16px;
+    width: 100%;
+    height: 50px;
+    background: #204CC0;
+    border-width: 0;
+    border-radius: 4px;
+    color: #fff;
+  }
+  .submit.el-button:hover, .submit.el-button.is-fouse {
+    color: #fff;
+    background: #274FB9;
+    border-color: #274FB9;
+  }
+}
