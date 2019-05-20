@@ -165,7 +165,7 @@ create table if not exists task_mapping_job
 
 ## 2.Zookeeper部署 
 
-Zookeeper的安装和配置这里不再赘述，详见Zookeeper官方文档。推荐Zookeeper集群暴露三个节点，如：*.*.*.2:2181,*.*.*.3:2181,*.*.*.:2181。
+Zookeeper的安装和配置这里不再赘述，详见Zookeeper官方文档。推荐Zookeeper集群暴露三个节点，如：A.B.C.2:2181,A.B.C.3:2181,A.B.C.4:2181。
 
 ## 3.前端部署启动 
 
