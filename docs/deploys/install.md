@@ -8,9 +8,9 @@
 
 JDK：JDK1.8+
 
-Mysql：安装并[初始化数据库](handbook/init-mysql-source.md)，将初始化数据导入Mysql即可
+Mysql：安装并[初始化数据库](init-mysql-source.md)，将初始化数据导入Mysql即可
 
-zookeeper: 可单点、集群安装，这里给出[Linux下集群安装方法](handbook/install-zookeeper-source.md)
+zookeeper: 可单点、集群安装，这里给出[Linux下集群安装方法](install-zookeeper-source.md)
 
 #### 一、源码启动项目
 
@@ -26,4 +26,4 @@ SIA-TASK微服务任务调度平台可以在Windows、Mac、Linux系统下进行
 
 ##### JAR包部署启动说明
 
-SIA-TASK微服务任务调度平台在机器节点上的部署启动非常简单方便。这里提供[Linux平台](handbook/install-linux-test.md)下的项目部署方式。
+SIA-TASK微服务任务调度平台在机器节点上的部署启动非常简单方便。这里提供[Linux平台](install-linux-test.md)下的项目部署方式。

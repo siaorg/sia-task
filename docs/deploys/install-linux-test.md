@@ -154,8 +154,12 @@ sia-task-scheduler工程test环境下的配置文件为task_scheduler_open.yml�
 
 #### 6、访问项目
 
-查询sia-task-config工程相应配置文件中的gantryUrl配置项，该配置项所配url是gantry工程的入口(需提前申请获取gantry访问权限，并修改菜单管理`任务调度`的访问入口)。gantry工程提供的菜单项如下图所示：
+访问sia-task微服务任务调度平台的访问入口(登录页面地址：http://localhost:10615)。登录页面如下图所示：
 
-![](images/install-gantry.png)
+![](images/install-gantry-login.jpg)
 
-点击菜单栏中的`任务调度`,即可访问SIA-TASK微服务任务调度平台的首页。
+输入用户名/密码即可登录（此处没做用户名/密码登录限制，任意字符串的用户名/密码都能登录。登录时选择"是否是管理员"选项后，则会以管理员身份登录）。微服务任务调度菜单项如下图所示：
+
+![](images/install-gantry.jpg)
+
+在该页面中，即可对SIA-TASK微服务任务调度的功能进行操作。

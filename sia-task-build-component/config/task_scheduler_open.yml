@@ -21,8 +21,8 @@ spring:
     datasource:
         name: test
         url: jdbc:mysql://127.0.0.1:3306/skyworld_task?useUnicode=true&characterEncoding=utf8
-        username: ****
-        password: ****
+        username: root
+        password: abc123ABC
         # 使用druid数据源
         type: com.alibaba.druid.pool.DruidDataSource
         driver-class-name: com.mysql.jdbc.Driver
