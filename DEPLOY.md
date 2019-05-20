@@ -165,125 +165,7 @@ create table if not exists task_mapping_job
 
 ## 2.Zookeeper部署 
 
-###  搭建zookeeper环境（准备工作）
-生产建议至少使用三个节点作为zk集群
-
-假设集群节点IP：100 - 101 - 102
-
-分别在三个节点上面执行如下命令：
-
-#### 命令1：切换app用户
-```shell
-命令1：切换app用户
-[root@localhost ~]# su app(看生产实际情况，需否)
-[app@localhost yxgly]$
-```
-#### 命令2：创建路径
-```shell
-命令2：创建路径
-[root@localhost ~]# cd /app/
-[root@localhost app]# mkdir zookeeper
-[root@localhost app]# cd zookeeper/
-```
-#### 命令3：上传zookeeper 安装包
-```shell
-命令3：上传zookeeper 安装包
-[root@localhost zookeeper]# rz 
-zookeeper-3.4.6.tar.gz
-```
-#### 命令4：解压缩
-```shell
-命令4：解压缩
-[root@localhost zookeeper]# tar -zxvf zookeeper-3.4.6.tar.gz 
-[root@localhost zookeeper]# ll
-total 17292
-drwxr-xr-x 10 app  app      4096 Feb 20  2014 zookeeper-3.4.6
--rw-r--r--  1 root root 17699306 Aug 27  2015 zookeeper-3.4.6.tar.gz
-```
-#### 命令5：创建data log路径
-```shell
-[root@localhost zookeeper]# mkdir -p zookeeperdata/data
-[root@localhost zookeeper]# mkdir -p zookeeperdata/log
-```
-
-#### 命令6：修改配置文件
-```shell
-[root@localhost zookeeper]# cd zookeeper-3.4.6/conf/
-[root@localhost conf]# ll
-total 12
--rw-rw-r-- 1 app app  535 Feb 20  2014 configuration.xsl
--rw-rw-r-- 1 app app 2161 Feb 20  2014 log4j.properties
--rw-rw-r-- 1 app app  922 Feb 20  2014 zoo_sample.cfg
-[root@localhost conf]# cp zoo_sample.cfg zoo.cfg
-
-[root@localhost log]# mkdir -p zookeeperdata/data
-[root@localhost conf]# vi zoo.cfg 
-```
-修改内容如下 zoo.cfg 
-```txt
-tickTime=2000
-# The number of ticks that the initial
-# synchronization phase can take
-initLimit=10
-# The number of ticks that can pass between
-# sending a request and getting an acknowledgement
-syncLimit=5
-# the directory where the snapshot is stored.
-dataDir=/app/zookeeper/zookeeperdata/data
-dataLogDir=/app/zookeeper/zookeeperdata/log
-# the port at which the clients will connect
-clientPort=2181
-     
-server.1=*.*.*.100:2888:3888
-server.2=*.*.*.101:2888:3888
-server.3=*.*.*.102:2888:3888
-
-```
-说明
-```txt
-*   tickTime=2000
-	tickTime这个时间是作为Zookeeper服务器之间或客户端与服务器之间维持心跳的时间间隔，也就是每个tickTime时间就会发送一个心跳；
-*   initLimit=10
-	initLimit这个配置项是用来配置Zookeeper接受客户端（这里所说的客户端不是用户连接Zookeeper服务器的客户端，而是Zookeeper服务器集群中连接到Leader的Follower 服务器）初始化连接时最长能忍受多少个心跳时间间隔数。 当已经超过10个心跳的时间（也就是tickTime）长度后 Zookeeper 服务器还没有收到客户端的返回信息，那么表明这个客户端连接失败。总的时间长度就是 10*2000=20 秒
-*   syncLimit=5
-	syncLimit这个配置项标识Leader与Follower之间发送消息，请求和应答时间长度，最长不能超过多少个tickTime的时间长度，总的时间长度就是5*2000=10秒；
-*   dataDir=/export/search/zookeeper-cluster/zookeeper-3.4.6-node1/data
-	dataDir顾名思义就是Zookeeper保存数据的目录，默认情况下Zookeeper将写数据的日志文件也保存在这个目录里；
-*   clientPort=2181
-	clientPort这个端口就是客户端连接Zookeeper服务器的端口，Zookeeper会监听这个端口接受客户端的访问请求；
-*   server.A=B:C:D
-	server.1=localhost:2887:3887
-	server.2=localhost:2888:3888
-	server.3=localhost:2889:3889
-A是一个数字，表示这个是第几号服务器； B是这个服务器的ip地址； C第一个端口用来集群成员的信息交换，表示的是这个服务器与集群中的Leader服务器交换信息的端口； D是在leader挂掉时专门用来进行选举leader所用。
-```
-
-#### 命令7 创建ServerID标识
-除了修改zoo.cfg配置文件，集群模式下还要配置一个文件myid，这个文件在dataDir目录下，这个文件里面就有一个数据就是A的值，在上面配置文件中zoo.cfg中配置的dataDir路径中创建myid文件
-```shell
-[root@localhost data]# cd /app/zookeeper/zookeeperdata/data/
-[root@localhost data]# vi myid
-```
-！注意！
-节点的myid 分别为:
-```txt
- 100 -> 1
- 101 -> 2
- 102 -> 3
-```
-#### 命令8 逐个启动新节点实例
-在三个节点上均执行完毕后；
-启动zookeeper命令
-```shell
-bin/zkServer.sh start
-```
-#### 命令9 检测集群是否启动
-```shell
-bin/zkCli.sh -server IP:2181
-bin/zkCli.sh
-
-查看ZK服务状态:       sh bin/zkServer.sh status
-```
+Zookeeper的安装和配置这里不再赘述，详见Zookeeper官方文档。推荐Zookeeper集群暴露三个节点，如：*.*.*.2:2181,*.*.*.3:2181,*.*.*.:2181。
 
 ## 3.前端部署启动 
 
@@ -311,9 +193,8 @@ npm run dev
 npm run build
 
 注：可以更改DIST/STATIC文件夹下面的SITE.MAP.JS文件进行环境的配置（IP：PORT形式）
-1、CESHI_API_HOST -> 后端服务地址
 
-2、CESHI_API_HOST_LOG -> kabana 日志连接地址
+CESHI_API_HOST -> 后端服务地址
 
 
 ## 4.编排中心和调度中心部署 
@@ -322,13 +203,9 @@ npm run build
 
 系统：64bit OS，Linux/Mac/Windows
 
-开发IDE：推荐使用IntelliJ IDEA 或 Eclipse
+IDE：推荐使用IntelliJ IDEA 或 Eclipse（打包时使用IDE）
 
 JDK：JDK1.8+
-
-Mysql：详见[MySQL部署](#1mysql部署)
-
-zookeeper: 可单点、集群安装，详见[Zookeeper部署](#2zookeeper部署)（这里给出Linux下集群安装方法）
 
 ### 一、源码启动项目
 
@@ -336,25 +213,77 @@ zookeeper: 可单点、集群安装，详见[Zookeeper部署](#2zookeeper部署)
 
 #### 源码启动项目说明
 
-SIA-TASK微服务任务调度平台可以在Windows、Mac、Linux系统下进行开发，由于我们一般使用IDE进行开发工作，三个系统下的开发流程类似，这里仅以 Windows平台 进行详细介绍项目导入及启动过程。
+SIA-TASK微服务任务调度平台可以在Windows、Mac、Linux系统下进行开发，由于我们一般使用IDE进行开发工作，三个系统下的开发流程类似，这里仅以JAR包部署启动方式进行详细介绍项目导入及启动过程。
 
-SIA-TASK微服务任务调度平台源码启动-Windows:
+### 二、JAR包部署启动
 
-1、[源码下载](https://github.com/siaorg/sia-task.git)
+本节主要说明如何在机器节点上以JAR包方式搭建SIA-TASK微服务任务调度平台系统，目前提供的开源版本为1.0.0。
 
-有两种方式将源码导入IDE环境：
+#### JAR包部署启动说明
 
-* 按照给出的源码下载地址下载源码，通过IDE从本地导入；
+SIA-TASK微服务任务调度平台在机器节点上的部署启动非常简单方便。这里提供 Linux平台 下的项目部署方式。
 
-* 使用IDE通过源码地址从版本控制仓库进行导入。
+SIA-TASK微服务任务调度平台Linux下JAR包部署启动:
 
-2、配置文件说明
+下面介绍SIA-TASK微服务任务调度平台在Linux下以JAR包方式进行部署启动的步骤，这里以部署open环境为例。
 
-SIA-TASK微服务任务调度平台需要启动的后端进程有两个：`sia-task-config`和`sia-task-scheduler`。下面以open环境配置文件为例，详细介绍这两个进程的配置文件的配置。
+1、安装包获取
 
-(1) sia-task-config
+有两种方式可以获取项目安装包：
 
-sia-task-config工程dev环境下的配置文件为application-open.yml，修改方式如下：
+(1) 在github源码中获取已经打包好的项目安装包，获取地址: https://github.com/siaorg/sia-task 
+
+(2) 从源码打包获取安装包。基本步骤如下：
+
+* 项目源码导入IDE：
+
+    * 按照给出的[源码下载地址](https://github.com/siaorg/sia-task.git)下载源码，通过IDE从本地导入；
+
+    * 使用IDE通过源码地址从版本控制仓库进行导入。
+
+* pom.xml修改：注释掉`sia-task-config`和`sia-task-scheduler`项目pom.xml中关于配置文件打包的配置，见下图：
+
+    ![](docs/images/install-pom.png)
+
+* 使用maven工具打包：
+
+    * 在IDE(以IntelliJ IDEA为例)中打开Maven Projects面板，如下图所示：
+
+    ![](docs/images/install-maven.png)
+    
+    * 在Maven Projects面板的Profiles下选中jdk18；
+    
+    * 打开Maven Projects面板的`sia-task-build-component`工程，依次点击`clean`和`install`，查看控制台输出：
+    
+        * 若两次点击最后都输出`Process finished with exit code 0`，说明两个maven命令都执行成功；
+        
+        * 若两次点击中有一个的点击不是输出`Process finished with exit code 0`，则对应maven命令执行失败，需查看控制台报错信息进行排查。
+        
+        * maven命令执行成功之后，在源码Project面板的`sia-task-build-component`工程中会出现名为target的目录，如下图所示：
+        
+        ![](docs/images/install-project-target.jpg)
+        
+    * 上图中的.zip包即为项目安装包。打开安装包所在文件夹，将安装包解压，得到task目录，其中包括四个子目录：
+    
+        * bin：存放`sia-task-config`和`sia-task-scheduler`两个工程的jar包及各类shell脚本，如下图所示：
+        
+        ![](docs/images/install-build-task.jpg)
+        
+        * config：存放`sia-task-config`和`sia-task-scheduler`两个工程的配置文件，如下图所示：
+        
+        ![](docs/images/install-build-config.jpg)
+        
+        * logs：存放日志
+        
+        * thirdparty：
+    
+2、配置文件修改
+
+得到项目安装包之后，需要根据自身环境修改安装包task/config下的配置文件。
+
+##### (1) sia-task-config
+
+sia-task-config工程open环境下的配置文件为task_config_open.yml，修改方式如下：
 
 sia-task-config工程配置文件修改
 
@@ -420,9 +349,9 @@ logging.file: ./logs/${spring.application.name}.log
 * Mysql：配置自身环境Mysql的url、username和password
 
 
-(2) sia-task-scheduler
+##### (2) sia-task-scheduler
 
-sia-task-scheduler工程dev环境下的配置文件为application-open.yml，修改方式如下：
+sia-task-scheduler工程test环境下的配置文件为task_scheduler_open.yml，修改方式如下：
 
 sia-task-scheduler工程配置文件修改
 
@@ -561,157 +490,6 @@ spring.kafka.producer.value-serializer: org.apache.kafka.common.serialization.St
         其中，请求方法为POST，subject、mailto、content、primary和elapse将以json格式发送到邮件服务接口，在提供的邮件服务接口中，需接受并处理这些字段。
 
 
-3、启动项目
-
-启动项目之前，检查确认`sia-task-scheduler`和`sia-task-config`两个工程的配置是否正确，检查的内容如下图红框中所示：
-
-![](docs/images/install-pom.png)
-
-确保在`sia-task-scheduler`和`sia-task-config`两个工程pom文件中的红框内容不被注释掉。
-
-检查完毕后，分别启动`sia-task-scheduler`和`sia-task-config`两个springboot工程，启动方式如下：
-
-* 启动`sia-task-scheduler`工程
-
-    (1) 在源码中找到SchedulerApplication启动类，如下图所示：
-
-    ![](docs/images/install-start-scheduler.png)
-
-    (2) 选中SchedulerApplication启动类，右键点击，在弹出框中选择`Run 'SchedulerApplication'` 或 `Debug 'SchedulerApplication'`(以调试模式启动)
-    
-    (3) 启动后若输出内容`>>>>>>>>>>SchedulerApplication start OK!`，则表示启动成功,如下图所示。
-    
-    ![](docs/images/install-start-scheduler-3.png)
-
-* 启动`sia-task-config`工程
-
-    (1) 在源码中找到TaskConfigApplication启动类，如下图所示：
-    
-    ![](docs/images/install-start-config.png)
-    
-    (2) 选中TaskConfigApplication启动类，右键点击，在弹出框中选择`Run 'TaskConfigApplication'` 或 `Debug 'TaskConfigApplication'`(以调试模式启动)
-    
-    (3) 启动后若输出内容`>>>>>>>>>>TaskConfig Application start ok!`，则表示启动成功,如下图所示。
-    
-    ![](docs/images/install-start-config-3.png)
-
-4、启动前端项目
-
-启动前端项目有两种方式：
-
-* 单独部署启动，详见[前端部署启动](#3前端部署启动)；
-
-* 置于`sia-task-config`工程中启动。
-
-    (1) 将获取的前端包解压，得到`static`目录和`index.html`文件，修改`static`目录下的site-map.js文件的`CESHI_API_HOST`配置，如下所示：
-    
-    ```
-    (function () {
-      window.API = {
-        'CESHI_API_HOST': 'localhost:10615',//修改为部署sia-task-config工程的节点的IP地址和工程启动端口号，这是sia-task微服务任务调度平台的访问入口
-        'CESHI_API_HOST_LOG': 'localhost:5601'
-      }
-      Object.freeze(window.API)
-      Object.defineProperty(window, 'API', {
-        configurable: false,
-        writable: false
-      })
-    })()
-    ```
-    
-    (2) 在sia-task-config工程中resources目录下新建名为static的目录，将(1)中获得的`static`目录和`index.html`文件放到新建的static目录中；
-    
-    (3) 启动`sia-task-config`工程时，前端工程也随即启动。
-
-这两种前端启动方式均需提前将前端包中`site-map.js`文件的`CESHI_API_HOST`配置进行修改。
-
-5、访问项目
-
-访问sia-task微服务任务调度平台的访问入口(登录页面地址：http://localhost:10615 )。登录页面如下图所示：
-
-![](docs/images/install-gantry-login.jpg)
-
-输入用户名/密码即可登录（此处没做用户名/密码登录限制，任意字符串的用户名/密码都能登录。登录时选择"是否是管理员"选项后，则会以管理员身份登录）。微服务任务调度菜单项如下图所示：
-
-![](docs/images/install-gantry.jpg)
-
-在该页面中，即可对SIA-TASK微服务任务调度的功能进行操作。
-
-
-### 二、JAR包部署启动
-
-本节主要说明如何在机器节点上以JAR包方式搭建SIA-TASK微服务任务调度平台系统，目前提供的安装版本为1.0.0。
-
-#### JAR包部署启动说明
-
-SIA-TASK微服务任务调度平台在机器节点上的部署启动非常简单方便。这里提供 Linux平台 下的项目部署方式。
-
-SIA-TASK微服务任务调度平台Linux下JAR包部署启动:
-
-下面介绍SIA-TASK微服务任务调度平台在Linux下以JAR包方式进行部署启动的步骤，这里以部署open环境为例。
-
-1、安装包获取
-
-有两种方式可以获取项目安装包：
-
-(1) 在github源码中获取已经打包好的项目安装包，获取地址: https://github.com/siaorg/sia-task 
-
-(2) 从源码打包获取安装包。基本步骤如下：
-
-* 项目源码导入IDE：
-
-    * 按照给出的[源码下载地址](https://github.com/siaorg/sia-task.git)下载源码，通过IDE从本地导入；
-
-    * 使用IDE通过源码地址从版本控制仓库进行导入。
-
-* pom.xml修改：注释掉`sia-task-config`和`sia-task-scheduler`项目pom.xml中关于配置文件打包的配置，见下图：
-
-    ![](docs/images/install-pom.png)
-
-* 使用maven工具打包：
-
-    * 在IDE(以IntelliJ IDEA为例)中打开Maven Projects面板，如下图所示：
-
-    ![](docs/images/install-maven.png)
-    
-    * 在Maven Projects面板的Profiles下选中jdk18；
-    
-    * 打开Maven Projects面板的`sia-task-build-component`工程，依次点击`clean`和`install`，查看控制台输出：
-    
-        * 若两次点击最后都输出`Process finished with exit code 0`，说明两个maven命令都执行成功；
-        
-        * 若两次点击中有一个的点击不是输出`Process finished with exit code 0`，则对应maven命令执行失败，需查看控制台报错信息进行排查。
-        
-        * maven命令执行成功之后，在源码Project面板的`sia-task-build-component`工程中会出现名为target的目录，如下图所示：
-        
-        ![](docs/images/install-project-target.jpg)
-        
-    * 上图中的.zip包即为项目安装包。打开安装包所在文件夹，将安装包解压，得到task目录，其中包括四个子目录：
-    
-        * bin：存放`sia-task-config`和`sia-task-scheduler`两个工程的jar包及各类shell脚本，如下图所示：
-        
-        ![](docs/images/install-build-task.jpg)
-        
-        * config：存放`sia-task-config`和`sia-task-scheduler`两个工程的配置文件，如下图所示：
-        
-        ![](docs/images/install-build-config.jpg)
-        
-        * logs：存放日志
-        
-        * thirdparty：
-    
-2、配置文件修改
-
-得到项目安装包之后，需要根据自身环境修改安装包task/config下的配置文件。
-
-##### (1) sia-task-config
-
-sia-task-config工程open环境下的配置文件为task_config_open.yml，修改方式参见 Windows平台sia-task-config工程配置文件修改。
-
-##### (2) sia-task-scheduler
-
-sia-task-scheduler工程test环境下的配置文件为task_scheduler_open.yml，修改方式见 Windows平台sia-task-scheduler工程配置文件修改。
-
 3、启动脚本运行
 
 项目需要启动的后端进程有两个：`sia-task-config`和`sia-task-scheduler`，且两个工程可以单独进行部署，下面分单点部署和集群部署分别介绍。
@@ -781,8 +559,7 @@ sia-task-scheduler工程test环境下的配置文件为task_scheduler_open.yml�
     ```
     (function () {
       window.API = {
-        'CESHI_API_HOST': 'localhost:10615',//修改为部署sia-task-config工程的节点的IP地址和工程启动端口号，这是sia-task微服务任务调度平台的访问入口
-        'CESHI_API_HOST_LOG': 'localhost:5601'
+        'CESHI_API_HOST': 'localhost:10615'//修改为部署sia-task-config工程的节点的IP地址和工程启动端口号，这是sia-task微服务任务调度平台的访问入口
       }
       Object.freeze(window.API)
       Object.defineProperty(window, 'API', {

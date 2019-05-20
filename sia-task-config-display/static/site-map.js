@@ -1,7 +1,6 @@
 (function () {
   window.API = {
-    'CESHI_API_HOST': '10.143.131.134:10615',
-    'CESHI_API_HOST_LOG': '10.143.131.86:5601'
+    'CESHI_API_HOST': '*.*.*.*:10615'
   }
   Object.freeze(window.API)
   Object.defineProperty(window, 'API', {
