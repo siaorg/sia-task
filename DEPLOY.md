@@ -1,7 +1,7 @@
 微服务任务调度平台部署指南
 =======
 
-## MySQL部署 
+## 1.MySQL部署 
 
 ### MySQL安装
 
@@ -163,7 +163,7 @@ create table if not exists task_mapping_job
 
 ```
 
-## Zookeeper部署 
+## 2.Zookeeper部署 
 
 ###  搭建zookeeper环境（准备工作）
 生产建议至少使用三个节点作为zk集群
@@ -285,7 +285,7 @@ bin/zkCli.sh
 查看ZK服务状态:       sh bin/zkServer.sh status
 ```
 
-## 前端部署启动 
+## 3.前端部署启动 
 
 ### 前言
 
@@ -316,7 +316,7 @@ npm run build
 2、CESHI_API_HOST_LOG -> kabana 日志连接地址
 
 
-## 编排中心和调度中心部署 
+## 4.编排中心和调度中心部署 
 
 ### 环境要求
 
@@ -326,9 +326,9 @@ npm run build
 
 JDK：JDK1.8+
 
-Mysql：详见MySQL部署
+Mysql：详见[MySQL部署](#1.MySQL部署)
 
-zookeeper: 可单点、集群安装，详见Zookeeper部署（这里给出Linux下集群安装方法）
+zookeeper: 可单点、集群安装，详见[Zookeeper部署](#2.Zookeeper部署)（这里给出Linux下集群安装方法）
 
 ### 一、源码启动项目
 
@@ -599,7 +599,7 @@ spring.kafka.producer.value-serializer: org.apache.kafka.common.serialization.St
 
 启动前端项目有两种方式：
 
-* 单独部署启动，详见[前端部署启动文档](install-front-end.md)；
+* 单独部署启动，详见[前端部署启动](#3.前端部署启动)；
 
 * 置于`sia-task-config`工程中启动。
 
@@ -772,7 +772,7 @@ sia-task-scheduler工程test环境下的配置文件为task_scheduler_open.yml�
 
 启动前端项目有两种方式：
 
-* 单独部署启动，详见 前端部署启动；
+* 单独部署启动，详见[前端部署启动](#3.前端部署启动)；
 
 * 置于`sia-task-config`工程中启动。
 
