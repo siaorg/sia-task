@@ -326,9 +326,9 @@ npm run build
 
 JDK：JDK1.8+
 
-Mysql：详见[MySQL部署](#1.MySQL部署)
+Mysql：详见[MySQL部署](#1mysql部署)
 
-zookeeper: 可单点、集群安装，详见[Zookeeper部署](#2.Zookeeper部署)（这里给出Linux下集群安装方法）
+zookeeper: 可单点、集群安装，详见[Zookeeper部署](#2zookeeper部署)（这里给出Linux下集群安装方法）
 
 ### 一、源码启动项目
 
@@ -599,7 +599,7 @@ spring.kafka.producer.value-serializer: org.apache.kafka.common.serialization.St
 
 启动前端项目有两种方式：
 
-* 单独部署启动，详见[前端部署启动](#3.前端部署启动)；
+* 单独部署启动，详见[前端部署启动](#3前端部署启动)；
 
 * 置于`sia-task-config`工程中启动。
 
@@ -772,7 +772,7 @@ sia-task-scheduler工程test环境下的配置文件为task_scheduler_open.yml�
 
 启动前端项目有两种方式：
 
-* 单独部署启动，详见[前端部署启动](#3.前端部署启动)；
+* 单独部署启动，详见[前端部署启动](#3前端部署启动)；
 
 * 置于`sia-task-config`工程中启动。
 
