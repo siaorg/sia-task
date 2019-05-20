@@ -13,7 +13,7 @@ spring:
     datasource:
         name: test
         url: jdbc:mysql://127.0.0.1:3306/skyworld_task?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
-        username: root
+        username: ****
         password: ****
         # 使用druid数据源
         type: com.alibaba.druid.pool.DruidDataSource
