@@ -1,7 +1,7 @@
 微服务任务调度平台部署指南
 =======
 
-## MySQL部署 (init-mysql-source.md)
+## MySQL部署 
 
 ### MySQL安装
 
@@ -326,9 +326,9 @@ npm run build
 
 JDK：JDK1.8+
 
-Mysql：安装并[初始化数据库](init-mysql-source.md)，将初始化数据导入Mysql即可
+Mysql：详见MySQL部署
 
-zookeeper: 可单点、集群安装，这里给出[Linux下集群安装方法](install-zookeeper-source.md)
+zookeeper: 可单点、集群安装，详见Zookeeper部署（这里给出Linux下集群安装方法）
 
 ### 一、源码启动项目
 
@@ -338,9 +338,9 @@ zookeeper: 可单点、集群安装，这里给出[Linux下集群安装方法](i
 
 SIA-TASK微服务任务调度平台可以在Windows、Mac、Linux系统下进行开发，由于我们一般使用IDE进行开发工作，三个系统下的开发流程类似，这里仅以 Windows平台 进行详细介绍项目导入及启动过程。
 
-##### SIA-TASK微服务任务调度平台源码启动-Windows
+SIA-TASK微服务任务调度平台源码启动-Windows:
 
-###### 1、[源码下载](https://github.com/siaorg/sia-task.git)
+1、[源码下载](https://github.com/siaorg/sia-task.git)
 
 有两种方式将源码导入IDE环境：
 
@@ -348,16 +348,15 @@ SIA-TASK微服务任务调度平台可以在Windows、Mac、Linux系统下进行
 
 * 使用IDE通过源码地址从版本控制仓库进行导入。
 
-###### 2、配置文件说明
+2、配置文件说明
 
 SIA-TASK微服务任务调度平台需要启动的后端进程有两个：`sia-task-config`和`sia-task-scheduler`。下面以open环境配置文件为例，详细介绍这两个进程的配置文件的配置。
 
-####### (1) sia-task-config
+(1) sia-task-config
 
 sia-task-config工程dev环境下的配置文件为application-open.yml，修改方式如下：
 
-
-######## sia-task-config工程配置文件修改
+sia-task-config工程配置文件修改
 
 ```
 spring.application.name: sia-task-config
@@ -421,11 +420,11 @@ logging.file: ./logs/${spring.application.name}.log
 * Mysql：配置自身环境Mysql的url、username和password
 
 
-####### (2) sia-task-scheduler
+(2) sia-task-scheduler
 
 sia-task-scheduler工程dev环境下的配置文件为application-open.yml，修改方式如下：
 
-######## sia-task-scheduler工程配置文件修改
+sia-task-scheduler工程配置文件修改
 
 ```
 spring.application.name: sia-task-scheduler
@@ -562,7 +561,7 @@ spring.kafka.producer.value-serializer: org.apache.kafka.common.serialization.St
         其中，请求方法为POST，subject、mailto、content、primary和elapse将以json格式发送到邮件服务接口，在提供的邮件服务接口中，需接受并处理这些字段。
 
 
-###### 3、启动项目
+3、启动项目
 
 启动项目之前，检查确认`sia-task-scheduler`和`sia-task-config`两个工程的配置是否正确，检查的内容如下图红框中所示：
 
@@ -596,7 +595,7 @@ spring.kafka.producer.value-serializer: org.apache.kafka.common.serialization.St
     
     ![](docs/images/install-start-config-3.png)
 
-###### 4、启动前端项目
+4、启动前端项目
 
 启动前端项目有两种方式：
 
@@ -626,7 +625,7 @@ spring.kafka.producer.value-serializer: org.apache.kafka.common.serialization.St
 
 这两种前端启动方式均需提前将前端包中`site-map.js`文件的`CESHI_API_HOST`配置进行修改。
 
-###### 5、访问项目
+5、访问项目
 
 访问sia-task微服务任务调度平台的访问入口(登录页面地址：http://localhost:10615 )。登录页面如下图所示：
 
@@ -647,12 +646,11 @@ spring.kafka.producer.value-serializer: org.apache.kafka.common.serialization.St
 
 SIA-TASK微服务任务调度平台在机器节点上的部署启动非常简单方便。这里提供 Linux平台 下的项目部署方式。
 
-
-##### SIA-TASK微服务任务调度平台Linux下JAR包部署启动
+SIA-TASK微服务任务调度平台Linux下JAR包部署启动:
 
 下面介绍SIA-TASK微服务任务调度平台在Linux下以JAR包方式进行部署启动的步骤，这里以部署open环境为例。
 
-###### 1、安装包获取
+1、安装包获取
 
 有两种方式可以获取项目安装包：
 
@@ -702,7 +700,7 @@ SIA-TASK微服务任务调度平台在机器节点上的部署启动非常简单
         
         * thirdparty：
     
-###### 2、配置文件修改
+2、配置文件修改
 
 得到项目安装包之后，需要根据自身环境修改安装包task/config下的配置文件。
 
@@ -714,7 +712,7 @@ sia-task-config工程open环境下的配置文件为task_config_open.yml，修�
 
 sia-task-scheduler工程test环境下的配置文件为task_scheduler_open.yml，修改方式见 Windows平台sia-task-scheduler工程配置文件修改。
 
-###### 3、启动脚本运行
+3、启动脚本运行
 
 项目需要启动的后端进程有两个：`sia-task-config`和`sia-task-scheduler`，且两个工程可以单独进行部署，下面分单点部署和集群部署分别介绍。
 
@@ -770,13 +768,11 @@ sia-task-scheduler工程test环境下的配置文件为task_scheduler_open.yml�
 
 * 同理，对201、202、203三个节点，只部署`sia-task-scheduler`进程，即在安装包的task/bin目录下，运行`sia-task-scheduler`工程的启动脚本，执行命令可见单点部署方式；
 
-###### 4、启动前端项目
+4、启动前端项目
 
 启动前端项目有两种方式：
 
-* 单独部署启动，详见[前端部署启动文档](install-front-end.md)；
-
-
+* 单独部署启动，详见 前端部署启动；
 
 * 置于`sia-task-config`工程中启动。
 
@@ -802,7 +798,7 @@ sia-task-scheduler工程test环境下的配置文件为task_scheduler_open.yml�
 
 这两种前端启动方式均需提前将前端包中`site-map.js`文件的`CESHI_API_HOST`配置进行修改。
 
-###### 5、访问项目
+5、访问项目
 
 访问sia-task微服务任务调度平台的访问入口(登录页面地址：http://localhost:10615)。登录页面如下图所示：
 
