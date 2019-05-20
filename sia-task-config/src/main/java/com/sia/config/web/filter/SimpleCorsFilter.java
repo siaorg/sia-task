@@ -47,8 +47,8 @@ public class SimpleCorsFilter implements Filter {
     private final static Logger LOGGER = LoggerFactory.getLogger(SimpleCorsFilter.class);
     private static final String METHOD_OPTIONS = "OPTIONS";
 
-    @Value("${gantryUrl}")
-    private String gantryUrl;
+//    @Value("${gantryUrl}")
+//    private String gantryUrl;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -73,11 +73,11 @@ public class SimpleCorsFilter implements Filter {
             filterChain.doFilter(httpServletRequest, httpServletResponse);
         }
         else{
-            if (!checkLogin(httpServletRequest)){
-                ((HttpServletResponse) servletResponse).sendRedirect(gantryUrl);
-            }else {
+//            if (!checkLogin(httpServletRequest)){
+//                ((HttpServletResponse) servletResponse).sendRedirect(gantryUrl);
+//            }else {
                 filterChain.doFilter(httpServletRequest, httpServletResponse);
-            }
+//            }
         }
     }
 
