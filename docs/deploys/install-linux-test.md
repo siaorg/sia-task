@@ -20,13 +20,13 @@
 
 * pom.xml修改：注释掉`sia-task-config`和`sia-task-scheduler`项目pom.xml中关于配置文件打包的配置，见下图：
 
-    ![](images/install-pom.png)
+    ![](../images/install-pom.png)
 
 * 使用maven工具打包：
 
     * 在IDE(以IntelliJ IDEA为例)中打开Maven Projects面板，如下图所示：
 
-    ![](images/install-maven.png)
+    ![](../images/install-maven.png)
     
     * 在Maven Projects面板的Profiles下选中jdk18；
     
@@ -38,17 +38,17 @@
         
         * maven命令执行成功之后，在源码Project面板的`sia-task-build-component`工程中会出现名为target的目录，如下图所示：
         
-        ![](images/install-project-target.jpg)
+        ![](../images/install-project-target.jpg)
         
     * 上图中的.zip包即为项目安装包。打开安装包所在文件夹，将安装包解压，得到task目录，其中包括四个子目录：
     
         * bin：存放`sia-task-config`和`sia-task-scheduler`两个工程的jar包及各类shell脚本，如下图所示：
         
-        ![](images/install-build-task.jpg)
+        ![](../images/install-build-task.jpg)
         
         * config：存放`sia-task-config`和`sia-task-scheduler`两个工程的配置文件，如下图所示：
         
-        ![](images/install-build-config.jpg)
+        ![](../images/install-build-config.jpg)
         
         * logs：存放日志
         
@@ -86,7 +86,7 @@ sia-task-scheduler工程test环境下的配置文件为task_scheduler_open.yml�
     
     执行之后，会在当前目录下生成task_config_test.start日志文件，查看日志文件，若日志中输出`>>>>>>>>>>TaskConfig Application start ok!`，则工程启动成功，如下图红色线段所示：
     
-    ![](images/install-start-config-3.png)
+    ![](../images/install-start-config-3.png)
 
 * 启动`sia-task-scheduler`工程，运行：
 
@@ -96,7 +96,7 @@ sia-task-scheduler工程test环境下的配置文件为task_scheduler_open.yml�
     
     执行之后，会在当前目录下生成task_scheduler_test.start日志文件，查看日志文件，若日志中输出`>>>>>>>>>>SchedulerApplication start OK!`，则工程启动成功，如下图红色线段所示：
     
-    ![](images/install-start-scheduler-3.png)
+    ![](../images/install-start-scheduler-3.png)
 
 若停止这两个工程，则执行如下命令：
 
@@ -156,10 +156,10 @@ sia-task-scheduler工程test环境下的配置文件为task_scheduler_open.yml�
 
 访问sia-task微服务任务调度平台的访问入口(登录页面地址：http://localhost:10615)。登录页面如下图所示：
 
-![](images/install-gantry-login.jpg)
+![](../images/install-gantry-login.jpg)
 
 输入用户名/密码即可登录（此处没做用户名/密码登录限制，任意字符串的用户名/密码都能登录。登录时选择"是否是管理员"选项后，则会以管理员身份登录）。微服务任务调度菜单项如下图所示：
 
-![](images/install-gantry.jpg)
+![](../images/install-gantry.jpg)
 
 在该页面中，即可对SIA-TASK微服务任务调度的功能进行操作。

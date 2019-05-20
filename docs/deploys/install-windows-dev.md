@@ -26,7 +26,7 @@ sia-task-scheduler工程dev环境下的配置文件为application-open.yml，修
 
 启动项目之前，检查确认`sia-task-scheduler`和`sia-task-config`两个工程的配置是否正确，检查的内容如下图红框中所示：
 
-![](images/install-pom.png)
+![](../images/install-pom.png)
 
 确保在`sia-task-scheduler`和`sia-task-config`两个工程pom文件中的红框内容不被注释掉。
 
@@ -36,25 +36,25 @@ sia-task-scheduler工程dev环境下的配置文件为application-open.yml，修
 
     (1) 在源码中找到SchedulerApplication启动类，如下图所示：
 
-    ![](images/install-start-scheduler.png)
+    ![](../images/install-start-scheduler.png)
 
     (2) 选中SchedulerApplication启动类，右键点击，在弹出框中选择`Run 'SchedulerApplication'` 或 `Debug 'SchedulerApplication'`(以调试模式启动)
     
     (3) 启动后若输出内容`>>>>>>>>>>SchedulerApplication start OK!`，则表示启动成功,如下图所示。
     
-    ![](images/install-start-scheduler-3.png)
+    ![](../images/install-start-scheduler-3.png)
 
 * 启动`sia-task-config`工程
 
     (1) 在源码中找到TaskConfigApplication启动类，如下图所示：
     
-    ![](images/install-start-config.png)
+    ![](../images/install-start-config.png)
     
     (2) 选中TaskConfigApplication启动类，右键点击，在弹出框中选择`Run 'TaskConfigApplication'` 或 `Debug 'TaskConfigApplication'`(以调试模式启动)
     
     (3) 启动后若输出内容`>>>>>>>>>>TaskConfig Application start ok!`，则表示启动成功,如下图所示。
     
-    ![](images/install-start-config-3.png)
+    ![](../images/install-start-config-3.png)
 
 #### 5、启动前端项目
 
@@ -88,12 +88,12 @@ sia-task-scheduler工程dev环境下的配置文件为application-open.yml，修
 
 #### 6、访问项目
 
-访问sia-task微服务任务调度平台的访问入口(登录页面地址：http://localhost:10615)。登录页面如下图所示：
+访问sia-task微服务任务调度平台的访问入口(登录页面地址：http://localhost:10615 )。登录页面如下图所示：
 
-![](images/install-gantry-login.jpg)
+![](../images/install-gantry-login.jpg)
 
 输入用户名/密码即可登录（此处没做用户名/密码登录限制，任意字符串的用户名/密码都能登录。登录时选择"是否是管理员"选项后，则会以管理员身份登录）。微服务任务调度菜单项如下图所示：
 
-![](images/install-gantry.jpg)
+![](../images/install-gantry.jpg)
 
 在该页面中，即可对SIA-TASK微服务任务调度的功能进行操作。

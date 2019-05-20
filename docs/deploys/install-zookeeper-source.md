@@ -67,9 +67,9 @@ dataLogDir=/app/zookeeper/zookeeperdata/log
 # the port at which the clients will connect
 clientPort=2181
      
-server.1=10.10.10.100:2888:3888
-server.2=10.10.10.101:2888:3888
-server.3=10.10.10.102:2888:3888
+server.1=*.*.*.100:2888:3888
+server.2=*.*.*.101:2888:3888
+server.3=*.*.*.102:2888:3888
 
 ```
 说明
