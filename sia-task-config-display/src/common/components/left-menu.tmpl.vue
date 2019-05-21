@@ -33,10 +33,6 @@
             <i></i>
             <span slot="title">调度日志</span>
           </el-menu-item>
-          <el-menu-item index="log-list-kibana">
-            <i></i>
-            <span slot="title">调度日志</span>
-          </el-menu-item>
       </el-menu>
     </div>
 </template>
@@ -92,9 +88,6 @@ export default {
             break
           case 'task-log-list':
             this.$router.push({path: '/task-log-list'})
-            break
-          case 'log-list-kibana':
-            this.$router.push({path: '/log-list-kibana'})
             break
         }
       })
