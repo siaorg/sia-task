@@ -510,7 +510,7 @@ spring.kafka.producer.value-serializer: org.apache.kafka.common.serialization.St
     
     执行之后，会在当前目录下生成task_config_test.start日志文件，查看日志文件，若日志中输出`>>>>>>>>>>TaskConfig Application start ok!`，则工程启动成功，如下图红色线段所示：
     
-    ![](docs/images/install-start-config-3.png)
+    ![](docs/images/install-start-config-3.jpg)
 
 * 启动`sia-task-scheduler`工程，运行：
 
