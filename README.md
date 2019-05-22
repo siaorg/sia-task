@@ -1,4 +1,4 @@
-微服务任务调度平台
+微服务任务调度平台                                            [使用指南](USERSGUIDE.md)      [部署指南](DEPLOY.md)
 ===
 
 背景
@@ -133,12 +133,17 @@ Job管理：提供作业相关操作
 
 ## 关于我们
 
-* 邮件交流：
+* 邮件交流：sia
 
 * 提交issue:
 
 * 微信交流：
-
+    * 开源交流群 
+    ![开源交流群](docs/images/openWeCht.jpeg)
+    * 开源小蜜
+    ![开源小蜜](docs/images/openWeCht.jpeg)
+    
+    
 （待补充）
 * * *
 返回[目录](readme) 
