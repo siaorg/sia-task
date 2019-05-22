@@ -139,7 +139,9 @@ Job管理：提供作业相关操作
 
 * 微信交流：
 
-    ![微信账号-10%](docs/images/siaopenWechatIMG3.jpeg)
+    ![微信账号](docs/images/siaopenWechatIMG3.jpeg)
+    
+    ![微信账号](docs/images/siaopenWechatIMG3.jpeg){: width="100px" height="100px"}
     
     
 （待补充）
