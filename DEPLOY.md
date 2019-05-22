@@ -223,14 +223,30 @@ server {
 	IDE：推荐使用IntelliJ IDEA 或 Eclipse </br>
 	JDK：JDK1.8+
 
-2. 从SIA-TASK工程下获取源代码打包，执行sia-task-build-component目录即可。
+2. 从SIA-TASK工程下获取源代码打包，执行sia-task-build-component目录的mvn命令即可。
+    * 在~/sia-task/sia-task-build-component目录下，执行如下命令打包：mvn clean install 。
+    * 打包成功后，会在~/sia-task/sia-task-build-component 目录下出现target文件，target文件中的.zip文件即为项目安装包。
+    * 打开安装包所在文件夹，将安装包解压，得到task目录，其中包括四个子目录：
+          
+        * bin：存放`sia-task-config`和`sia-task-scheduler`两个工程的jar包及各类shell脚本，如下图所示：
+              
+        ![](docs/images/install-build-task.jpg)
+              
+        * config：存放`sia-task-config`和`sia-task-scheduler`两个工程的配置文件，如下图所示：
+              
+        ![](docs/images/install-build-config.jpg)
+              
+        * logs：存放日志
+              
+        * thirdparty：
+
 
 3. 配置文件修改
 
 	修改sia-task-config工程task_config_open.yml，sia-task-scheduler工程task_scheduler_open.yml的zookeeper和Mysql的链接。
 
 4. 启动`sia-task-config`工程
-> sh start_task_config_test.sh   
+> sh start_task_config_open.sh   
 
 5. 启动`sia-task-scheduler`工程
 > sh start_task_scheduler_open.sh

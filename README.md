@@ -1,4 +1,4 @@
-微服务任务调度平台
+微服务任务调度平台                                            [使用指南](USERSGUIDE.md)      [部署指南](DEPLOY.md)
 ===
 
 背景
@@ -133,12 +133,14 @@ Job管理：提供作业相关操作
 
 ## 关于我们
 
-* 邮件交流：
+* 邮件交流：sia.list@creditease.cn
 
 * 提交issue:
 
 * 微信交流：
 
+    <img src="https://github.com/lijun006788/sia-task/blob/master/docs/images/siaopenWechatIMG3.jpeg" width="30%" height="30%">
+    
 （待补充）
 * * *
 返回[目录](readme) 
