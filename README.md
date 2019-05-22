@@ -133,12 +133,13 @@ Job管理：提供作业相关操作
 
 ## 关于我们
 
-* 邮件交流：sia
+* 邮件交流：sia.list@creditease.cn
 
 * 提交issue:
 
 * 微信交流：
-    ![微信账号](docs/images/siaopen.jpg)
+
+    ![微信账号](docs/images/siaopenWechatIMG3.jpeg@10p)
     
     
 （待补充）
