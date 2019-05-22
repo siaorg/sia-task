@@ -138,10 +138,7 @@ Job管理：提供作业相关操作
 * 提交issue:
 
 * 微信交流：
-    * 开源交流群 
-    ![开源交流群](docs/images/openWeCht.jpeg)
-    * 开源小蜜
-    ![开源小蜜](docs/images/openWeCht.jpeg)
+    ![微信账号](docs/images/siaopen.jpg)
     
     
 （待补充）
