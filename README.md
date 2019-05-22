@@ -139,7 +139,7 @@ Job管理：提供作业相关操作
 
 * 微信交流：
 
-    ![微信账号](docs/images/siaopenWechatIMG3.jpeg@10p)
+    ![微信账号10%](docs/images/siaopenWechatIMG3.jpeg)
     
     
 （待补充）
