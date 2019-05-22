@@ -139,11 +139,7 @@ Job管理：提供作业相关操作
 
 * 微信交流：
 
-    ![微信账号](docs/images/siaopenWechatIMG3.jpeg)
-    
-    ![微信账号](docs/images/siaopenWechatIMG3.jpeg){: width="100px" height="100px"}
-    
-    <img src="https://github.com/lijun006788/sia-task/blob/master/docs/images/siaopenWechatIMG3.jpeg" width="20%" height="20%">
+    <img src="https://github.com/lijun006788/sia-task/blob/master/docs/images/siaopenWechatIMG3.jpeg" width="30%" height="30%">
     
 （待补充）
 * * *
