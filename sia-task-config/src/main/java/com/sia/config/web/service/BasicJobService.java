@@ -111,11 +111,6 @@ public class BasicJobService {
      * @return
      */
     public int insertSelective(BasicJob basicJob) {
-        String jobAlarmEmail = basicJob.getJobAlarmEmail();
-        String emails = Arrays.stream(jobAlarmEmail.split(","))
-                .map(email->email.trim().toLowerCase().endsWith("@********.cn") ? email.trim() : (email+"@********.cn").trim()).collect(Collectors.joining(","));
-
-        basicJob.setJobAlarmEmail(emails);
         return basicJobMapper.insertSelective(basicJob);
     }
 
@@ -156,12 +151,6 @@ public class BasicJobService {
             LOGGER.warn(Constants.LOG_PREFIX + " update Job fail, basicJob invalid, basicJob={}", basicJob);
             return 0;
         }
-
-        String jobAlarmEmail = basicJob.getJobAlarmEmail();
-        String emails = Arrays.stream(jobAlarmEmail.split(","))
-                .map(email->email.trim().toLowerCase().endsWith("@********.cn") ? email.trim() : (email+"@********.cn").trim()).collect(Collectors.joining(","));
-
-        basicJob.setJobAlarmEmail(emails);
         return basicJobMapper.updateByPrimaryKey(basicJob);
     }
 
