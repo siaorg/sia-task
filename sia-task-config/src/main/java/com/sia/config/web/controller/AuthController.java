@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -70,13 +71,17 @@ public class AuthController{
      */
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(String userName, String roleName, String isAdmin) {
+        LOGGER.info(Constants.LOG_PREFIX + "Page permission loading userName:{},roleName:{},isAdmin:{}",userName, roleName,isAdmin);
         HttpSession session = httpServletRequest.getSession();
         session.setAttribute("currentUser",userName);
-        session.setAttribute("roleNames", Arrays.asList(roleName.split(",")));
-        if ("admin".equals(isAdmin)){
-            session.setAttribute("roleNames","admin");
+
+        List<String> list = new ArrayList<>();
+        list.addAll(Arrays.asList(roleName.split(",")));
+        if ("true".equals(isAdmin)){
+            list.add("admin");
         }
 
+        session.setAttribute("roleNames", list);
 
         List<String> roleNames = userService.getCurrentUserAllRoles();
         LOGGER.info(Constants.LOG_PREFIX + "Page permission loading   roles {}", roleNames);
