@@ -178,10 +178,10 @@ zookeeper的安装和配置详见官方文档，至少部署三个节点。
 2. Nginx准备
 
 ### 前端项目打包
-1. 进入本地的项目执行命令进行打包 => npm run build 
+进入本地的项目,在~/sia-task/sia-task-config-display目录下执行如下命令进行前端代码打包：npm run build 
 
->  注：1、打包完成在改文件夹下面生成dist文件夹，改文件夹为前端工程 </br>
-> 2、dist/static文件夹下面的site.map.js为后端服务配置（ip：port形式），根据项目需求自行更改
+> 1、打包完成在当前目录下面生成dist文件夹，改文件夹为前端工程：在~/sia-task/sia-task-config/src/main/resources目录下新建static文件夹，将dist文件夹中的内容复制到static文件夹中 </br>
+> 2、修改前端配置的编排中心应用服务地址：static/static文件夹下面的site.map.js为后端服务配置（ip:port形式），根据项目需求自行更改（CESHI_API_HOST参数配置的地址即为编排中心服务地址）</br>
 
 ### 前端项目部署
 1. nginx的代理配置，进入nginx的目录下nginx.conf，添加如下代理：
@@ -208,7 +208,7 @@ server {
     listen       80;
     server_name  localhost;
     location / {
-        proxy_pass http://*.*.*.*:8081; // 后端服务地址
+        proxy_pass http://*.*.*.*:10615; // 后端编排中心服务地址
         add_header 'Access-Control-Allow-Origin' 'http://*.*.*.*:8080';
         add_header 'Access-Control-Allow-Credentials' 'true';
     }
@@ -243,7 +243,7 @@ server {
 
 3. 配置文件修改
 
-	修改sia-task-config工程task_config_open.yml，sia-task-scheduler工程task_scheduler_open.yml的zookeeper和Mysql的链接。
+	将config文件夹下的sia-task-config工程的配置文件task_config_open.yml，以及sia-task-scheduler工程下的配置文件task_scheduler_open.yml中的zookeeper和Mysql的链接修改为自己的地址。
 
 4. 启动`sia-task-config`工程
 > sh start_task_config_open.sh   
@@ -253,11 +253,16 @@ server {
 
 6. 访问项目
 
-访问sia-task微服务任务调度平台的访问入口(登录页面地址：http://localhost:10615)。登录页面如下图所示：
+访问sia-task微服务任务调度平台的访问入口(登录页面地址（即为前端配置的编排中心服务地址），如：http://localhost:10615 )。登录页面如下图所示：
 
 ![](docs/images/install-gantry-login.jpg)
 
-输入用户名/密码即可登录（此处没做用户名/密码登录限制，任意字符串的用户名/密码都能登录。登录时选择"是否是管理员"选项后，则会以管理员身份登录）。微服务任务调度菜单项如下图所示：
+* 输入用户名/密码即可登录（开源项目登录页面没做用户名/密码登录限制，任意字符串的用户名/密码都能登录。登录时选择"是否是管理员"选项后，则会以管理员身份登录）。
+* 任务调度是按角色进行权限控制的，接入任务调度的应用必须以角色名称为应用名称前缀（如：角色名为"abc"，则，该角色下的应用名必须以"abc"为前缀，应用名举例："abc-datadraw"），要求任务名称以角色名称为前缀。
+* 用户登录任务调度系统，只能看到有权限的角色的任务。
+* 管理员能看到所有的角色的任务
+
+微服务任务调度菜单项如下图所示：
 
 ![](docs/images/install-gantry.jpg)
 
