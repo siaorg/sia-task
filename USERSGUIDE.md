@@ -34,7 +34,7 @@
 * 调度器调度趋势图
 * 任务调度状态统计
   
-![](images/user-handbook_firstPage2.png)
+![](docs/images/user-handbook_firstPage2.png)
   
 #### 1.2.1 调度器调度趋势图
   
