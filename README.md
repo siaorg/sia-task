@@ -1,5 +1,8 @@
-微服务任务调度平台                       [使用指南](USERSGUIDE.md)   [开发指南](DEVELOPGUIDE.md)    [部署指南](DEPLOY.md)
+微服务任务调度平台
 ===
+[使用指南](USERSGUIDE.md) </br>
+[开发指南](DEVELOPGUIDE.md) </br>
+[部署指南](DEPLOY.md)</br>
 
 背景
 ---
