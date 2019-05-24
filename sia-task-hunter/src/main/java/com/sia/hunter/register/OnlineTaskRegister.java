@@ -228,7 +228,7 @@ public class OnlineTaskRegister implements ApplicationListener<ApplicationEvent>
         String groupPath = getZkOnlineTaskPath() + OnlineTaskConstant.ZK_SEPARATOR
                 + onlineTaskAppProperty.getGroupName();
         if (!client.isExists(groupPath)) {
-            client.createPersistentZKNode(OnlineTaskConstant.ZK_DEFAULT_VALUE);
+            client.createPersistentZKNode(groupPath);
         }
 
         /**
