@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,10 +35,11 @@ import java.util.List;
 
 /**
  * Scheduler operation
- *  @see
+ *
  * @author maozhengwei
- * @date 2019-04-28 15:40
  * @version V1.0.0
+ * @date 2019-04-28 15:40
+ * @see
  **/
 @RestController
 @RequestMapping("/scheduler")
@@ -56,9 +57,10 @@ public class SchedulerController {
      * Front-end call interface
      * Work scheduler list
      * Gets the list of all online schedulers to remove the scheduler from the blacklist
+     *
      * @return
      */
-    @RequestMapping(value = "/workinglist",method = RequestMethod.GET)
+    @RequestMapping(value = "/workinglist", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String getSchedulersOfWorking() {
         List<String> blackList = curator4Scheduler.getBlackList();
@@ -75,7 +77,7 @@ public class SchedulerController {
      *
      * @return
      */
-    @RequestMapping(value = "/blacklist",method = RequestMethod.GET)
+    @RequestMapping(value = "/blacklist", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String getSchedulerInfoOfBlacklist() {
         List<String> blackList = curator4Scheduler.getBlackList();
@@ -89,9 +91,10 @@ public class SchedulerController {
      * Front-end call interface
      * offline scheduler List
      * offlineList = blacklist - whitelist
+     *
      * @return
      */
-    @RequestMapping(value = "/offline",method = RequestMethod.GET)
+    @RequestMapping(value = "/offline", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String getSchedulersOffLine() {
         List<String> blackList = curator4Scheduler.getBlackList();
@@ -104,10 +107,11 @@ public class SchedulerController {
     /**
      * Front-end call interface
      * Remove the blacklist scheduler
+     *
      * @param schedulerInstance
      * @return
      */
-    @RequestMapping(value = "/openScheduler", method = RequestMethod.POST)
+    @RequestMapping(value = "/openScheduler", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String upLineScheduler(@RequestBody String schedulerInstance) {
         if (StringHelper.isEmpty(schedulerInstance)) {
@@ -134,10 +138,11 @@ public class SchedulerController {
     /**
      * Front-end call interface
      * Add the blacklist scheduler
+     *
      * @param schedulerInstance
      * @return
      */
-    @RequestMapping(value = "/closeScheduler", method = RequestMethod.POST)
+    @RequestMapping(value = "/closeScheduler", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String downLineScheduler(@RequestBody String schedulerInstance) {
         if (StringHelper.isEmpty(schedulerInstance)) {
@@ -164,7 +169,7 @@ public class SchedulerController {
     /**
      * Get the IP whitelist
      */
-    @RequestMapping(value = "/getAuthList",method = RequestMethod.GET)
+    @RequestMapping(value = "/getAuthList", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String getAuthList() {
         List<String> authList = curator4Scheduler.getAuthList();
@@ -174,11 +179,11 @@ public class SchedulerController {
     /**
      * Add IP whitelist
      */
-    @RequestMapping(value = "/addAuthList", method = RequestMethod.POST)
+    @RequestMapping(value = "/addAuthList", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String addAuthList(@RequestBody String ip) {
 
-        if (!StringHelper.isGrammatical(ip, Constants.IP_REGEX) && !"localhost".equals(ip.toLowerCase())){
+        if (!StringHelper.isGrammatical(ip, Constants.IP_REGEX) && !"localhost".equals(ip.toLowerCase())) {
             return ResultBody.failed("IP地址格式不正确");
         }
 
@@ -195,15 +200,15 @@ public class SchedulerController {
         }
 
         return flag ? ResultBody.success() : ResultBody.failed();
-}
+    }
 
     /**
      * Remove IP whitelist
      */
-    @RequestMapping(value = "/removeAuthList", method = RequestMethod.POST)
+    @RequestMapping(value = "/removeAuthList", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String removeAuthList(@RequestBody String ipList) {
-        if(StringHelper.isEmpty(ipList)) {
+        if (StringHelper.isEmpty(ipList)) {
             LOGGER.info(Constants.LOG_PREFIX + " removeAuthList >>> fail : ipList is {}", ipList);
             return ResultBody.failed();
         }

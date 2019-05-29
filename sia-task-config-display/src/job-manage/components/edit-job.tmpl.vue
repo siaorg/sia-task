@@ -77,7 +77,7 @@
               </el-form-item>
             </div>
 
-            <el-form-item label="预警邮箱(前缀)" prop="emailWarning">
+            <el-form-item label="预警邮箱(前缀)">
               <el-input type="text" auto-complete="off" placeholder="请输入预警邮箱" v-model="taskAddViewModel.emailWarning"></el-input>
               <el-tooltip class="item" effect="dark" content="输入预警邮箱前缀，多个请用邮箱全程并以英文逗号隔开" placement="right">
                 <span class="el-icon-warning info-icon"></span>
@@ -109,11 +109,6 @@ export default {
   data () {
     var checkBlur = (rule, value, callback) => {
       switch (rule.field) {
-        case 'emailWarning':
-          // if (!new RegExp(/^(([a-zA-Z0-9_.-])+@((creditease)+.)+(cn)+(,){0,1}){0,}$/).test(value)) {
-          //   return callback(new Error('邮箱格式为xxx@creditease.cn'))
-          // }
-          break
         case 'jobDescribe':
           if (value.replace(/(^\s*)|(\s*$)/g, '') !== '' && !new RegExp(/^[^]{2,1000}$/).test(value)) {
             return callback(new Error('输入内容必须是2到1000个字符!'))
@@ -171,8 +166,7 @@ export default {
         starTime: [this.$validator.required('请选择启动时间'), { validator: checkBlur, trigger: 'blur' }],
         executeNumber: [this.$validator.required('请输入执行次数'), { validator: checkBlur, trigger: 'blur' }],
         executeSpace: [this.$validator.required('请输入执行间隔'), { validator: checkBlur, trigger: 'blur' }],
-        jobDescribe: [this.$validator.required('请输入描述内容'), { validator: checkBlur, trigger: 'blur' }],
-        emailWarning: [this.$validator.required('请输入预警邮箱'), { validator: checkBlur, trigger: 'blur' }]
+        jobDescribe: [this.$validator.required('请输入描述内容'), { validator: checkBlur, trigger: 'blur' }]
       }
     }
   },

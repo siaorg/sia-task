@@ -6,18 +6,15 @@ spring.application.cnname: 任务编排中心
 #management.security.enabled: false
 #endpoints.health.sensitive: false
 
-#TODO 跳转登录地址,
-gantryUrl: http://127.0.0.1:10615/
-
 #zooKeeperHosts: 127.0.0.1:12181
 zooKeeperHosts: 127.0.0.1:2181
 
 spring:
     datasource:
         name: test
-        url: jdbc:mysql://127.0.0.1:3306/skyworld_scheduler_dev?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
-        username: root
-        password: abc123ABC
+        url: jdbc:mysql://127.0.0.1:3306/skyworld_task?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
+        username: ****
+        password: ****
         # 使用druid数据源
         type: com.alibaba.druid.pool.DruidDataSource
         driver-class-name: com.mysql.jdbc.Driver
