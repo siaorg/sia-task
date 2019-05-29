@@ -56,7 +56,7 @@ public class WebJobController {
      * @param jobKey
      * @return
      */
-    @RequestMapping(value = "/runOnce/{jobGroupName}/{jobKey}",method = RequestMethod.GET)
+    @RequestMapping(value = "/runOnce/{jobGroupName}/{jobKey}",method = {RequestMethod.POST,RequestMethod.GET})
     @ResponseBody
     public String runOnce(@PathVariable String jobGroupName, @PathVariable String jobKey) {
         if (StringHelper.isEmpty(jobGroupName) || StringHelper.isEmpty(jobKey)) {
