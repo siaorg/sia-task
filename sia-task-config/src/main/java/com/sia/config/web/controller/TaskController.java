@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,10 +41,11 @@ import java.util.Map;
 
 /**
  * The orchestration center calls TASK's API class
- * @see
+ *
  * @author maozhengwei
- * @date 2019-04-28 15:40
  * @version V1.0.0
+ * @date 2019-04-28 15:40
+ * @see
  **/
 @RestController
 @RequestMapping("/taskapi")
@@ -67,9 +68,10 @@ public class TaskController {
 
     /**
      * Permissions are filtered based on the role's corresponding group name
+     *
      * @return
      */
-    @RequestMapping(value = "/selectAuth",method = RequestMethod.GET)
+    @RequestMapping(value = "/selectAuth", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String selectAuth() {
         List<String> groupList;
@@ -85,10 +87,11 @@ public class TaskController {
 
     /**
      * Get the corresponding App name according to the group and conduct permission filtering
+     *
      * @param groupName
      * @return
      */
-    @RequestMapping(value = "/selectappsbygroup",method = RequestMethod.GET)
+    @RequestMapping(value = "/selectappsbygroup", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String selectAppsByGroup(String groupName) {
         List<String> apps;
@@ -103,19 +106,20 @@ public class TaskController {
 
     /**
      * According to the group, the App gets the corresponding TaskKey name for permission filtering
+     *
      * @param groupName
      * @param appName
      * @return
      */
-    @RequestMapping(value = "/selecttaskkeys",method = RequestMethod.GET)
+    @RequestMapping(value = "/selecttaskkeys", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String selectTaskKeys(String groupName, String appName) {
-        if (StringHelper.isEmpty(groupName)){
+        if (StringHelper.isEmpty(groupName)) {
             return ResultBody.failed(ResultBody.ResultEnum.REQUEST_FAIL_PARAM.getCode(), ResultBody.ResultEnum.REQUEST_FAIL_PARAM.getMessage());
         }
         List<String> taskKeys;
         try {
-            taskKeys = basicTaskService.selectTaskKeysByGroupAndApp(groupName,appName);
+            taskKeys = basicTaskService.selectTaskKeysByGroupAndApp(groupName, appName);
         } catch (Exception e) {
             LOGGER.error(Constants.LOG_PREFIX + "selectTaskKeys ", e);
             return ResultBody.error();
@@ -129,7 +133,7 @@ public class TaskController {
      * @param host
      * @return
      */
-    @RequestMapping(value = "/checkPingTelnet",method = RequestMethod.GET)
+    @RequestMapping(value = "/checkPingTelnet", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String checkPingTelnet(@RequestParam String host) {
         boolean result;
@@ -149,10 +153,11 @@ public class TaskController {
 
     /**
      * check Task In Job
+     *
      * @param taskKey
      * @return
      */
-    @RequestMapping(value = "/selectTaskInJob",method = RequestMethod.GET)
+    @RequestMapping(value = "/selectTaskInJob", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String selectTaskInJob(@RequestParam String taskAppName, @RequestParam String taskGroupName, @RequestParam String taskKey) {
         List<JobMTask> jobMTasks = basicTaskService.selectTaskInJob(taskAppName, taskGroupName, taskKey);
@@ -161,6 +166,7 @@ public class TaskController {
 
     /**
      * Front-end paging interface
+     *
      * @param taskAppName
      * @param taskGroupName
      * @param taskKey
@@ -168,7 +174,7 @@ public class TaskController {
      * @param pageSize
      * @return
      */
-    @RequestMapping(value = "/selectTasksByPage",method = RequestMethod.GET)
+    @RequestMapping(value = "/selectTasksByPage", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String selectTasks(@RequestParam String taskAppName, @RequestParam String taskGroupName, @RequestParam String taskKey, @RequestParam int currentPage, @RequestParam int pageSize) {
         PageBean<?> pageData;
@@ -184,12 +190,13 @@ public class TaskController {
 
     /**
      * get task List
+     *
      * @param taskAppName
      * @param taskGroupName
      * @param taskKey
      * @return
      */
-    @RequestMapping(value = "/selectTasks",method = RequestMethod.GET)
+    @RequestMapping(value = "/selectTasks", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String selectTasks(@RequestParam String taskAppName, @RequestParam String taskGroupName, @RequestParam String taskKey) {
         List<BasicTask> basicTaskList;
@@ -205,17 +212,17 @@ public class TaskController {
 
     /**
      * The task management interface gets the project name and number of tasks owned
-     * @param taskGroupName
      *
+     * @param taskGroupName
      */
-    @RequestMapping(value = "/selectGroupAndCount", method = RequestMethod.GET)
+    @RequestMapping(value = "/selectGroupAndCount", method = {RequestMethod.POST,RequestMethod.GET})
     @ResponseBody
-    public String selectGroupCount(@RequestParam String taskGroupName){
+    public String selectGroupCount(@RequestParam String taskGroupName) {
         List<Map<String, Integer>> groupAndCount;
-        try{
+        try {
             List<String> roleNames = userService.getCurrentUserRoles();
             groupAndCount = basicTaskService.selectGroupAndCount(roleNames, taskGroupName);
-        } catch (Exception e){
+        } catch (Exception e) {
             LOGGER.error(Constants.LOG_PREFIX + "selectGroupAndCount error");
             return ResultBody.error();
         }
@@ -226,6 +233,7 @@ public class TaskController {
     /**
      * front-end calls the API
      * insert Task
+     *
      * @param basicTask
      * @return
      */
@@ -238,11 +246,9 @@ public class TaskController {
                 || StringHelper.isEmpty(basicTask.getTaskGroupName())) {
             LOGGER.warn(Constants.LOG_PREFIX + " insert task fail :  basicTask invalid, basicTask={}", basicTask);
             return ResultBody.failed(ResultBody.ResultEnum.REQUEST_FAIL_PARAM.getCode(), ResultBody.ResultEnum.REQUEST_FAIL_PARAM.getMessage());
-        }
-        else if(!StringHelper.isGrammatical(basicTask.getTaskGroupName(), Constants.REGEX)||!StringHelper.isGrammatical(basicTask.getTaskAppName(),Constants.REGEX)) {
+        } else if (!StringHelper.isGrammatical(basicTask.getTaskGroupName(), Constants.REGEX) || !StringHelper.isGrammatical(basicTask.getTaskAppName(), Constants.REGEX)) {
             return ResultBody.failed("输入的名称不符合规则，仅能包含数字、字母、下划线和中划线");
-        }
-        else {
+        } else {
             try {
                 String userName = userService.getCurrentUser();
                 basicTask.setTaskSource(Constants.TASK_SOURCE_UI);
@@ -262,6 +268,7 @@ public class TaskController {
     /**
      * front-end calls the API
      * updateTask
+     *
      * @param basicTask
      * @return
      */
@@ -274,7 +281,7 @@ public class TaskController {
                 || StringHelper.isEmpty(basicTask.getTaskGroupName())) {
             LOGGER.warn(Constants.LOG_PREFIX + " update task fail :  basicTask={}", basicTask);
             return ResultBody.failed(ResultBody.ResultEnum.REQUEST_FAIL_PARAM.getCode(), ResultBody.ResultEnum.REQUEST_FAIL_PARAM.getMessage());
-        }else {
+        } else {
             try {
                 String userName = userService.getCurrentUser();
                 basicTask.setTaskSource(Constants.TASK_SOURCE_UI);
@@ -292,10 +299,11 @@ public class TaskController {
     /**
      * front-end calls the API
      * delete Task
+     *
      * @param taskKey
      * @return
      */
-    @RequestMapping(value = "/deleteTaskByPrimaryKey",method = RequestMethod.GET)
+    @RequestMapping(value = "/deleteTaskByPrimaryKey", method = {RequestMethod.POST,RequestMethod.GET})
     @ResponseBody
     public String deleteTaskByPrimaryKey(@RequestParam String taskAppName, @RequestParam String taskGroupName, @RequestParam String taskKey) {
         int result = 0;
@@ -326,6 +334,7 @@ public class TaskController {
     /**
      * front-end calls the API
      * insert or update by taskKey
+     *
      * @param basicTask
      * @return
      */
@@ -341,7 +350,7 @@ public class TaskController {
                 basicTask.setTaskSource(Constants.TASK_SOURCE_UI);
                 basicTask.setTaskKey(basicTask.getTaskAppName() + Constants.REGEX_COLON + basicTask.getTaskAppHttpPath());
                 result = basicTaskService.insertOrUpdateByTaskKey(basicTask);
-                LOGGER.info(Constants.OPERATION_LOG_PREFIX + "username is: " + userName +  "; operation is: insert or update task,taskKey is " + basicTask.getTaskKey());
+                LOGGER.info(Constants.OPERATION_LOG_PREFIX + "username is: " + userName + "; operation is: insert or update task,taskKey is " + basicTask.getTaskKey());
             } catch (Exception e) {
                 LOGGER.error(Constants.LOG_PREFIX + " insertOrUpdateByTaskKey Exception : ", e);
                 return ResultBody.error();
@@ -355,6 +364,7 @@ public class TaskController {
     /**
      * front-end calls the API
      * Get the list of executor instances based on basicTask
+     *
      * @param basicTask
      * @return
      */
@@ -362,10 +372,9 @@ public class TaskController {
     @ResponseBody
     public String getExecutorList(@RequestBody BasicTask basicTask) {
         String executorList = null;
-        if(basicTask == null){
+        if (basicTask == null) {
             LOGGER.warn(Constants.LOG_PREFIX + " getExecutorList fail :  basicTask={}", basicTask);
-        }
-        else {
+        } else {
             try {
                 executorList = basicTaskService.getExecutorList(basicTask);
             } catch (Exception e) {
@@ -373,7 +382,7 @@ public class TaskController {
                 return ResultBody.error();
             }
         }
-         return ResultBody.success((Object) executorList);
+        return ResultBody.success((Object) executorList);
     }
 
     /**
@@ -383,24 +392,25 @@ public class TaskController {
      * through standard annotations,sia-task-hunter adds permission control.
      * IP that is not within this permission cannot call the task.
      * If it is necessary to test whether the task can work normally (POST only)
+     *
      * @param request
      * @return
      */
-    @RequestMapping(value = "/connextest", produces = "application/json;charset=UTF-8",method = RequestMethod.GET)
+    @RequestMapping(value = "/connextest", produces = "application/json;charset=UTF-8", method = {RequestMethod.POST,RequestMethod.GET})
     @ResponseBody
-    public String connexTest(@RequestBody Map<String,String> request) {
-        if(request == null) {
-            LOGGER.info(Constants.LOG_PREFIX +"connextest by user:"+ userService.getCurrentUser());
+    public String connexTest(@RequestBody Map<String, String> request) {
+        if (request == null) {
+            LOGGER.info(Constants.LOG_PREFIX + "connextest by user:" + userService.getCurrentUser());
             return ResultBody.failed();
         }
         String param = request.get("param");
         String result;
         try {
             String url = request.get("url");
-            LOGGER.info(Constants.LOG_PREFIX +"connextest by user:"+ userService.getCurrentUser());
-            LOGGER.info(Constants.LOG_PREFIX + "url："+ url);
-            LOGGER.info(Constants.LOG_PREFIX +"param: "+param);
-            result = basicTaskService.testTask(url,param);
+            LOGGER.info(Constants.LOG_PREFIX + "connextest by user:" + userService.getCurrentUser());
+            LOGGER.info(Constants.LOG_PREFIX + "url：" + url);
+            LOGGER.info(Constants.LOG_PREFIX + "param: " + param);
+            result = basicTaskService.testTask(url, param);
         } catch (Exception e) {
             LOGGER.error(Constants.LOG_PREFIX + " connexTest Error ：", e);
             return ResultBody.error();
