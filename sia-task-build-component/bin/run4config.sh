@@ -57,7 +57,7 @@ if [ "$proc_watcher" == "yes" ]; then
     # add crontab
     cronfile=$(pwd)/$1".cron.run"
     crontab -l | grep -v "$1" 1>$cronfile 2>/dev/null
-    echo "*/1 * * * * sh $working_directory/task_proc_watcher.sh \"$1\" \"$working_directory\" \"./run4config.sh --no-watch $1 $2 \"  >/dev/null 2>&1" >> $cronfile
+    echo "*/1 * * * * sh $working_directory/task_proc_watcher.sh \"$1\" \"$working_directory\" \"sh run4config.sh --no-watch $1 $2 \"  >/dev/null 2>&1" >> $cronfile
     crontab $cronfile
     rm $cronfile
     exit 0
