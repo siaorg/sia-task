@@ -113,14 +113,6 @@ Job管理：提供作业相关操作
 
 * [https://github.com/siaorg/sia-task](https://github.com/siaorg/sia-task)
 
-## 文档中心
-
-* [用户指南](http://**.**.**.**:****/user-handbook-readme.html)
-
-* [架构设计说明指南](http://**.**.**.**:****/architect-readme.html)
-
-* [安装部署指南](http://**.**.**.**:****/install-readme.html)
-
 ## 其他说明
 
 ### 关于编译代码
