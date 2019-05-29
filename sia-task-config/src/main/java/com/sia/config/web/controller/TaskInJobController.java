@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,10 +38,11 @@ import java.util.List;
 
 /**
  * The TASK arranging
- * @see
+ *
  * @author maozhengwei
- * @date 2019-04-28 15:40
  * @version V1.0.0
+ * @date 2019-04-28 15:40
+ * @see
  **/
 @RestController
 @RequestMapping("/taskinjobapi")
@@ -58,7 +59,7 @@ public class TaskInJobController {
     @Autowired
     protected Curator4Scheduler curator4Scheduler;
 
-    @RequestMapping(value = "/selectTaskByJobKey",method = RequestMethod.GET)
+    @RequestMapping(value = "/selectTaskByJobKey", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String selectTaskByJobKey(@RequestParam String jobGroup, @RequestParam String jobKey) {
         List<JobMTaskVO> jobMTasks = jobMTaskService.selectTaskMJobAndIPListByJobGroupAndKey(jobGroup, jobKey);
@@ -67,17 +68,18 @@ public class TaskInJobController {
 
     /**
      * Task dependency graph of Job
+     *
      * @param jobGroup
      * @param jobKey
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/selectTaskDependencyByJobKey",method = RequestMethod.GET)
+    @RequestMapping(value = "/selectTaskDependencyByJobKey", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String selectTaskDependencyByJobKey(@RequestParam String jobGroup, @RequestParam String jobKey) {
         List<JobMTaskVO> jobMTasks = jobMTaskService.selectTaskMJobAndIPListByJobGroupAndKey(jobGroup, jobKey);
         List<JobMTaskVO> jobMTaskVOList = null;
-        if (jobMTasks.size()>0){
+        if (jobMTasks.size() > 0) {
             jobMTaskVOList = jobMTaskService.analyticalTask(jobMTasks);
         }
         return ResultBody.success(jobMTaskVOList);
@@ -86,6 +88,7 @@ public class TaskInJobController {
 
     /**
      * insert or update task in a job
+     *
      * @param jobMTaskList
      * @return String : success or fail
      */

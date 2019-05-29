@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -45,10 +45,11 @@ import java.util.Map;
 /**
  * Monitoring interface,
  * the operation of some monitoring indicators
- * @see
+ *
  * @author maozhengwei
- * @date 2019-04-28 15:40
  * @version V1.0.0
+ * @date 2019-04-28 15:40
+ * @see
  **/
 @RestController
 @RequestMapping("/monitor")
@@ -70,7 +71,7 @@ public class MonitorController {
     PortalStatisticsService portalStatisticsService;
 
 
-    @RequestMapping(value = "/",method = RequestMethod.GET)
+    @RequestMapping(value = "/", method = {RequestMethod.POST, RequestMethod.GET})
     public String index() {
         return "index.html";
     }
@@ -82,7 +83,7 @@ public class MonitorController {
      *
      * @return
      */
-    @RequestMapping(value = "/schedulers",method = RequestMethod.GET)
+    @RequestMapping(value = "/schedulers", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String getSchedulers() {
 
@@ -96,7 +97,7 @@ public class MonitorController {
      *
      * @return
      */
-    @RequestMapping(value = "/schedulerInfo",method = RequestMethod.GET)
+    @RequestMapping(value = "/schedulerInfo", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String getSchedulerInfo() {
 
@@ -117,9 +118,10 @@ public class MonitorController {
      * Front-end call interface
      * Get the task information interface
      * Including the number of projects and the number of jobs
+     *
      * @return
      */
-    @RequestMapping(value = "/actuators",method = RequestMethod.GET)
+    @RequestMapping(value = "/actuators", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String getActuators() {
         Map<String, String> actuatorsAndJobCount;
@@ -137,9 +139,10 @@ public class MonitorController {
      * Front-end call interface
      * get Job statistics，
      * Real-time and historical job  data statistics
+     *
      * @return
      */
-    @RequestMapping(value = "/jobstatistics",method = RequestMethod.GET)
+    @RequestMapping(value = "/jobstatistics", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String getJobStatistics(@RequestParam String scheduler, @RequestParam String startTime, @RequestParam String endTime) {
         List<Map<String, String>> jobStatistics;
@@ -157,9 +160,10 @@ public class MonitorController {
      * Front-end call interface
      * get Task statistics，
      * Real-time and historical Task  data statistics
+     *
      * @return
      */
-    @RequestMapping(value = "/taskstatistics",method = RequestMethod.GET)
+    @RequestMapping(value = "/taskstatistics", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String getTaskStatistics(@RequestParam String scheduler, @RequestParam String startTime, @RequestParam String endTime) {
         List<Map<String, String>> taskStatistics;
@@ -178,7 +182,7 @@ public class MonitorController {
      *
      * @return
      */
-    @RequestMapping(value = "/jobGroupDetails",method = RequestMethod.GET)
+    @RequestMapping(value = "/jobGroupDetails", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String getJobGroupDetails() {
         //jobGroupDetails
@@ -196,9 +200,10 @@ public class MonitorController {
     /**
      * Front-end call interface
      * get scheduling statistics
+     *
      * @Return scheduling statistics
      */
-    @RequestMapping(value = "/jobcallcount",method = RequestMethod.GET)
+    @RequestMapping(value = "/jobcallcount", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String getJobCallCount() {
         Map<String, Integer> jobCnt;
@@ -215,9 +220,10 @@ public class MonitorController {
     /**
      * Front-end call interface
      * get the Job and Task call count details
+     *
      * @return
      */
-    @RequestMapping(value = "/jobcallstatistics",method = RequestMethod.GET)
+    @RequestMapping(value = "/jobcallstatistics", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String getJobCallStatistics(@RequestParam String scheduler, @RequestParam String startTime, @RequestParam String endTime) {
         List<Map<String, Object>> jobCallStatistics;
