@@ -2,16 +2,15 @@
 ===
 
 # 一、根据部署文档搭建任务调度平台
-详见[部署指南](DEPLOY.md#部署指南)
+根据[部署指南](DEPLOY.md#部署指南)，搭建任务调度平台并启动，详见[部署指南](DEPLOY.md#部署指南)
 
 # 二、根据开发文档编写TASK示例
 
+根据[开发指南](DEVELOPGUIDE.md#开发指南)，编写TASK示例(本示例配置了两个TASK，使用其中一个即可)，具体开发规则见[开发指南](DEVELOPGUIDE.md#开发指南)，TASK示例如下：
 
-根据开发指南，编写TASK示例(配置了两个TASK，使用其中一个即可)，具体开发规则见[开发指南](DEVELOPGUIDE.md#开发指南)，TASK示例如下：
-
-  # 1.2 自动抓取任务开发代码示例
+  #2.1 自动抓取任务开发代码示例
   
-  ## 1. `POM`文件
+  ## 2.1.1. `POM`文件
   
   ```xml
   <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -108,7 +107,7 @@
   </project>
   ```
   
-  ## 2. 配置文件
+  ## 2.1.2. 配置文件
   
   ```yml
   # 项目名称（必须）
@@ -130,7 +129,7 @@
   spring.onlinetask.serial: true
   ```
   
-  ## 3. `controller`
+  ## 2.1.3. `controller`
   
   ```java
   package com.creditease.online.example;
@@ -179,7 +178,7 @@
 }
   ```
   
-  ## 4. `启动类`
+  ## 2.1.4. `启动类`
   
   ```java
   package com.creditease;
@@ -203,7 +202,7 @@
   
   }
   ```
-## 启动该TASK所在进程
+#2.2 启动该TASK所在进程
 启动日志如下图：
 
 ![](docs/images/faststart_taskStart.png)
@@ -211,16 +210,16 @@
 日志表明该进程正常启动且该TASK信息正常上传至ZK中
 
 
-# 根据使用文档创建并配置JOB
+#三、 根据使用文档创建并配置JOB
 
-## 观察TASK管理界面：
+##3.1 观察TASK管理界面：
 
 ![](docs/images/faststart_taskNew.png)
 
 TASK已自动注册至ZK，并同步至数据库中
 
 
-## 创建JOB，配置参数
+## 3.2 创建JOB，配置参数
 
 在JOB管理界面点击添加JOB
 
@@ -236,7 +235,7 @@ TASK已自动注册至ZK，并同步至数据库中
 
 点击添加，添加JOB成功
 
-## 配置TASK，配置TASK参数
+## 3.3 配置TASK
 
 添加JOB成功后，需要为该JOB配置相应的TASK，可配置一个或多个，本例以配置一个TASK为例
 
@@ -264,13 +263,13 @@ TASK配置信息
 
 ![](docs/images/faststart_jobMappingTaskMsg2.png)
 
-##激活JOB
+##3.4 激活JOB
 
 TASK配置成功后，可进行激活JOB操作
 
 ![](docs/images/faststart_jobActive.png)
 
-##观察JOB日志
+##3.5 观察JOB日志
 
 成功激活JOB后，进入调度日志界面，都待至JOB执行时间后，可查看到该JOB执行日志，如下图示：
 
@@ -283,10 +282,6 @@ TASK配置成功后，可进行激活JOB操作
 标号3：endTask为一个虚拟TASK，仅表示该JOB的一次调度过程完成
 
 
-
-
-
-##打完收工
 
 
 
