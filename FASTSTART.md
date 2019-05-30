@@ -223,11 +223,11 @@ TASK已自动注册至ZK，并同步至数据库中
 
 ## 3.2 创建JOB，配置参数
 
-在JOB管理界面点击添加JOB
+在JOB管理界面点击`添加Job`
 
 ![](docs/images/faststart_jobCreate.png)
 
-点击后进入编辑JOB界面
+点击后进入`添加Job`界面
 
 ![](docs/images/faststart_jobEdit.png)
 
@@ -235,7 +235,7 @@ TASK已自动注册至ZK，并同步至数据库中
 
 分别填写Job类型及其他项，Job类型也可以选择FixRate(特定时间点)类型，本例为CRON类型，具体数值为：从当前时刻开始，每30秒执行一次
 
-点击添加，添加JOB成功
+点击`添加`，添加JOB成功
 
 ## 3.3 配置TASK
 
@@ -243,31 +243,28 @@ TASK已自动注册至ZK，并同步至数据库中
 
 ![](docs/images/faststart_jobMappingTask.png)
 
-点击配置TASK后，进入TASK配置界面
+点击`配置TASK`后，进入`Task信息配置`界面
 
 ![](docs/images/faststart_jobMappingTaskDetail.png)
 
-如上图所示，将需要配置的TASK拉取至右侧，点击编辑按钮，进入TASK属性编辑界面
+如上图所示，将需要配置的TASK拉取至右侧，点击`编辑`按钮(铅笔形状)，进入TASK`参数配置`界面
 
 ![](docs/images/faststart_jobMappingTaskEdit.png)
 
-按图中编辑完成后，点击添加
+按图中编辑完成后，点击`添加`，成功将TASK配置至JOB中，可点击`TASK信息`按钮，查看`TASK配置信息详情`，观察该JOB的TASK配置情况
 
-成功将TASK配置至JOB中
-
-可查看TASK配置详情，观察该JOB的TASK配置情况
-
-TASK配置图：
+`TASK配置信息图`：
 
 ![](docs/images/faststart_jobMappingTaskMsg.png)
 
-TASK配置信息
+`TASK配置信息详情`
 
 ![](docs/images/faststart_jobMappingTaskMsg2.png)
 
 ##3.4 激活JOB
 
-TASK配置成功后，可进行激活JOB操作
+TASK配置成功后，点击`状态操作`下拉按钮中`激活`按钮，可进行激活JOB操作
+
 
 ![](docs/images/faststart_jobActive.png)
 
@@ -282,6 +279,15 @@ TASK配置成功后，可进行激活JOB操作
 标号2：代表该JOB所关联的TASK日志
 
 标号3：endTask为一个虚拟TASK，仅表示该JOB的一次调度过程完成
+
+##3.4 停止JOB
+
+当需要停止JOB时，点击`状态操作`下拉按钮中`停止`按钮，可进行停止JOB操作
+
+![](docs/images/faststart_jobActive.png)
+
+
+
 
 
 
