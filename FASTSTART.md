@@ -1,20 +1,13 @@
-微服务任务调度平台使用指南
+微服务任务调度平台快速入手demo
 ===
 
-一.根据部署文档搭建并启动任务调度平台，详见部署文档
-
-二.结合使用文档和开发文档，写一个TASK，并启动，
-
-三.新增一个JOB，并引用该TASK，配置相应参数
-
-四.激活，到执行时间后，观察日志，打完收工
-
 # 一、根据部署文档搭建任务调度平台
+详见[部署指南](DEPLOY.md#部署指南)
 
 # 二、根据开发文档编写TASK示例
 
 
-根据开发文档，编写TASK示例，具体开发规则见开发文档，TASK示例如下：
+根据开发指南，编写TASK示例，具体开发规则见[开发指南](DEVELOPGUIDE.md#开发指南)，TASK示例如下：
 
   # 1.2 自动抓取任务开发代码示例
   
@@ -156,61 +149,34 @@
   import com.gantry.onlinetask.helper.JSONHelper;
   
   @RestController
-  public class OnlineTaskExample {
-  
-      /**
-       * OnlineTask示例，标准格式
-       * <p>
-       * （1）方法上有@OnlineTask注解，用来标注是否被抓取，可以添加description描述，描述该Task的作用
-       * <p>
-       * （2）方法上有@RequestMapping注解，因为OnlineTask必须对外提供HTTP访问
-       * <p>
-       * （3）@RequestMapping注解中，请使用value（或path）属性（因为低版本Spring没有path属性，为了兼容，优先抓取value属性的值），且value 以"/"为前缀（减少处理复杂度），路径不能包含"\"（用作替换）
-       * <p>
-       * （4）@RequestMapping注解中，method中必须要有POST方法（需要传参），且使用@CrossOrigin支持跨域（POST方法默认不允许跨域）或者使用过滤器（Filter）让Task可以跨域
-       * <p>
-       * （5）请使用 @ResponseBody 标注返回值。类上如果使用 @RestController，则 @ResponseBody可选，如果使用@Controller，则@ResponseBody必选
-       * <p>
-       * （6）方法返回值是String（JSON），JSON是一个Map，必须有"status" 属性，值为{success,failure,unknown}，用于处理逻辑；必须有 "result" 属性，值为HTTP调用的返回值
-       * <p>
-       * （7）方法可以无参；若有入参，则只能有一个，且是String（JSON），请使用 @RequestBody 标注
-       * <p>
-       * （8）@OnlineTask注解使用了AOP技术，保证调用的方法是单例单线程
-       * <p>
-       * （9）OnlineTask的业务逻辑处理请尽量保证幂等
-       * <p>
-       * （10）现支持类上使用@RequestMapping注解
-       * /
-       *
-       * @param json
-       * @return
-       */
-      // （1）方法上有@OnlineTask注解，用来标注是否被抓取，可以添加description描述，描述该Task的作用
-      @OnlineTask(description = "在线任务示例",enableSerial=true)
-      // （2）方法上有@RequestMapping注解，因为OnlineTask必须对外提供HTTP访问
-      // （3）@RequestMapping注解中，请使用value（或path）属性（因为低版本Spring没有path属性，为了兼容，优先抓取value属性的值），且value 以"/"为前缀（减少处理复杂度），路径不能包含"\"（用作替换）
-      @RequestMapping(value = "/example", method = { RequestMethod.POST }, produces = "application/json;charset=UTF-8")
-      // （4）@RequestMapping注解中，method中必须要有POST方法（需要传参），且使用@CrossOrigin支持跨域（POST方法默认不允许跨域）或者使用过滤器（Filter）让Task可以跨域
-      @CrossOrigin(methods = { RequestMethod.POST }, origins = "*")
-      // （5）请使用 @ResponseBody 标注返回值。类上如果使用 @RestController，则 @ResponseBody可选，如果使用@Controller，则@ResponseBody必选
-      @ResponseBody
-      // （6）方法返回值是String（JSON），JSON是一个Map，必须有"status" 属性，值为{success,failure,unknown}，用于处理逻辑；必须有 "result"属性，值为HTTP调用的返回值
-      // （7）方法可以无参；若有入参，则只能有一个，且是String（JSON），请使用 @RequestBody 标注
-      public String example(@RequestBody String json) {
-  
-          /**
-           * TODO：客户端业务逻辑处理
-           */
-          // 返回结果存储结构，请使用Map
-          Map<String, String> info = new HashMap<String, String>();
-          // 返回的信息必须包含以下两个字段
-          info.put("status", "success");// status字段表明此次Task调用是否成功，非 success 都是失败
-          info.put("result", "as you need");// result字段表示此次Task调用的返回结果（之后可能传递给其他Task） ，其值可能作为其他Task的输入，所以只能是String（JSON）类型
-          // 返回值也是String（JSON）类型，客户端包里有JSONHelper，可直接使用
-          return JSONHelper.toString(info);
-      }
-  
-  }
+  public class OpenTestController {
+
+    @OnlineTask(description = "success,有入参",enableSerial=true)
+    @RequestMapping(value = "/success-param", method = { RequestMethod.POST }, produces = "application/json;charset=UTF-8")
+    @CrossOrigin(methods = { RequestMethod.POST }, origins = "*")
+    @ResponseBody
+    public String example(@RequestBody String json) {
+        Map<String, String> info = new HashMap<String, String>();
+        info.put("result", "success-param"+"入参是："+json);
+        info.put("status", "success");
+
+        return JSONHelper.toString(info);
+    }
+
+
+    @OnlineTask(description = "success,无入参",enableSerial=true)
+    @RequestMapping(value = "/success-noparam", method = { RequestMethod.POST }, produces = "application/json;charset=UTF-8")
+    @CrossOrigin(methods = { RequestMethod.POST }, origins = "*")
+    @ResponseBody
+    public String example1() {
+        Map<String, String> info = new HashMap<String, String>();
+        info.put("result", "success-noparam");
+        info.put("status", "success");
+
+        return JSONHelper.toString(info);
+    }
+
+}
   ```
   
   ## 4. `启动类`
@@ -237,15 +203,88 @@
   
   }
   ```
+## 启动该TASK所在进程
+启动日志如下图：
+
+![](docs/images/faststart_taskStart.png)
+
+日志表明该进程正常启动且该TASK信息正常上传至ZK中
+
+
 # 根据使用文档创建并配置JOB
+
+## 观察TASK管理界面：
+
+![](docs/images/faststart_taskNew.png)
+
+TASK已自动注册至ZK，并同步至数据库中
+
 
 ## 创建JOB，配置参数
 
+在JOB管理界面点击添加JOB
+
+![](docs/images/faststart_jobCreate.png)
+
+点击后进入编辑JOB界面
+
+![](docs/images/faststart_jobEdit.png)
+
+选定Job_Group,尽量选定所要关联的TASK所属的Group组名
+
+分别填写Job类型(也可以选择FixRate类型，本例为CRON类型)及其他项
+
+点击添加，添加JOB成功
+
 ## 配置TASK，配置TASK参数
 
-##激活该JOB
+添加JOB成功后，需要为该JOB配置相应的TASK，可配置一个或多个，本例以配置一个TASK为例
+
+![](docs/images/faststart_jobMappingTask.png)
+
+点击配置TASK后，进入TASK配置界面
+
+![](docs/images/faststart_jobMappingTaskDetail.png)
+
+如上图所示，将需要配置的TASK拉取至右侧，点击编辑按钮，进入TASK属性编辑界面
+
+![](docs/images/faststart_jobMappingTaskEdit.png)
+
+按图中编辑完成后，点击添加
+
+成功将TASK配置至JOB中
+
+可查看TASK配置详情，观察该JOB的TASK配置情况
+
+TASK配置图：
+
+![](docs/images/faststart_jobMappingTaskMsg.png)
+
+TASK配置信息
+
+![](docs/images/faststart_jobMappingTaskMsg2.png)
+
+##激活JOB
+
+TASK配置成功后，可进行激活JOB操作
+
+![](docs/images/faststart_jobActive.png)
 
 ##观察JOB日志
+
+成功激活JOB后，进入调度日志界面，都待至JOB执行时间后，可查看到该JOB执行日志，如下图示：
+
+![](docs/images/faststart_jobTaskLog.png)
+
+标号1：代表该JOB日志
+
+标号2：代表该JOB所关联的TASK日志
+
+标号3：endTask为一个虚拟TASK，仅表示该JOB的一次调度过程完成
+
+
+
+
 
 ##打完收工
 
