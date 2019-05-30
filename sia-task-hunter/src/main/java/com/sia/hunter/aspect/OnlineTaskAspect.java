@@ -105,7 +105,7 @@ public class OnlineTaskAspect {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         String task = joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName();
-        if (runningTaskMap.containsKey(task) && runningTaskMap.get(task).equals(TaskStatus.RUNNING)) {
+        if (runningTaskMap.containsKey(task) && TaskStatus.RUNNING.equals(runningTaskMap.get(task))) {
             throw new OnlineTaskException("This task is running");
         }
         else {
@@ -141,7 +141,7 @@ public class OnlineTaskAspect {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         String task = joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName();
-        if (runningTaskMap.get(task).equals(TaskStatus.RUNNING)) {
+        if (TaskStatus.RUNNING.equals(runningTaskMap.get(task))) {
             // if(onlineTaskMessageSwitch) {
             // producer.sendPubSub(AmqpConfig.ONLINE_TASK_EX_NAME, builtMqMessage(request).put("Result",
             // result).put("TaskStatus", "Success").toString());
@@ -181,7 +181,7 @@ public class OnlineTaskAspect {
                     .getRequestAttributes();
             HttpServletRequest request = attributes.getRequest();
             String task = joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName();
-            if (runningTaskMap.get(task).equals(TaskStatus.RUNNING)) {
+            if (TaskStatus.RUNNING.equals(runningTaskMap.get(task))) {
                 // if(onlineTaskMessageSwitch) {
                 // producer.sendPubSub(AmqpConfig.ONLINE_TASK_EX_NAME, builtMqMessage(request).put("TaskStatus",
                 // "Exception").toString());
