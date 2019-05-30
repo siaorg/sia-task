@@ -263,7 +263,7 @@ TASK已自动注册至ZK，并同步至数据库中
 
 ##3.4 激活JOB
 
-TASK配置成功后，点击`状态操作`下拉按钮中`激活`按钮，可进行激活JOB操作
+TASK配置成功后，点击`状态操作`下拉按钮中`激活`按钮，激活JOB
 
 
 ![](docs/images/faststart_jobActive.png)
@@ -282,7 +282,7 @@ TASK配置成功后，点击`状态操作`下拉按钮中`激活`按钮，可进
 
 ##3.6 停止JOB
 
-当需要停止JOB时，点击`状态操作`下拉按钮中`停止`按钮，可进行停止JOB操作
+当需要停止JOB时，点击`状态操作`下拉按钮中`停止`按钮，停止JOB
 
 ![](docs/images/faststart_jobActive.png)
 
