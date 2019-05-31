@@ -15,7 +15,7 @@
 
 # 二、根据开发文档编写TASK示例
 
-根据SIA-TASK[开发指南](https://github.com/siaorg/sia-task/blob/master/DEPLOY.md)，编写TASK示例(本示例配置了两个TASK，使用其中一个即可)，具体开发规则见[开发指南](DEVELOPGUIDE.md#开发指南)，TASK示例如下：
+根据[SIA-TASK开发指南](https://github.com/siaorg/sia-task/blob/master/DEVELOPGUIDE.md)，编写TASK示例(本示例编写了两个TASK，使用其中一个即可)，具体开发规则见[SIA-TASK开发指南](https://github.com/siaorg/sia-task/blob/master/DEVELOPGUIDE.md)，TASK示例如下：
 
   ## 2.1 自动抓取任务开发代码示例
   
@@ -221,7 +221,7 @@
 
 # 三、 创建、配置并激活JOB
 
-根据[使用指南](USERSGUIDE.md#使用指南)进行如下操作：
+根据[使用指南](https://github.com/siaorg/sia-task/blob/master/USERSGUIDE.md)进行如下操作：
 
 ## 3.1 观察TASK管理界面：
 
@@ -294,6 +294,8 @@ TASK配置成功后，点击`状态操作`下拉按钮中`激活`按钮，激活
 当需要停止JOB时，点击`状态操作`下拉按钮中`停止`按钮，停止JOB
 
 ![](docs/images/faststart_jobActive.png)
+
+本文仅是对微服务调度平台SIA-TASK的初步实践使用，通过以上阐述，可实现SIA-TASK对执行器实例TASK实现任务调度的功能，当然，微服务调度平台SIA-TASK还有更加强大的任务调度功能，可以应对更加复杂的业务场景，后续更多文章，敬请期待！
 
 
 
