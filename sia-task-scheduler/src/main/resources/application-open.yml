@@ -74,7 +74,7 @@ logging.file: ./logs/${spring.application.name}.log
 
 # 用户权限  所有权限（创建、读取、写入，删除，赋权）
 # 可选参数，需要overwritten此参数时，打开注释并填写指定的所有用户权限，否则默认为 SIA:SkyWorld
-ALLAUTH: SIA:SIA
+#ALLAUTH: SIA:SkyWorld
 
 # 用户权限  只有创建权限
 # 可选参数，需要overwritten此参数时，打开注释并填写指定的创建权限，否则默认为 guest:guest
