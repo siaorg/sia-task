@@ -3,7 +3,7 @@
 [使用指南](USERSGUIDE.md) </br>
 [开发指南](DEVELOPGUIDE.md) </br>
 [部署指南](DEPLOY.md)</br>
-[快速入手](FASTSTART.md)</br>
+[Demo](FASTSTART.md)</br>
 
 背景
 ---
