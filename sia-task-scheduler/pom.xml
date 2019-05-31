@@ -14,8 +14,6 @@
     <version>1.0.0</version>
 
 
-
-
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -36,7 +34,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.8.11.3</version>
+            <version>2.9.9</version>
         </dependency>
         <!-- caffeine cache -->
         <dependency>
@@ -143,12 +141,12 @@
                 </excludes>
             </resource>
             <!--<resource>-->
-                <!--<directory>src/main/resources</directory>-->
-                <!--<filtering>true</filtering>-->
-                <!--<includes>-->
-                    <!--<include>application.yml</include>-->
-                    <!--<include>application-${envFlag}.yml</include>-->
-                <!--</includes>-->
+            <!--<directory>src/main/resources</directory>-->
+            <!--<filtering>true</filtering>-->
+            <!--<includes>-->
+            <!--<include>application.yml</include>-->
+            <!--<include>application-${envFlag}.yml</include>-->
+            <!--</includes>-->
             <!--</resource>-->
         </resources>
 

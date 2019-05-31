@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -42,13 +42,15 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Map;
+
 /**
  * Job management interface API,
  * Provides various operations on jobs
- * @see
+ *
  * @author maozhengwei
- * @date 2019-04-28 15:40
  * @version V1.0.0
+ * @date 2019-04-28 15:40
+ * @see
  **/
 @RestController
 @RequestMapping("/jobapi")
@@ -73,11 +75,12 @@ public class JobController {
 
     /**
      * Perform cron expression validation
-     * @param  cron cronExpression
+     *
+     * @param cron cronExpression
      * @return
      */
 
-    @RequestMapping(value = "/cronexpression", method = RequestMethod.GET)
+    @RequestMapping(value = "/cronexpression", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String cronExpression(@RequestParam String cron) {
         if (cron == null) {
@@ -91,11 +94,12 @@ public class JobController {
     /**
      * The front end calls the interface
      * Job Status
+     *
      * @param jobGroupName
      * @param jobKey
      * @return
      */
-    @RequestMapping(value = "/selectJobStatus/{jobGroupName}/{jobKey}", method = RequestMethod.GET)
+    @RequestMapping(value = "/selectJobStatus/{jobGroupName}/{jobKey}", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String selectJobStatus(@PathVariable String jobGroupName, @PathVariable String jobKey) {
         String jobStatus = curator4Scheduler.getJobStatus(jobGroupName, jobKey);
@@ -106,11 +110,12 @@ public class JobController {
     /**
      * The front end calls the interface
      * Run the Job once
+     *
      * @param jobGroupName
      * @param jobKey
      * @return
      */
-    @RequestMapping(value = "/runOnceforweb/{jobGroupName}/{jobKey}", method = RequestMethod.GET)
+    @RequestMapping(value = "/runOnceforweb/{jobGroupName}/{jobKey}", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String runOnce(@PathVariable String jobGroupName, @PathVariable String jobKey) {
         LOGGER.info(Constants.OPERATION_LOG_PREFIX + " runOnce : {}，{}", jobGroupName, jobKey);
@@ -136,11 +141,12 @@ public class JobController {
     /**
      * The front end calls the interface
      * Activate the Job
+     *
      * @param jobGroupName
      * @param jobKey
      * @return
      */
-    @RequestMapping(value = "/activateJob/{jobGroupName}/{jobKey}", method = RequestMethod.GET)
+    @RequestMapping(value = "/activateJob/{jobGroupName}/{jobKey}", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String activateJob(@PathVariable String jobGroupName, @PathVariable String jobKey) {
         if (StringHelper.isEmpty(jobGroupName) || StringHelper.isEmpty(jobKey)) {
@@ -153,7 +159,7 @@ public class JobController {
             if (jobMTasks == null || jobMTasks.size() == 0) {
                 return ResultBody.failed(ResultBody.ResultEnum.JOB_NO_TASK_CONFIG.getCode(), ResultBody.ResultEnum.JOB_NO_TASK_CONFIG.getMessage());
             }
-            return basicJobService.activateJob(jobGroupName,jobKey) ? ResultBody.success() : ResultBody.failed();
+            return basicJobService.activateJob(jobGroupName, jobKey) ? ResultBody.success() : ResultBody.failed();
 
         } catch (Exception e) {
             LOGGER.error(Constants.LOG_PREFIX + " activateJob Exception : ", e);
@@ -162,14 +168,16 @@ public class JobController {
 
 
     }
+
     /**
      * The front end calls the interface
      * stop the Job
+     *
      * @param jobGroupName
      * @param jobKey
      * @return
      */
-    @RequestMapping(value = "/stopJob/{jobGroupName}/{jobKey}", method = RequestMethod.GET)
+    @RequestMapping(value = "/stopJob/{jobGroupName}/{jobKey}", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String stopJob(@PathVariable String jobGroupName, @PathVariable String jobKey) {
 
@@ -185,7 +193,7 @@ public class JobController {
      *
      * @return
      */
-    @RequestMapping(value = "/selectAuth", method = RequestMethod.GET)
+    @RequestMapping(value = "/selectAuth", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String selectAuth() {
         Map<String, List<String>> groupMap;
@@ -202,11 +210,12 @@ public class JobController {
     /**
      * Get the job list and support paging.
      * if jobAppName and jobGroupName = null ? return All : return filtration
+     *
      * @param jobGroupName can be null
      * @param jobKey       can be null
      * @return
      */
-    @RequestMapping(value = "/selectjobs",method = RequestMethod.GET)
+    @RequestMapping(value = "/selectjobs", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String selectJobs(@RequestParam String jobGroupName, @RequestParam String jobKey, @RequestParam int currentPage, @RequestParam int pageSize) {
         PageBean<?> pageData;
@@ -223,7 +232,7 @@ public class JobController {
     /**
      * Job management gets the project name and the number of jobs
      */
-    @RequestMapping(value = "/selectGroupAndJobCount",method = RequestMethod.GET)
+    @RequestMapping(value = "/selectGroupAndJobCount", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String selectGroupAndJobCount(@RequestParam String jobGroupName) {
         List<Map<String, Integer>> groupAndCount;
@@ -240,6 +249,7 @@ public class JobController {
 
     /**
      * Save the Job according to the jobKey
+     *
      * @param basicJob
      * @return
      */
@@ -250,8 +260,7 @@ public class JobController {
         try {
             if (StringHelper.isEmpty(basicJob.getJobKey()) || StringHelper.isEmpty(basicJob.getJobGroup())) {
                 return ResultBody.failed();
-            }
-            else if(!StringHelper.isGrammatical(basicJob.getJobKey(), Constants.REGEX)||!StringHelper.isGrammatical(basicJob.getJobGroup(),Constants.REGEX)) {
+            } else if (!StringHelper.isGrammatical(basicJob.getJobKey(), Constants.REGEX) || !StringHelper.isGrammatical(basicJob.getJobGroup(), Constants.REGEX)) {
                 return ResultBody.failed("输入的名称不符合规则，仅能包含数字、字母、下划线和中划线");
             }
             String userName = userService.getCurrentUser();
@@ -292,10 +301,11 @@ public class JobController {
 
     /**
      * delete Job by primary jobKey
+     *
      * @param jobKey
      * @return
      */
-    @RequestMapping(value = "/deleteJobByJobKeyAndGroup",method = RequestMethod.GET)
+    @RequestMapping(value = "/deleteJobByJobKeyAndGroup", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String deleteJobByPrimaryKey(@RequestParam String jobGroupName, @RequestParam String jobKey) {
         int result;
@@ -318,11 +328,11 @@ public class JobController {
     }
 
     /**
-         *
-         * Gets an overview of the tasks in scheduling monitoring.
-         * @return taskView
-         */
-    @RequestMapping(value = "/selectTaskView",method = RequestMethod.GET)
+     * Gets an overview of the tasks in scheduling monitoring.
+     *
+     * @return taskView
+     */
+    @RequestMapping(value = "/selectTaskView", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String selectTaskView() {
         List<String> roleNames = userService.getCurrentUserRoles();
@@ -331,24 +341,25 @@ public class JobController {
     }
 
     /**
-         *
-         * Get the number of scheduling monitoring projects, tasks, and jobs.
-         * @return summary
-         */
-    @RequestMapping(value = "/selectSummary",method = RequestMethod.GET)
+     * Get the number of scheduling monitoring projects, tasks, and jobs.
+     *
+     * @return summary
+     */
+    @RequestMapping(value = "/selectSummary", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String selectSummary() {
         List<String> roleNames = userService.getCurrentUserRoles();
         Map<String, Integer> summary = basicJobService.selectSummary(roleNames);
         return ResultBody.success(summary);
     }
+
     /**
-         *
-         * The scheduling monitoring page filters by project name and gets the scheduler running details.
-         * @param jobGroupName
-         * @return job and scheduler running details
-         */
-    @RequestMapping(value = "/jobGroupPortrait",method = RequestMethod.GET)
+     * The scheduling monitoring page filters by project name and gets the scheduler running details.
+     *
+     * @param jobGroupName
+     * @return job and scheduler running details
+     */
+    @RequestMapping(value = "/jobGroupPortrait", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String selectJobGroupPortrait(@RequestParam String jobGroupName) {
         List<JobPortrait> jobPortraitList;
@@ -364,10 +375,11 @@ public class JobController {
 
     /**
      * Gets the list of jobs belong to the scheduler
+     *
      * @param scheduler
      * @return
      */
-    @RequestMapping(value = "/getJobList", method = RequestMethod.GET)
+    @RequestMapping(value = "/getJobList", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String getJobListByScheduler(@RequestParam String scheduler) {
         if (StringHelper.isEmpty(scheduler)) {
@@ -387,10 +399,11 @@ public class JobController {
      * Set cascade Job JobPlan,
      * set cascade jobs, and the dependencies between jobs can be realized with specific timing cycles,
      * which can be divided into pre and post jobs
+     *
      * @param basicJob
      * @return
      */
-    @RequestMapping(value = "/updatejobplan", method = RequestMethod.POST)
+    @RequestMapping(value = "/updatejobplan", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String updateJobPlan(@RequestBody BasicJob basicJob) {
         String userName = userService.getCurrentUser();
@@ -399,33 +412,33 @@ public class JobController {
             return ResultBody.failed("Job 已激活，请关闭Job 再进行配置！");
         }
         try {
-                String jobPlan = basicJob.getJobPlan();
-                //jobPlan = null ? delete/create : update
-                if (StringHelper.isEmpty(jobPlan)) {
+            String jobPlan = basicJob.getJobPlan();
+            //jobPlan = null ? delete/create : update
+            if (StringHelper.isEmpty(jobPlan)) {
 
-                    BasicJob jobChild = basicJob.getJobChild();
+                BasicJob jobChild = basicJob.getJobChild();
 
-                    if (jobChild != null) {
-                        if (!StringHelper.isEmpty(jobChild.getJobPlan())) {
-                            return ResultBody.failed("后置Job[" + jobChild.getJobKey() +"] 已被其它Job关联！！");
-                        }
-                        //create
-                        basicJobService.updateJobPlanByJobKey(basicJob);
-                        LOGGER.info(Constants.OPERATION_LOG_PREFIX + "username is: " + userName + "; operation is:updateJobPlan [add],jobKey is; " + basicJob.getJobKey());
-
-                    } else {
-                        //delete
-                        basicJobService.removeJobPlan(basicJob);
-                        LOGGER.info(Constants.OPERATION_LOG_PREFIX + "username is: " + userName + "; operation is:updateJobPlan [remove],jobKey is; " + basicJob.getJobKey());
+                if (jobChild != null) {
+                    if (!StringHelper.isEmpty(jobChild.getJobPlan())) {
+                        return ResultBody.failed("后置Job[" + jobChild.getJobKey() + "] 已被其它Job关联！！");
                     }
+                    //create
+                    basicJobService.updateJobPlanByJobKey(basicJob);
+                    LOGGER.info(Constants.OPERATION_LOG_PREFIX + "username is: " + userName + "; operation is:updateJobPlan [add],jobKey is; " + basicJob.getJobKey());
 
                 } else {
-                    //update
+                    //delete
                     basicJobService.removeJobPlan(basicJob);
-                    basicJobService.updateJobPlanByJobKey(basicJob);
-                    LOGGER.info(Constants.OPERATION_LOG_PREFIX + "username is: " + userName + "; operation is:updateJobPlan [update],jobKey is; " + basicJob.getJobKey());
-
+                    LOGGER.info(Constants.OPERATION_LOG_PREFIX + "username is: " + userName + "; operation is:updateJobPlan [remove],jobKey is; " + basicJob.getJobKey());
                 }
+
+            } else {
+                //update
+                basicJobService.removeJobPlan(basicJob);
+                basicJobService.updateJobPlanByJobKey(basicJob);
+                LOGGER.info(Constants.OPERATION_LOG_PREFIX + "username is: " + userName + "; operation is:updateJobPlan [update],jobKey is; " + basicJob.getJobKey());
+
+            }
 
             return ResultBody.success("Job 级联配置成功！");
 
@@ -438,26 +451,27 @@ public class JobController {
 
 
     /**
-     *  Job batch transfer with one key
-     *  When the scheduler is switched,
-     *  the original scheduler needs to be offline,
-     *  the Job on the scheduler needs to be stopped,
-     *  then activated, and transferred to the newly online scheduler,
-     *  and the Job batch transfer result needs to be generated at the same time.
+     * Job batch transfer with one key
+     * When the scheduler is switched,
+     * the original scheduler needs to be offline,
+     * the Job on the scheduler needs to be stopped,
+     * then activated, and transferred to the newly online scheduler,
+     * and the Job batch transfer result needs to be generated at the same time.
+     *
      * @param scheduler
-     * @return  the Job batch transfer result
+     * @return the Job batch transfer result
      */
-    @RequestMapping(value = "/batchJobTransfer", method = RequestMethod.POST)
+    @RequestMapping(value = "/batchJobTransfer", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String batchJobTransfer(@RequestBody String scheduler) {
         if (StringHelper.isEmpty(scheduler)) {
             return ResultBody.failed(ResultBody.ResultEnum.REQUEST_FAIL_PARAM.getCode(), ResultBody.ResultEnum.REQUEST_FAIL_PARAM.getMessage());
         }
-        Map<String,Object> resultMap;
+        Map<String, Object> resultMap;
         try {
             resultMap = basicJobService.batchJobTransfer(scheduler);
             if (resultMap.isEmpty()) {
-                return ResultBody.failed(ResultBody.ResultEnum.ERROR.getCode(),scheduler + "调度器下线失败");
+                return ResultBody.failed(ResultBody.ResultEnum.ERROR.getCode(), scheduler + "调度器下线失败");
             }
         } catch (Exception e) {
             LOGGER.error(Constants.LOG_PREFIX + " batchJobTransfer Exception : ", e);
@@ -469,19 +483,20 @@ public class JobController {
     /**
      * The front end calls the interface
      * get batch transfer information with one key of Job
+     *
      * @return
      */
-    @RequestMapping(value = "/JobTransferInfo",method = RequestMethod.GET)
+    @RequestMapping(value = "/JobTransferInfo", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String getJobTransferInfo(@RequestParam String scheduler) {
-        if(StringHelper.isEmpty(scheduler)) {
+        if (StringHelper.isEmpty(scheduler)) {
             return ResultBody.failed(ResultBody.ResultEnum.REQUEST_FAIL_PARAM.getCode(), ResultBody.ResultEnum.REQUEST_FAIL_PARAM.getMessage());
         }
         String JobTransferInfo;
-        try{
+        try {
             JobTransferInfo = curator4Scheduler.getJobTransferInfo(scheduler);
             LOGGER.info(Constants.LOG_PREFIX + " 获取一键Job转移信息 >>> 成功 :  schedulerInfo is{} ", JobTransferInfo);
-        }catch (Exception e) {
+        } catch (Exception e) {
             LOGGER.error(Constants.LOG_PREFIX + " getJobTransferInfo Error ：", e);
             return ResultBody.error();
         }
