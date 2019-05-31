@@ -1,12 +1,21 @@
-微服务任务调度平台快速入手demo
+微服务任务调度平台SIA-TASK入手实践
 ===
 
+引言
+
+最近在研究开源项目微服务任务调度平台SIA-TASK，本文通过一个示例来阐述一个TASK(执行器)是如何通过微服务调度平台SIA-TASK实现任务调度的。
+
 # 一、根据部署文档搭建任务调度平台
-根据[部署指南](DEPLOY.md#部署指南)，搭建任务调度平台并启动，详见[部署指南](DEPLOY.md#部署指南)
+
+源码地址：https://github.com/siaorg/sia-task
+
+官方文档：https://github.com/siaorg/sia-task/blob/master/README.md
+
+下载源码后，根据[SIA-TASK部署指南](https://github.com/siaorg/sia-task/blob/master/DEPLOY.md)，搭建任务调度平台并启动，详见[SIA-TASK部署指南](https://github.com/siaorg/sia-task/blob/master/DEPLOY.md)
 
 # 二、根据开发文档编写TASK示例
 
-根据[开发指南](DEVELOPGUIDE.md#开发指南)，编写TASK示例(本示例配置了两个TASK，使用其中一个即可)，具体开发规则见[开发指南](DEVELOPGUIDE.md#开发指南)，TASK示例如下：
+根据SIA-TASK[开发指南](https://github.com/siaorg/sia-task/blob/master/DEPLOY.md)，编写TASK示例(本示例配置了两个TASK，使用其中一个即可)，具体开发规则见[开发指南](DEVELOPGUIDE.md#开发指南)，TASK示例如下：
 
   ## 2.1 自动抓取任务开发代码示例
   
