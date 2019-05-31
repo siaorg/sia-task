@@ -3,6 +3,7 @@
 [使用指南](USERSGUIDE.md) </br>
 [开发指南](DEVELOPGUIDE.md) </br>
 [部署指南](DEPLOY.md)</br>
+[Demo](FASTSTART.md)</br>
 
 背景
 ---
@@ -113,14 +114,6 @@ Job管理：提供作业相关操作
 
 * [https://github.com/siaorg/sia-task](https://github.com/siaorg/sia-task)
 
-## 文档中心
-
-* [用户指南](http://**.**.**.**:****/user-handbook-readme.html)
-
-* [架构设计说明指南](http://**.**.**.**:****/architect-readme.html)
-
-* [安装部署指南](http://**.**.**.**:****/install-readme.html)
-
 ## 其他说明
 
 ### 关于编译代码
@@ -145,7 +138,6 @@ Job管理：提供作业相关操作
     <img src="https://github.com/lijun006788/sia-task/blob/master/docs/images/siaopenWechatIMG3.jpeg" width="30%" height="30%">
     
 （待补充）
-* * *
-返回[目录](readme) 
+
 
 
