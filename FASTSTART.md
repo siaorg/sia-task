@@ -1,21 +1,12 @@
-微服务任务调度平台SIA-TASK入手实践
+微服务任务调度平台快速入手demo
 ===
 
-引言
-
-最近在研究开源项目微服务任务调度平台SIA-TASK，本文通过一个示例来阐述一个TASK(执行器)是如何通过微服务调度平台SIA-TASK实现任务调度的。
-
 # 一、根据部署文档搭建任务调度平台
-
-源码地址：https://github.com/siaorg/sia-task
-
-官方文档：https://github.com/siaorg/sia-task/blob/master/README.md
-
-下载源码后，根据[SIA-TASK部署指南](https://github.com/siaorg/sia-task/blob/master/DEPLOY.md)，搭建SIA-TASK任务调度平台并启动，详见[SIA-TASK部署指南](https://github.com/siaorg/sia-task/blob/master/DEPLOY.md)
+根据[部署指南](DEPLOY.md#部署指南)，搭建任务调度平台并启动，详见[部署指南](DEPLOY.md#部署指南)
 
 # 二、根据开发文档编写TASK示例
 
-根据[SIA-TASK开发指南](https://github.com/siaorg/sia-task/blob/master/DEVELOPGUIDE.md)，编写TASK示例(本示例编写了两个TASK，使用其中一个即可)，具体开发规则见[SIA-TASK开发指南](https://github.com/siaorg/sia-task/blob/master/DEVELOPGUIDE.md)，TASK示例如下：
+根据[开发指南](DEVELOPGUIDE.md#开发指南)，编写TASK示例(本示例配置了两个TASK，使用其中一个即可)，具体开发规则见[开发指南](DEVELOPGUIDE.md#开发指南)，TASK示例如下：
 
   ## 2.1 自动抓取任务开发代码示例
   
@@ -221,7 +212,7 @@
 
 # 三、 创建、配置并激活JOB
 
-根据[使用指南](https://github.com/siaorg/sia-task/blob/master/USERSGUIDE.md)进行如下操作：
+根据[使用指南](USERSGUIDE.md#使用指南)进行如下操作：
 
 ## 3.1 观察TASK管理界面：
 
@@ -279,7 +270,7 @@ TASK配置成功后，点击`状态操作`下拉按钮中`激活`按钮，激活
 
 ## 3.5 观察JOB日志
 
-成功激活JOB后，进入调度日志界面，等待至JOB执行时间后，可查看到该JOB执行日志，如下图示：
+成功激活JOB后，进入调度日志界面，都待至JOB执行时间后，可查看到该JOB执行日志，如下图示：
 
 ![](docs/images/faststart_jobTaskLog.png)
 
@@ -294,8 +285,6 @@ TASK配置成功后，点击`状态操作`下拉按钮中`激活`按钮，激活
 当需要停止JOB时，点击`状态操作`下拉按钮中`停止`按钮，停止JOB
 
 ![](docs/images/faststart_jobActive.png)
-
-本文仅是对微服务任务调度平台SIA-TASK的初步实践使用，通过以上阐述，可实现SIA-TASK对执行器实例TASK实现任务调度的功能，微服务调度平台SIA-TASK还有更加强大的任务调度功能，可以应对更加复杂的业务场景，后续更多文章，敬请期待！
 
 
 
