@@ -34,12 +34,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<version>2.9.9</version>
-		</dependency>
-
-		<dependency>
 			<groupId>com.sia</groupId>
 			<artifactId>sia-task-core</artifactId>
 			<version>1.0.0</version>
