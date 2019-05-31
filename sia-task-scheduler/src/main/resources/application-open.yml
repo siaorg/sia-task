@@ -13,7 +13,7 @@ server.port: 19011
 ############## zooKeeperHosts config ########################
 #############################################################
 #zooKeeperSessionTime: 2000
-zooKeeperHosts: 10.143.131.134:12181
+zooKeeperHosts: 127.0.0.1:2181
 
 #############################################################
 ############## eureka config ################################
@@ -29,9 +29,9 @@ eureka.instance.instance-id: ${spring.cloud.client.ipAddress}:${server.port}
 spring:
     datasource:
         name: test
-        url: jdbc:mysql://10.143.131.134:3306/skyworld_scheduler_dev?useUnicode=true&characterEncoding=utf8
-        username: root
-        password: Mysql@888888
+        url: jdbc:mysql://127.0.0.1:3306/skyworld_task?useUnicode=true&characterEncoding=utf8
+        username: ****
+        password: ****
         # 使用druid数据源
         type: com.alibaba.druid.pool.DruidDataSource
         driver-class-name: com.mysql.jdbc.Driver
@@ -74,7 +74,7 @@ logging.file: ./logs/${spring.application.name}.log
 
 # 用户权限  所有权限（创建、读取、写入，删除，赋权）
 # 可选参数，需要overwritten此参数时，打开注释并填写指定的所有用户权限，否则默认为 SIA:SkyWorld
-#ALLAUTH: SIA:SkyWorld
+ALLAUTH: SIA:SIA
 
 # 用户权限  只有创建权限
 # 可选参数，需要overwritten此参数时，打开注释并填写指定的创建权限，否则默认为 guest:guest
