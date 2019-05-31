@@ -135,14 +135,14 @@
 
                 </excludes>
             </resource>
-            <resource>
-            <directory>src/main/resources</directory>
-            <filtering>true</filtering>
-            <includes>
-                <include>application.yml</include>
-                <include>application-${envFlag}.yml</include>
-            </includes>
-        </resource>
+            <!--<resource>-->
+            <!--<directory>src/main/resources</directory>-->
+            <!--<filtering>true</filtering>-->
+            <!--<includes>-->
+                <!--<include>application.yml</include>-->
+                <!--<include>application-${envFlag}.yml</include>-->
+            <!--</includes>-->
+        <!--</resource>-->
         </resources>
 
         <plugins>
