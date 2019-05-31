@@ -142,7 +142,7 @@
             <!--<include>application.yml</include>-->
             <!--<include>application-${envFlag}.yml</include>-->
             <!--</includes>-->
-        <!--</resource>-->
+            <!--</resource>-->
         </resources>
 
         <plugins>
