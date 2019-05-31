@@ -44,7 +44,7 @@
     </resultMap>
 
     <resultMap id="selectJobGroupDetails"   type="java.util.Map">
-        <result property="jobGroup" column="groups" />
+        <result property="jobGroup" column="job_group" />
         <result property="taskCount" column="task_count" />
         <result property="jobCount" column="job_count" />
         <result property="Emails" column="Emails" />
@@ -216,7 +216,7 @@
     <select id="selectJobGroupDetails" resultMap="selectJobGroupDetails"
             parameterType="java.lang.String">
         SELECT
-        sbk.task_group_name AS groups,
+        sbk.task_group_name AS job_group,
         COUNT(DISTINCT sbk.task_id) AS task_count ,
         COUNT(DISTINCT sbj.job_id) job_count,
         GROUP_CONCAT(DISTINCT(sbj.job_alarm_email)) AS Emails
@@ -231,7 +231,7 @@
                 #{roleNames, jdbcType=VARCHAR}
             </foreach>
         </if>
-        GROUP BY groups;
+        GROUP BY job_group;
     </select>
 
 <!--schedulerMapper-->
