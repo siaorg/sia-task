@@ -7,14 +7,14 @@ spring.application.cnname: 任务编排中心
 #endpoints.health.sensitive: false
 
 #zooKeeperHosts: 127.0.0.1:12181
-zooKeeperHosts: 10.143.131.134:12181,10.143.131.12:12181,10.143.131.47:12181
+zooKeeperHosts: 127.0.0.1:2181
 
 spring:
     datasource:
         name: test
-        url: jdbc:mysql://10.143.131.134:3306/skyworld_scheduler_dev_lxs?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
-        username: root
-        password: Mysql@888888
+        url: jdbc:mysql://127.0.0.1:3306/skyworld_task?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
+        username: ****
+        password: ****
         # 使用druid数据源
         type: com.alibaba.druid.pool.DruidDataSource
         driver-class-name: com.mysql.jdbc.Driver
@@ -66,4 +66,3 @@ logging.file: ./logs/${spring.application.name}.log
 # 用户权限  ZK权限模式
 # 可选参数，需要overwritten此参数时，打开注释并填写指定的ZK权限模式，否则默认为 digest
 # DIGEST: digest
-ZK_ONLINE_ROOT_PATH: SkyWorldOnlineTaskLLLOPEN

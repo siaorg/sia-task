@@ -20,9 +20,6 @@
 
 package com.sia.core.helper;
 
-
-
-
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.JavaType;
 import org.slf4j.Logger;
