@@ -103,5 +103,5 @@ public class AuthController {
         session.removeAttribute("roleNames");
         return ResultBody.success("logout");
     }
-    
+
 }

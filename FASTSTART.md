@@ -8,9 +8,9 @@
 
 根据[开发指南](DEVELOPGUIDE.md#开发指南)，编写TASK示例(本示例配置了两个TASK，使用其中一个即可)，具体开发规则见[开发指南](DEVELOPGUIDE.md#开发指南)，TASK示例如下：
 
-  #2.1 自动抓取任务开发代码示例
+  ## 2.1 自动抓取任务开发代码示例
   
-  ## 2.1.1. `POM`文件
+  ### 2.1.1. `POM`文件
   
   ```xml
   <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -107,7 +107,7 @@
   </project>
   ```
   
-  ## 2.1.2. 配置文件
+  ### 2.1.2. 配置文件
   
   ```yml
   # 项目名称（必须）
@@ -129,7 +129,7 @@
   spring.onlinetask.serial: true
   ```
   
-  ## 2.1.3. `controller`
+  ### 2.1.3. `controller`
   
   ```java
   package com.creditease.online.example;
@@ -178,7 +178,7 @@
 }
   ```
   
-  ## 2.1.4. `启动类`
+  ### 2.1.4. `启动类`
   
   ```java
   package com.creditease;
@@ -202,7 +202,7 @@
   
   }
   ```
-#2.2 启动该TASK所在进程
+## 2.2 启动该TASK所在进程
 启动日志如下图：
 
 ![](docs/images/faststart_taskStart.png)
@@ -210,11 +210,11 @@
 日志表明该进程正常启动且该TASK信息正常上传至ZK中
 
 
-#三、 创建、配置并激活JOB
+# 三、 创建、配置并激活JOB
 
 根据[使用指南](USERSGUIDE.md#使用指南)进行如下操作：
 
-##3.1 观察TASK管理界面：
+## 3.1 观察TASK管理界面：
 
 ![](docs/images/faststart_taskNew.png)
 
@@ -261,14 +261,14 @@ TASK已自动注册至ZK，并同步至数据库中
 
 ![](docs/images/faststart_jobMappingTaskMsg2.png)
 
-##3.4 激活JOB
+## 3.4 激活JOB
 
 TASK配置成功后，点击`状态操作`下拉按钮中`激活`按钮，激活JOB
 
 
 ![](docs/images/faststart_jobActive.png)
 
-##3.5 观察JOB日志
+## 3.5 观察JOB日志
 
 成功激活JOB后，进入调度日志界面，都待至JOB执行时间后，可查看到该JOB执行日志，如下图示：
 
@@ -280,7 +280,7 @@ TASK配置成功后，点击`状态操作`下拉按钮中`激活`按钮，激活
 
 标号3：endTask为系统追加的一个虚拟TASK，仅表示该JOB的一次调度过程完成
 
-##3.6 停止JOB
+## 3.6 停止JOB
 
 当需要停止JOB时，点击`状态操作`下拉按钮中`停止`按钮，停止JOB
 
