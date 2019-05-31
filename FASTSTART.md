@@ -11,7 +11,7 @@
 
 官方文档：https://github.com/siaorg/sia-task/blob/master/README.md
 
-下载源码后，根据[SIA-TASK部署指南](https://github.com/siaorg/sia-task/blob/master/DEPLOY.md)，搭建任务调度平台并启动，详见[SIA-TASK部署指南](https://github.com/siaorg/sia-task/blob/master/DEPLOY.md)
+下载源码后，根据[SIA-TASK部署指南](https://github.com/siaorg/sia-task/blob/master/DEPLOY.md)，搭建SIA-TASK任务调度平台并启动，详见[SIA-TASK部署指南](https://github.com/siaorg/sia-task/blob/master/DEPLOY.md)
 
 # 二、根据开发文档编写TASK示例
 
@@ -279,7 +279,7 @@ TASK配置成功后，点击`状态操作`下拉按钮中`激活`按钮，激活
 
 ## 3.5 观察JOB日志
 
-成功激活JOB后，进入调度日志界面，都待至JOB执行时间后，可查看到该JOB执行日志，如下图示：
+成功激活JOB后，进入调度日志界面，等待至JOB执行时间后，可查看到该JOB执行日志，如下图示：
 
 ![](docs/images/faststart_jobTaskLog.png)
 
