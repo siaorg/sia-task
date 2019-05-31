@@ -242,7 +242,7 @@ TASK已自动注册至ZK，并同步至数据库中
 
 ## 3.3 配置TASK
 
-添加JOB成功后，需要为该JOB配置相应的TASK，可配置一个或多个，本例以配置一个TASK为例
+添加JOB成功后，需要为该JOB配置相应的TASK，可配置单个或多个，本例以配置单个TASK为例
 
 ![](docs/images/faststart_jobMappingTask.png)
 
