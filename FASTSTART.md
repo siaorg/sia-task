@@ -161,6 +161,7 @@ package com.creditease.online.example;
         Map<String, String> info = new HashMap<String, String>();
         info.put("result", "success-param"+"入参是："+json);
         info.put("status", "success");
+        System.out.println("调用任务成功");
 
         return JSONHelper.toString(info);
     }
@@ -174,6 +175,7 @@ package com.creditease.online.example;
         Map<String, String> info = new HashMap<String, String>();
         info.put("result", "success-noparam");
         info.put("status", "success");
+        System.out.println("调用任务成功");
 
         return JSONHelper.toString(info);
     }
@@ -234,7 +236,7 @@ TASK已自动注册至ZK，并同步至数据库中
 
 选定Job_Group,尽量选定所要关联的TASK所属的Group组名
 
-分别填写Job类型及其他项，Job类型也可以选择FixRate(特定时间点)类型，本例为CRON类型，具体数值为：从当前时刻开始，每30秒执行一次
+分别填写Job类型及其他项，Job类型也可以选择FixRate(特定时间点)类型，本例为CRON类型，具体数值为：0/30 * * * * ?，表示从当前时刻开始，每30秒执行一次
 
 点击`添加`，添加JOB成功
 
@@ -281,7 +283,15 @@ TASK配置成功后，点击`状态操作`下拉按钮中`激活`按钮，激活
 
 标号3：endTask为系统追加的一个虚拟TASK，仅表示该JOB的一次调度过程完成
 
-## 3.6 停止JOB
+## 3.6 观察执行器TASK实例日志
+
+可观察执行器实例TASK日志，验证是否调用成功
+
+![](docs/images/faststart_taskRun.png)
+
+从日志可知，确实调用成功，并且每30秒调用一次
+
+## 3.7 停止JOB
 
 当需要停止JOB时，点击`状态操作`下拉按钮中`停止`按钮，停止JOB
 
