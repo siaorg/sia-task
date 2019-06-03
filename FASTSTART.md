@@ -3,7 +3,9 @@
 
 引言
 
-最近在研究开源项目微服务任务调度平台SIA-TASK，本文通过示例来阐述一个TASK(执行器)是如何通过SIA-TASK实现任务调度的。
+最近在研究开源项目微服务任务调度平台SIA-TASK，
+最近微服务任务调度平台SIA-TASK开源，SIA-TASK属于分布式任务调度的平台，使用起来简单方便，非常容易入手，部署搭建好SIA-TASK任务调度平台之后，编写TASK进行调度，进而实现整个调度流程，本文通过示例来阐述一个TASK(执行器)是如何通过SIA-TASK实现任务调度的。
+
 
 # 一、根据部署文档搭建任务调度平台
 
@@ -11,11 +13,11 @@
 
 官方文档：https://github.com/siaorg/sia-task/blob/master/README.md
 
-下载源码后，根据[SIA-TASK部署指南](https://github.com/siaorg/sia-task/blob/master/DEPLOY.md)，搭建SIA-TASK任务调度平台并启动，详见[SIA-TASK部署指南](https://github.com/siaorg/sia-task/blob/master/DEPLOY.md)
+从github上clone代码仓库并下载源码后，可根据[SIA-TASK部署指南](https://github.com/siaorg/sia-task/blob/master/DEPLOY.md)，搭建SIA-TASK任务调度平台并启动，详见[SIA-TASK部署指南](https://github.com/siaorg/sia-task/blob/master/DEPLOY.md)
 
 # 二、根据开发文档编写TASK示例
 
-根据[SIA-TASK开发指南](https://github.com/siaorg/sia-task/blob/master/DEVELOPGUIDE.md)，编写TASK示例(本示例编写了两个TASK，使用其中一个即可)，具体开发规则见[SIA-TASK开发指南](https://github.com/siaorg/sia-task/blob/master/DEVELOPGUIDE.md)，TASK示例如下：
+根据[SIA-TASK开发指南](https://github.com/siaorg/sia-task/blob/master/DEVELOPGUIDE.md)，编写了两个TASK示例，本文仅使用了其中一个，具体开发规则见[SIA-TASK开发指南](https://github.com/siaorg/sia-task/blob/master/DEVELOPGUIDE.md)，TASK示例如下：
 
 ## 2.1 自动抓取任务开发代码示例
 ### 2.1.1. `POM`文件
@@ -297,4 +299,4 @@ TASK配置成功后，点击`状态操作`下拉按钮中`激活`按钮，激活
 
 ![](docs/images/faststart_jobActive.png)
 
-本文仅是对微服务任务调度平台SIA-TASK的初步实践使用，通过以上描述，可实现SIA-TASK对执行器实例TASK实现任务调度的功能，SIA-TASK还有更加强大的任务调度功能，可以应对更加复杂的业务场景，后续更多文章，敬请期待！
+本文仅是对微服务任务调度平台SIA-TASK的初步实践使用，通过以上描述，可实现SIA-TASK对执行器实例TASK实现任务调度的功能，本文中搭建的示例非常简单，适合快速入手SIA-TASK，当然，SIA-TASK还有更加强大的任务调度功能，可以应对更加复杂的业务场景，大家可以继续深度使用体验，将SIA-TASK的功能点和业务相结合，将其应用至更加复杂的业务场景之下。
