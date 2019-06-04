@@ -3,7 +3,7 @@
 
 引言
 
-最近微服务任务调度平台SIA-TASK开源，SIA-TASK属于分布式的任务调度平台，使用起来简单方便，非常容易入手，部署搭建好SIA-TASK任务调度平台之后，编写TASK进行调度，进而实现整个调度流程。本文新建了JOB示例，该JOB关联了前后级联的两个TASK，TASKONE(前置TASK)和TASKTWO(后置TASK)，主要阐述一个JOB怎样关联配置两个级联TASK，以及该JOB是如何通过SIA-TASK实现任务调度，最终实现对两个TASK执行器的调用。
+最近微服务任务调度平台SIA-TASK开源，SIA-TASK属于分布式的任务调度平台，使用起来简单方便，非常容易入手，部署搭建好SIA-TASK任务调度平台之后，编写TASK后配置JOB进行调度，进而实现整个调度流程。本文新建了JOB示例，该JOB关联了前后级联的两个TASK，TASKONE(前置TASK)和TASKTWO(后置TASK)，主要阐述一个JOB怎样关联配置两个级联TASK，以及该JOB是如何通过SIA-TASK实现任务调度，最终实现对两个TASK执行器的调用。
 
 
 ## 首先，根据部署文档来搭建任务调度平台：
@@ -111,7 +111,7 @@ public class OpenTestController {
 从图中可知，TASK已同步至数据库中
 
 
-## 再次，需要进行JOB的创建和JOB对TASK的关联和配置
+## 再次，需要进行JOB的创建和JOB对TASK的关联及配置
 
 根据[使用指南](https://github.com/siaorg/sia-task/blob/master/USERSGUIDE.md)进行如下操作：
 
@@ -135,7 +135,7 @@ TASK已自动注册至ZK，并同步至数据库中
 
 ### 配置TASK
 
-添加JOB成功后，需要为该JOB配置相应的TASK，可配置单个或多个，本例以配置单个TASK为例
+添加JOB成功后，需要为该JOB配置相应的TASK，可配置单个或多个，本例以配置两个级联TASK为例
 
 ![](docs/images/faststart_jobMappingTask2.png)
 
@@ -158,7 +158,7 @@ TASKTWO参数配置：
 
 ![](docs/images/faststart_jobMappingTaskEdit4.png)
 
-用箭头将TASKONE指向TASKTWO，即可完成TASK指尖的依赖关系设置，点击提交，完成整个JOB的配置，配置完成后，可点击`TASK信息`按钮，查看`TASK配置信息详情`，观察该JOB的TASK配置情况
+用箭头将TASKONE(前置TASK)指向TASKTWO(后置TASK)，即可完成TASK之间的依赖关系设置，点击提交，完成整个JOB的配置，配置完成后，可点击`TASK信息`按钮，查看`TASK配置信息详情`，观察该JOB的TASK配置情况
 
 `TASK配置信息图`：
 
@@ -173,27 +173,31 @@ TASKTWO参数配置：
 TASK配置成功后，点击`状态操作`下拉按钮中`激活`按钮，激活JOB
 
 
-![](docs/images/faststart_jobActive.png)
+![](docs/images/faststart_jobActive2.png)
 
-激活JOB后，刷下该界面，可发现该JOB列表调度器(红框处)出现IP及端口号，表示该JOB激活后被该调度器抢占
+激活JOB后，刷新该界面，可发现该JOB列表调度器(红框处)出现调度器IP及端口号，表示该JOB激活后被该调度器抢占
 
 ### 先观察管理界面JOB及TASK日志
 
 成功激活JOB后，进入调度日志界面，等待至JOB执行时间后，可查看到该JOB执行日志，如下图示：
 
-![](docs/images/faststart_jobTaskLog.png)
+![](docs/images/faststart_jobTaskLog2.jpg)
 
 标号1：代表该JOB日志
 
-标号2：代表该JOB所关联的TASK日志
+标号2：代表该JOB所关联的前置TASK(TASKONE)日志
 
-标号3：endTask为系统追加的一个虚拟TASK，仅表示该JOB的一次调度过程完成
+标号3：代表该JOB所关联的后置TASK(TASKTWO)日志
+
+标号4：endTask为系统追加的一个虚拟TASK，仅表示该JOB的一次调度过程完成
+
+同时从执行时间也可观察出，每30秒调度一次
 
 ### 再观察执行器TASK实例日志
 
-可观察执行器实例TASK日志，验证是否调用成功
+还可观察执行器实例TASK日志，验证是否调用成功
 
-![](docs/images/faststart_taskRun.png)
+![](docs/images/faststart_taskRun2.png)
 
 从日志可知，确实调用成功，并且每30秒调用一次
 
@@ -201,6 +205,6 @@ TASK配置成功后，点击`状态操作`下拉按钮中`激活`按钮，激活
 
 当需要停止JOB时，点击`状态操作`下拉按钮中`停止`按钮，停止JOB
 
-![](docs/images/faststart_jobActive.png)
+![](docs/images/faststart_jobActive2.png)
 
 本文仅是对微服务任务调度平台SIA-TASK的初步实践使用，通过以上描述，可实现SIA-TASK对执行器实例TASK实现任务调度的功能，本文中搭建的示例非常简单，适合快速入手SIA-TASK，当然，SIA-TASK还有更加强大的任务调度功能，可以应对更加复杂的业务场景，大家可以继续深度使用体验，将SIA-TASK的功能点和业务相结合，将其应用至更加复杂的业务场景之下。
