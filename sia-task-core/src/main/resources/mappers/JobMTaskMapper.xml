@@ -44,7 +44,7 @@
     </resultMap>
 
     <resultMap id="selectJobGroupDetails"   type="java.util.Map">
-        <result property="jobGroup" column="groups" />
+        <result property="jobGroup" column="task_group_name" />
         <result property="taskCount" column="task_count" />
         <result property="jobCount" column="job_count" />
         <result property="Emails" column="Emails" />
@@ -216,9 +216,9 @@
     <select id="selectJobGroupDetails" resultMap="selectJobGroupDetails"
             parameterType="java.lang.String">
         SELECT
-        sbk.task_group_name AS groups,
+        sbk.task_group_name AS task_group_name,
         COUNT(DISTINCT sbk.task_id) AS task_count ,
-        COUNT(DISTINCT sbj.job_id) job_count,
+        COUNT(DISTINCT sbj.job_id) AS job_count,
         GROUP_CONCAT(DISTINCT(sbj.job_alarm_email)) AS Emails
         FROM skyworld_basic_job sbj
         RIGHT JOIN  skyworld_basic_task sbk
@@ -231,7 +231,7 @@
                 #{roleNames, jdbcType=VARCHAR}
             </foreach>
         </if>
-        GROUP BY groups;
+        GROUP BY task_group_name;
     </select>
 
 <!--schedulerMapper-->
