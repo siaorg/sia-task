@@ -143,6 +143,7 @@ public class OpenTestController {
 ![](docs/images/faststart_jobMappingTaskDetail2.png)
 
 如上图所示，将需要配置的两个TASK均拉取至右侧，点击`编辑`按钮(铅笔形状)，进入TASK`参数配置`界面
+
 TASKONE参数配置：
 
 ![](docs/images/faststart_jobMappingTaskEdit3.png)
