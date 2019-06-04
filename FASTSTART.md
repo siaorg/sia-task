@@ -115,7 +115,6 @@ public class OpenTestController {
 
 根据[使用指南](https://github.com/siaorg/sia-task/blob/master/USERSGUIDE.md)进行如下操作：
 
-TASK已自动注册至ZK，并同步至数据库中
 
 ### 创建JOB，配置参数
 
