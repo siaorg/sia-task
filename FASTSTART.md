@@ -12,7 +12,7 @@
 
 官方文档：https://github.com/siaorg/sia-task/blob/master/README.md
 
-任务调度平台主要由任务编排中心、任务调度中心及ZK和DB等第三方服务构成，搭建SIA-TASK任务调度平台需要的主要工作包括：
+任务调度平台主要由任务编排中心、任务调度中心以及ZK和DB等第三方服务构成，搭建SIA-TASK任务调度平台需要的主要工作包括：
 
 1.MySQL的搭建及根据建表语句建表
 
@@ -26,8 +26,10 @@
 
 从github上clone代码仓库并下载源码后，可根据[SIA-TASK部署指南](https://github.com/siaorg/sia-task/blob/master/DEPLOY.md)，搭建SIA-TASK任务调度平台并启动，详见[SIA-TASK部署指南](https://github.com/siaorg/sia-task/blob/master/DEPLOY.md)
 
+搭建好SIA-TASK任务调度平台后，下一步就是TASK执行器实例的编写啦
 
-## 其次，根据开发文档来编写TASK示例并启动：
+
+## 其次，根据开发文档来编写TASK执行器实例并启动：
 
 根据[SIA-TASK开发指南](https://github.com/siaorg/sia-task/blob/master/DEVELOPGUIDE.md)，编写了两个TASK示例，TASKONE(前置TASK)和TASKTWO(后置TASK)，具体开发规则见[SIA-TASK开发指南](https://github.com/siaorg/sia-task/blob/master/DEVELOPGUIDE.md)，TASK示例关键配置即代码如下：
 
@@ -61,49 +63,49 @@
 ```
 ### 编写TASK执行器主要代码
 ```java
-  @RestController
-  public class OpenTestController {
-
-    @OnlineTask(description = "success,有入参",enableSerial=true)
-    @RequestMapping(value = "/success-param", method = { RequestMethod.POST }, produces = "application/json;charset=UTF-8")
-    @CrossOrigin(methods = { RequestMethod.POST }, origins = "*")
-    @ResponseBody
-    public String taskOne(@RequestBody String json) {
-        Map<String, String> info = new HashMap<String, String>();
-        info.put("result", "success-param"+"入参是："+json);
-        info.put("status", "success");
-        System.out.println("调用任务成功");
-
-        return JSONHelper.toString(info);
-    }
-
+@Controller
+public class OpenTestController {
 
     @OnlineTask(description = "success,无入参",enableSerial=true)
     @RequestMapping(value = "/success-noparam", method = { RequestMethod.POST }, produces = "application/json;charset=UTF-8")
     @CrossOrigin(methods = { RequestMethod.POST }, origins = "*")
     @ResponseBody
-    public String taskTwo() {
+    public String taskOne() {
         Map<String, String> info = new HashMap<String, String>();
         info.put("result", "success-noparam");
         info.put("status", "success");
-        System.out.println("调用任务成功");
+        System.out.println("调用taskOne任务成功");
+
+        return JSONHelper.toString(info);
+    }
+
+    @OnlineTask(description = "success,有入参",enableSerial=true)
+    @RequestMapping(value = "/success-param", method = { RequestMethod.POST }, produces = "application/json;charset=UTF-8")
+    @CrossOrigin(methods = { RequestMethod.POST }, origins = "*")
+    @ResponseBody
+    public String taskTwo(@RequestBody String json) {
+        Map<String, String> info = new HashMap<String, String>();
+        info.put("result", "success-param"+"入参是："+json);
+        info.put("status", "success");
+        System.out.println("调用taskTwo任务成功");
 
         return JSONHelper.toString(info);
     }
 
 }
+```
 
 ### 当编写完TASK执行器实例后，启动该执行器所在进程
 
 启动日志如下图：
 
-![](docs/images/faststart_taskStart.png)
+![](docs/images/faststart_taskStart2.png)
 
 日志表明该进程正常启动，并且TASK执行器信息正常上传至ZK当中
 
 观察TASK管理界面，如图示：
 
-![](docs/images/faststart_taskNew.png)
+![](docs/images/faststart_taskNew2.png)
 
 
 从图中可知，TASK已同步至数据库中
@@ -123,7 +125,7 @@ TASK已自动注册至ZK，并同步至数据库中
 
 点击后进入`添加Job`界面
 
-![](docs/images/faststart_jobEdit.png)
+![](docs/images/faststart_jobEdit2.png)
 
 选定Job_Group,尽量选定所要关联的TASK所属的Group组名
 
@@ -135,25 +137,36 @@ TASK已自动注册至ZK，并同步至数据库中
 
 添加JOB成功后，需要为该JOB配置相应的TASK，可配置单个或多个，本例以配置单个TASK为例
 
-![](docs/images/faststart_jobMappingTask.png)
+![](docs/images/faststart_jobMappingTask2.png)
 
 点击`配置TASK`后，进入`Task信息配置`界面
 
-![](docs/images/faststart_jobMappingTaskDetail.png)
+![](docs/images/faststart_jobMappingTaskDetail2.png)
 
-如上图所示，将需要配置的TASK拉取至右侧，点击`编辑`按钮(铅笔形状)，进入TASK`参数配置`界面
+如上图所示，将需要配置的两个TASK均拉取至右侧，点击`编辑`按钮(铅笔形状)，进入TASK`参数配置`界面
+TASKONE参数配置：
 
-![](docs/images/faststart_jobMappingTaskEdit.png)
+![](docs/images/faststart_jobMappingTaskEdit3.png)
 
-按图中编辑完成后，点击`添加`，成功将TASK配置至JOB中，可点击`TASK信息`按钮，查看`TASK配置信息详情`，观察该JOB的TASK配置情况
+TASKTWO参数配置：
+
+![](docs/images/faststart_jobMappingTaskEdit2.png)
+
+按图中编辑完成后，点击`添加`，成功将TASKONE和TASKTWO配置至JOB中，
+
+添加完毕后，可进行两个TASK的依赖关系配置，如下图所示：
+
+![](docs/images/faststart_jobMappingTaskEdit4.png)
+
+用箭头将TASKONE指向TASKTWO，即可完成TASK指尖的依赖关系设置，点击提交，完成整个JOB的配置，配置完成后，可点击`TASK信息`按钮，查看`TASK配置信息详情`，观察该JOB的TASK配置情况
 
 `TASK配置信息图`：
 
-![](docs/images/faststart_jobMappingTaskMsg.png)
+![](docs/images/faststart_jobMappingTaskMsg3.png)
 
 `TASK配置信息详情`
 
-![](docs/images/faststart_jobMappingTaskMsg2.png)
+![](docs/images/faststart_jobMappingTaskMsg4.png)
 
 ## 最后，激活JOB并观察相应日志
 
