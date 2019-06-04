@@ -33,7 +33,12 @@
 
 根据[SIA-TASK开发指南](https://github.com/siaorg/sia-task/blob/master/DEVELOPGUIDE.md)，编写了两个TASK示例，TASKONE(前置TASK)和TASKTWO(后置TASK)，具体开发规则见[SIA-TASK开发指南](https://github.com/siaorg/sia-task/blob/master/DEVELOPGUIDE.md)，TASK示例关键配置即代码如下：
 
-该示例为springboot项目，并且需要通过POM文件引入SIA-TASK的执行器关键依赖包sia-task-hunter来实现task执行器的自动抓取，示例主要包括以下几部分：
+该示例为springboot项目，并且需要通过POM文件引入SIA-TASK的执行器关键依赖包sia-task-hunter来实现task执行器的自动抓取，首先需要将SIA-TASK源码中的sia-task-hunter包用mvn install命令打包为jar包安装至本地仓库，SIA-TASK源码中的sia-task-hunter包如下图示：
+
+![](docs/images/faststart_hunterInstall.png)
+
+
+然后就可以进行示例的编写，示例主要包括以下几部分：
 
 ### 配置`POM`文件关键依赖：
 ```xml 
