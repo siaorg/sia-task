@@ -101,14 +101,14 @@
 					<exclude>application-open.yml</exclude>
 				</excludes>
 			</resource>
-			<!--<resource>-->
-				<!--<directory>src/main/resources</directory>-->
-				<!--<filtering>true</filtering>-->
-				<!--<includes>-->
-					<!--<include>application.yml</include>-->
-					<!--<include>application-${envFlag}.yml</include>-->
-				<!--</includes>-->
-			<!--</resource>-->
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>application.yml</include>
+					<include>application-open.yml</include>
+				</includes>
+			</resource>
 		</resources>
 		<plugins>
 			<plugin>
