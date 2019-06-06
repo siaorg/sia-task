@@ -1,4 +1,4 @@
-package com.sia.task.executordemo;
+package com.sia.task.executor.demo;
 import com.sia.hunter.annotation.OnlineTask;
 import com.sia.hunter.helper.JSONHelper;
 import org.springframework.stereotype.Controller;
