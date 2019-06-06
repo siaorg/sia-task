@@ -5,9 +5,9 @@
 
 	<!-- 项目名称配置，请自定义修改 -->
 	<groupId>com.sia</groupId>
-	<artifactId>sia-task-executordemo</artifactId>
+	<artifactId>sia-task-executor-demo</artifactId>
 	<version>1.0.0</version>
-	<name>sia-task-executordemo</name>
+	<name>sia-task-executor-demo</name>
 	<description>Demo project for SIA-TASK executor</description>
 	<packaging>jar</packaging>
 
