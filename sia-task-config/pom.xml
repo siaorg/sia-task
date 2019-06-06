@@ -112,7 +112,7 @@
 				<filtering>true</filtering>
 				<includes>
 					<include>application.yml</include>
-					<include>application-open.yml</include>
+					<include>application-${envFlag}.yml</include>
 				</includes>
 			</resource>
 		</resources>
