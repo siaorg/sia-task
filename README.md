@@ -13,7 +13,7 @@
 <font color=#5584FF size=4 face="Times new roman">
 A lot of batch tasks need to be processed by job scheduling systems. The single architectures are evolving towards distributed ones. We often need distributed job scheduling platforms to handle the needs of business systems. But such platforms may not support job scheduling across OS or are coupled with business features. We therefore decided to develop SIA-TASK.
 </font>
-
+<br>
 
 SIA是我们公司基础开发平台Simple is Awesome的简称，SIA-TASK（微服务任务调度平台）是其中的一项重要产品，SIA-TASK契合当前微服务架构模式，具有跨平台，可编排，高可用，无侵入，一致性，异步并行，动态扩展，实时监控等特点。
 
