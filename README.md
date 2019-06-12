@@ -10,7 +10,12 @@
 
 无论是互联网应用或者企业级应用，都充斥着大量的批处理任务。我们常常需要一些任务调度系统帮助我们解决问题。随着微服务化架构的逐步演进，单体架构逐渐演变为分布式、微服务架构。在此的背景下，很多原先的任务调度平台已经不能满足业务系统的需求。于是出现了一些基于分布式的任务调度平台。这些平台各有其特点，但各有不足之处，比如不支持任务编排、与业务高耦合、不支持跨平台等问题。不是非常符合公司的需求，因此我们开发了微服务任务调度平台（SIA-TASK）。
 
+A lot of batch tasks need to be processed by job scheduling systems. The single architectures are evolving towards distributed ones. We often need distributed job scheduling platforms to handle the needs of business systems. But such platforms may not support job scheduling across OS or are coupled with business features. We therefore decided to develop SIA-TASK.
+
+
 SIA是我们公司基础开发平台Simple is Awesome的简称，SIA-TASK（微服务任务调度平台）是其中的一项重要产品，SIA-TASK契合当前微服务架构模式，具有跨平台，可编排，高可用，无侵入，一致性，异步并行，动态扩展，实时监控等特点。
+
+SIA (Simple is Awesome) is our basic development platform. SIA-TASK is one of the key products of SIA and can work across OS. Its features include job scheduling, high availability, non-invasiveness, consistency, asynchronous concurrent processing, dynamic scale-out and real-time monitoring, etc.
 
 
 项目简介
