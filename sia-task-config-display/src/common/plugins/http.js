@@ -16,14 +16,15 @@ axios.interceptors.request.use(
 
 axios.interceptors.response.use(
   res => {
-    if (res.data.code !== 0) {
-      appRouters.replace({
-        path: '/login'
-      })
-      return res
-    } else {
-      return res
-    }
+    return res
+    // if (res.data.code !== 0) {
+    //   appRouters.replace({
+    //     path: '/login'
+    //   })
+    //   return res
+    // } else {
+    //   return res
+    // }
   },
   err => {
     if (err.message && err.message.indexOf('Network Error') > -1) {
