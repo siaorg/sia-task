@@ -109,7 +109,7 @@ create table if not exists skyworld_portal_stat
   last_time            datetime      not null comment '上次统计时间',
   create_time          datetime      not null
 )
-  charset = utf8;;
+  charset = utf8;
 
 -- ----------------------------
 -- Table structure for skyworld_task_log
