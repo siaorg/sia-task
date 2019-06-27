@@ -264,7 +264,7 @@ public class OnlineTaskAspect {
                     .getRequestAttributes();
             HttpServletRequest request = attributes.getRequest();
             String ip = request.getRemoteAddr();
-            LOGGER.debug("who call me ? ->[" + ip + "]");
+            LOGGER.info("who call me ? ->[" + ip + "]");
             return shouldIAccept(ip);
         }
         return true;
