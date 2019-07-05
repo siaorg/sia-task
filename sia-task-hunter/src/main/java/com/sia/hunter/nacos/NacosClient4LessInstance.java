@@ -22,14 +22,14 @@ import java.util.Properties;
 /**
  * @author jinghuali2
  * @version V1.0.0
- * @description NacosClient
+ * @description NacosClient4LessInstance
  * @date 2019-7-1 14:26
  * @see
  **/
 @Component
-public class NacosClient  {
+public class NacosClient4LessInstance  {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(NacosClient.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(NacosClient4LessInstance.class);
 
     @Value("${nacosServers}")
     protected String nacosServerHosts;

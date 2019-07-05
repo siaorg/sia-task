@@ -23,18 +23,16 @@ package com.sia.hunter.register;
 import com.alibaba.nacos.api.exception.NacosException;
 import com.alibaba.nacos.api.naming.listener.Event;
 import com.alibaba.nacos.api.naming.listener.EventListener;
-import com.alibaba.nacos.api.naming.listener.NamingEvent;
 import com.alibaba.nacos.api.naming.pojo.Instance;
-import com.sia.hunter.constant.OnlineTaskAppProperty;
-import com.sia.hunter.helper.JSONHelper;
-import com.sia.hunter.helper.OnlineTaskHelper;
-import com.sia.hunter.nacos.NacosClient;
-import com.sia.hunter.nacos.NacosClient4LessInstance;
-import com.sia.hunter.pojo.OnlineTaskPojo;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.sia.hunter.annotation.OnlineTask;
 import com.sia.hunter.collector.OnlineTaskCollector;
+import com.sia.hunter.constant.OnlineTaskAppProperty;
 import com.sia.hunter.constant.OnlineTaskConstant;
+import com.sia.hunter.helper.JSONHelper;
+import com.sia.hunter.helper.OnlineTaskHelper;
+import com.sia.hunter.nacos.NacosClient4LessInstance;
+import com.sia.hunter.pojo.OnlineTaskPojo;
 import com.sia.hunter.zookeeper.CuratorClient;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.cache.TreeCache;
@@ -81,10 +79,10 @@ import java.util.concurrent.atomic.AtomicReference;
  * @date 2018-07-11 16:11:19
  * @version V1.0.0
  **/
-@Component
-public class OnlineTaskRegister implements ApplicationListener<ApplicationEvent> {
+//@Component
+public class OnlineTaskRegister4LessInstance implements ApplicationListener<ApplicationEvent> {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(OnlineTaskRegister.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(OnlineTaskRegister4LessInstance.class);
 
     @Autowired
     public CuratorClient client;
@@ -105,7 +103,7 @@ public class OnlineTaskRegister implements ApplicationListener<ApplicationEvent>
      * nacos相关
      */
     @Autowired
-    public NacosClient nacosClient;
+    public NacosClient4LessInstance nacosClient;
 
     private String getZkOnlineRootPath() {
         StringBuilder zkOnlineRootPath = new StringBuilder().append(OnlineTaskConstant.ZK_SEPARATOR).append(zkOnlineRoot);
@@ -167,7 +165,7 @@ public class OnlineTaskRegister implements ApplicationListener<ApplicationEvent>
                         ExecutorService pool =new ThreadPoolExecutor(4, 4, 0L, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>(1024), namedThreadFactory, new ThreadPoolExecutor.AbortPolicy());
                         client.client().getConnectionStateListenable().addListener(listener, pool);
                     }else if ("nacos".equals(registry)){
-                        onlineTaskUpload4Nacos();
+                        onlineTaskUpload4Nacos4LessInstance();
                     }
 
                     LOGGER.info(OnlineTaskConstant.LOGPREFIX + "upload OnlineTask OK");
@@ -269,7 +267,7 @@ public class OnlineTaskRegister implements ApplicationListener<ApplicationEvent>
         try {
             Map<String, OnlineTaskPojo> onlineTask = OnlineTaskCollector.getOnlineTask();
             final int size = onlineTask.size();
-            for (Map.Entry<String, OnlineTaskPojo> onlineTaskEntry : onlineTask.entrySet()) {
+            for (Entry<String, OnlineTaskPojo> onlineTaskEntry : onlineTask.entrySet()) {
                 String httpPath = onlineTaskEntry.getKey();
                 OnlineTaskPojo instance = onlineTaskEntry.getValue();
                 String metaData = buildMetaData(instance);
@@ -651,7 +649,7 @@ public class OnlineTaskRegister implements ApplicationListener<ApplicationEvent>
      * 如果总是更新失败，则意味着白名单操作频繁，最多尝试10次之后放弃。
      * <p>
      * 此时本地缓存的结果可能不是最新，但一定是尝试更新（多次并发修改）期间存在的有效值。
-     * 
+     *
      * @param parentPath
      * @param instance
      * @throws Exception
@@ -742,7 +740,7 @@ public class OnlineTaskRegister implements ApplicationListener<ApplicationEvent>
      * @return
      * @throws
      */
-    private void onlineTaskUpload4Nacos() throws Exception {
+    private void onlineTaskUpload4Nacos4LessInstance() throws Exception {
 
         // 是否存在调度器HTTP调用授权路径
         if (!nacosClient.existNacosService(OnlineTaskConstant.NACOS_ONLINE_AUTH, OnlineTaskConstant.NACOS_ONLINE_AUTH_GROUP)) {
@@ -758,31 +756,23 @@ public class OnlineTaskRegister implements ApplicationListener<ApplicationEvent>
         // 监听授权白名单的变化
         monitorAuth4Nacos();
 
-        // 是否存在Task路径
-/*        if (!nacosClient.existNacosService(OnlineTaskConstant.NACOS_ONLINE_TASK, onlineTaskAppProperty.getGroupName())){
-            nacosClient.createNacosService(OnlineTaskConstant.NACOS_ONLINE_TASK, onlineTaskAppProperty.getGroupName());
-        }*/
-
         // ---------------预处理结束,task开始上传---------------------------
 
         final List<String> paths = new LinkedList<>();
         int count = 0;
+        Map<String, String> taskKeyMap = new HashMap<>();
 
         try{
             Map<String, OnlineTaskPojo> onlineTask = OnlineTaskCollector.getOnlineTask();
-            final int size = onlineTask.size();
-            for (Map.Entry<String, OnlineTaskPojo> onlineTaskEntry : onlineTask.entrySet()){
+            for (Entry<String, OnlineTaskPojo> onlineTaskEntry : onlineTask.entrySet()){
                 String httpPath = onlineTaskEntry.getKey();
                 OnlineTaskPojo instance = onlineTaskEntry.getValue();
-                String taskKeyMetaData = buildMetaData(instance);
 
                 // 装饰一下路径
-                String taskKey = onlineTaskAppProperty.getApplicationName() + OnlineTaskConstant.NACOS_KEY_SPLIT
-                        + httpPath.substring(1, httpPath.length());
+                String taskKey = onlineTaskAppProperty.getApplicationName() + OnlineTaskConstant.ZK_KEY_SPLIT
+                        + httpPath;
 
-                //删除已有相同实例，防止因为启动频繁导致的问题
-                nacosClient.deleteNacosInstance(OnlineTaskConstant.NACOS_ONLINE_TASK, taskKey, onlineTaskAppProperty.getGroupName(), onlineTaskAppProperty.getIPAndPort(), true);
-                nacosClient.createNacosInstance(OnlineTaskConstant.NACOS_ONLINE_TASK, taskKey, onlineTaskAppProperty.getGroupName(), onlineTaskAppProperty.getIPAndPort(), buildTaskMetaData(instance), true);
+                taskKeyMap.put(taskKey, taskKey);
 
                 count++;
                 paths.add(httpPath);
@@ -790,6 +780,12 @@ public class OnlineTaskRegister implements ApplicationListener<ApplicationEvent>
         }catch (Exception ex){
             LOGGER.error(OnlineTaskConstant.LOGPREFIX, ex);
         }
+
+        //删除已有相同实例，防止因为启动频繁导致的问题
+        nacosClient.deleteNacosInstance(OnlineTaskConstant.NACOS_ONLINE_TASK, onlineTaskAppProperty.getGroupName(), onlineTaskAppProperty.getApplicationName(),
+                                        onlineTaskAppProperty.getIPAndPort(), true);
+        nacosClient.createNacosInstance(OnlineTaskConstant.NACOS_ONLINE_TASK, onlineTaskAppProperty.getGroupName(), onlineTaskAppProperty.getApplicationName(),
+                                        onlineTaskAppProperty.getIPAndPort(), taskKeyMap, true);
 
         LOGGER.info(OnlineTaskConstant.LOGPREFIX + "↓↓↓↓↓↓↓↓↓↓上传OnlineTask明细↓↓↓↓↓↓↓↓↓↓");
 
@@ -824,5 +820,4 @@ public class OnlineTaskRegister implements ApplicationListener<ApplicationEvent>
         LOGGER.info(OnlineTaskConstant.LOGPREFIX + "↑↑↑↑↑↑↑↑↑↑第二部分：不合规的OnlineTask信息明细，，共[" + count + "]个↑↑↑↑↑↑↑↑↑↑");
         LOGGER.info(OnlineTaskConstant.LOGPREFIX + "↑↑↑↑↑↑↑↑↑↑以上是未上传的OnlineTask明细↑↑↑↑↑↑↑↑↑↑");
     }
-
 }
