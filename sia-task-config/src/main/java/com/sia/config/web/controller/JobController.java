@@ -24,6 +24,7 @@ import com.sia.config.web.constants.Constants;
 import com.sia.config.web.filter.AuthInterceptor;
 import com.sia.config.web.service.BasicJobService;
 import com.sia.config.web.service.JobMTaskService;
+import com.sia.config.web.service.RegistryService;
 import com.sia.config.web.util.PageBean;
 import com.sia.config.web.vo.JobPortrait;
 import com.sia.core.curator.Curator4Scheduler;
@@ -73,6 +74,9 @@ public class JobController {
     @Autowired
     protected Curator4Scheduler curator4Scheduler;
 
+    @Autowired
+    protected RegistryService registryService;
+
     /**
      * Perform cron expression validation
      *
@@ -102,7 +106,7 @@ public class JobController {
     @RequestMapping(value = "/selectJobStatus/{jobGroupName}/{jobKey}", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String selectJobStatus(@PathVariable String jobGroupName, @PathVariable String jobKey) {
-        String jobStatus = curator4Scheduler.getJobStatus(jobGroupName, jobKey);
+        String jobStatus = registryService.getJobStatus(jobGroupName, jobKey);
         LOGGER.info(Constants.LOG_PREFIX + " selectJobStatus : jobStatus is {}, jobGroupName is{}, jobKey is {}", jobStatus, jobGroupName, jobKey);
         return ResultBody.success(jobStatus, ResultBody.ResultEnum.SUCCESS.getMessage());
     }
@@ -182,7 +186,7 @@ public class JobController {
     public String stopJob(@PathVariable String jobGroupName, @PathVariable String jobKey) {
 
         String userName = userService.getCurrentUser();
-        boolean deleteJobKey = curator4Scheduler.deleteJobKey(jobGroupName, jobKey);
+        boolean deleteJobKey = registryService.deleteJobKey(jobGroupName, jobKey);
         LOGGER.info(Constants.OPERATION_LOG_PREFIX + "username is: " + userName + "; operation is: stop job,jobKey is：" + jobKey);
 
         return deleteJobKey ? ResultBody.success() : ResultBody.failed();
@@ -285,7 +289,7 @@ public class JobController {
     public String updateJobByPrimaryKey(@RequestBody BasicJob basicJob) {
         int result = 0;
         String userName = userService.getCurrentUser();
-        String jobStatus = curator4Scheduler.getJobStatus(basicJob.getJobGroup(), basicJob.getJobKey());
+        String jobStatus = registryService.getJobStatus(basicJob.getJobGroup(), basicJob.getJobKey());
         if (StringHelper.isEmpty(jobStatus)) {
             try {
                 result = basicJobService.updateByPrimaryKey(basicJob);
@@ -315,7 +319,7 @@ public class JobController {
         }
         try {
             //Delete the Job from ZK
-            curator4Scheduler.deleteJobKey(jobGroupName, jobKey);
+            registryService.deleteJobKey(jobGroupName, jobKey);
             //Delete the Job from DB
             result = basicJobService.deleteJobByJobKeyAndJobGroup(jobGroupName, jobKey);
             LOGGER.info(Constants.OPERATION_LOG_PREFIX + "username is: " + userName + "; operation is: delete job,jobKey is: " + jobKey);
@@ -407,7 +411,7 @@ public class JobController {
     @ResponseBody
     public String updateJobPlan(@RequestBody BasicJob basicJob) {
         String userName = userService.getCurrentUser();
-        String jobStatus = curator4Scheduler.getJobStatus(basicJob.getJobGroup(), basicJob.getJobKey());
+        String jobStatus = registryService.getJobStatus(basicJob.getJobGroup(), basicJob.getJobKey());
         if (!StringHelper.isEmpty(jobStatus)) {
             return ResultBody.failed("Job 已激活，请关闭Job 再进行配置！");
         }

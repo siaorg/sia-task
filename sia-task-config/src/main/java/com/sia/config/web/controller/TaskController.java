@@ -20,6 +20,7 @@
 
 package com.sia.config.web.controller;
 
+import com.sia.config.web.service.RegistryService;
 import com.sia.core.curator.Curator4Scheduler;
 import com.sia.core.entity.BasicTask;
 import com.sia.core.entity.JobMTask;
@@ -34,6 +35,7 @@ import com.sia.config.web.util.PageBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -64,6 +66,9 @@ public class TaskController {
 
     @Autowired
     protected Curator4Scheduler curator4Scheduler;
+
+    @Autowired
+    protected RegistryService registryService;
 
 
     /**
@@ -320,7 +325,7 @@ public class TaskController {
                     return ResultBody.failed(ResultBody.ResultEnum.TASK_CHECK.getCode(), ResultBody.ResultEnum.TASK_CHECK.getMessage());
                 }
                 result = basicTaskService.deleteByPrimaryKey(taskAppName, taskGroupName, taskKey);
-                curator4Scheduler.deleteTaskKey(taskKey);
+                registryService.deleteTaskKey(taskKey);
                 LOGGER.info(Constants.OPERATION_LOG_PREFIX + "username is: " + userName + "; operation is: delete task,taskKey is " + taskKey);
 
             } catch (Exception e) {

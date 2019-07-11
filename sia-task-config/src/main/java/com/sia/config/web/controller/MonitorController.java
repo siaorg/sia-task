@@ -20,6 +20,7 @@
 
 package com.sia.config.web.controller;
 
+import com.sia.config.web.service.RegistryService;
 import com.sia.core.curator.Curator4Scheduler;
 import com.sia.core.helper.JSONHelper;
 import com.sia.core.web.vo.ResultBody;
@@ -70,6 +71,9 @@ public class MonitorController {
     @Autowired
     PortalStatisticsService portalStatisticsService;
 
+    @Autowired
+    protected RegistryService registryService;
+
 
     @RequestMapping(value = "/", method = {RequestMethod.POST, RequestMethod.GET})
     public String index() {
@@ -87,7 +91,7 @@ public class MonitorController {
     @ResponseBody
     public String getSchedulers() {
 
-        List<String> schedulers = curator4Scheduler.getSchedulers();
+        List<String> schedulers = registryService.getSchedulers();
         return ResultBody.success(schedulers);
     }
 
@@ -102,10 +106,10 @@ public class MonitorController {
     public String getSchedulerInfo() {
 
         Map<String, String> schedulerInfo = new HashMap<>();
-        List<String> schedulers = curator4Scheduler.getSchedulers();
+        List<String> schedulers = registryService.getSchedulers();
 
         for (String scheduler : schedulers) {
-            String info = curator4Scheduler.getSchedulerInfo(scheduler);
+            String info = registryService.getSchedulerInfo(scheduler);
             schedulerInfo.put(scheduler, info);
         }
         logger.info(Constants.LOG_PREFIX + " Gets the scheduler instance information >>> success :  schedulerInfo is{}", JSONHelper.toString(schedulerInfo));

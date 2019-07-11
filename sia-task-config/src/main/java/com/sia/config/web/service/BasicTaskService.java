@@ -58,6 +58,9 @@ public class BasicTaskService {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private RegistryService registryService;
+
     /**
      * Query owned groups by roles
      * @param roleNames
@@ -135,7 +138,7 @@ public class BasicTaskService {
         //封装来自抓取的Task的执行器实例
         for (BasicTask basicTask : basicTasks) {
             if (Constants.TASK_SOURCE_ZK.equals(basicTask.getTaskSource())) {
-                List<String> executorList = curator4Scheduler.getExecutors(basicTask.getTaskGroupName(), basicTask.getTaskAppName(), basicTask.getTaskAppHttpPath());
+                List<String> executorList = registryService.getExecutors(basicTask.getTaskGroupName(), basicTask.getTaskAppName(), basicTask.getTaskAppHttpPath());
                 String executors = null;
                 if (executorList != null) {
                     executors = String.join(Constants.REGEX_COMMA, executorList);
@@ -229,7 +232,7 @@ public class BasicTaskService {
     public String getExecutorList(BasicTask basicTask) {
         String executors = null;
         if (Constants.TASK_SOURCE_ZK.equals(basicTask.getTaskSource())) {
-            List<String> executorList = curator4Scheduler.getExecutors(basicTask.getTaskKey());
+            List<String> executorList = registryService.getExecutors(basicTask.getTaskKey());
             if (executorList != null) {
                 executors = String.join(Constants.REGEX_COMMA, executorList);
             }
