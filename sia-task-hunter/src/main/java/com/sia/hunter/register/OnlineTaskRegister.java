@@ -759,9 +759,9 @@ public class OnlineTaskRegister implements ApplicationListener<ApplicationEvent>
         monitorAuth4Nacos();
 
         // 是否存在Task路径
-/*        if (!nacosClient.existNacosService(OnlineTaskConstant.NACOS_ONLINE_TASK, onlineTaskAppProperty.getGroupName())){
-            nacosClient.createNacosService(OnlineTaskConstant.NACOS_ONLINE_TASK, onlineTaskAppProperty.getGroupName());
-        }*/
+        if (!nacosClient.existNacosService(OnlineTaskConstant.NACOS_ONLINE_TASK, OnlineTaskConstant.NACOS_ONLINE_TASK_GROUP)){
+            nacosClient.createNacosService(OnlineTaskConstant.NACOS_ONLINE_TASK, OnlineTaskConstant.NACOS_ONLINE_TASK_GROUP);
+        }
 
         // ---------------预处理结束,task开始上传---------------------------
 
@@ -781,8 +781,8 @@ public class OnlineTaskRegister implements ApplicationListener<ApplicationEvent>
                         + httpPath.substring(1, httpPath.length());
 
                 //删除已有相同实例，防止因为启动频繁导致的问题
-                nacosClient.deleteNacosInstance(OnlineTaskConstant.NACOS_ONLINE_TASK, taskKey, onlineTaskAppProperty.getGroupName(), onlineTaskAppProperty.getIPAndPort(), true);
-                nacosClient.createNacosInstance(OnlineTaskConstant.NACOS_ONLINE_TASK, taskKey, onlineTaskAppProperty.getGroupName(), onlineTaskAppProperty.getIPAndPort(), buildTaskMetaData(instance), true);
+                nacosClient.deleteNacosInstance(OnlineTaskConstant.NACOS_ONLINE_TASK, OnlineTaskConstant.NACOS_ONLINE_TASK_GROUP, taskKey, onlineTaskAppProperty.getIPAndPort(), true);
+                nacosClient.createNacosInstance(OnlineTaskConstant.NACOS_ONLINE_TASK, OnlineTaskConstant.NACOS_ONLINE_TASK_GROUP, taskKey, onlineTaskAppProperty.getIPAndPort(), buildTaskMetaData(instance), true);
 
                 count++;
                 paths.add(httpPath);

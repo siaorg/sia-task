@@ -82,8 +82,12 @@ public class NacosClient  {
      * @return
      * @throws Exception
      */
-    public void createNacosService(String serviceName, String groupName) throws Exception {
-        namingMaintainService.createService(serviceName, groupName);
+    public void createNacosService(String serviceName, String groupName) {
+        try {
+            namingMaintainService.createService(serviceName, groupName);
+        } catch (Exception e) {
+            LOGGER.error(">>>>>>nacos: createNacosService:" + e.getMessage());
+        }
     }
 
     /**
