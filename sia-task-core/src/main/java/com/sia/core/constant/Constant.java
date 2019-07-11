@@ -120,5 +120,26 @@ public class Constant {
      */
     public static final String JOBKEY_SEPARATOR = "_";
 
+    public static final String NACOS_REGISTRY = "nacos";
+    public static final String ZOOKEEPER_REGISTRY = "zookeeper";
+
+    // nacos
+    public static final String NACOS_DEFAULT_GROUP = "DEFAULT_GROUP";
+    public static final String NACOS_DEFAULT_CLUSTER = "DEFAULT";
+    public static final String NACOS_ONLINE_TASK ="Task";
+    public static final String NACOS_ONLINE_TASK_GROUP = "TASK_GROUP";
+    public static final String NACOS_ONLINE_JOB = "Job";
+    public static final String NACOS_ONLINE_JOB_GROUP = "JOB_GROUP";
+    public static final String NACOS_JOB_STATUS = "status";
+    public static final String NACOS_SCHEDULER_INFO = "schedulerInfo";
+    public static final String NACOS_ONLINE_SCHEDULER = "Scheduler";
+    public static final String NACOS_ONLINE_SCHEDULER_GROUP = "ONLINE_GROUP";
+    public static final String NACOS_OFFLINE_SCHEDULER = "Offline";
+    public static final String NACOS_OFFLINE_SCHEDULER_GROUP = "OFFLINE_GROUP";
+    public static final String NACOS_ONLINE_SCHINDLER = "Schindler";
+    public static final String NACOS_ONLINE_SCHINDLER_GROUP = "SCHINDLER_GROUP";
+    public static final int NACOS_SCHINDLER_PORT = 0;
+    public static final String NACOS_SEPARATOR = "---";
+
 
 }

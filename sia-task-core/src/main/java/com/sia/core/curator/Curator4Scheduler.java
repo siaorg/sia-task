@@ -753,7 +753,7 @@ public class Curator4Scheduler {
      * @return zk distributed-lock path of jobStatus
      * @throws
      */
-    private String buildJobStatusLock(String jobGroupName, String jobKey) {
+    public String buildJobStatusLock(String jobGroupName, String jobKey) {
 
         boolean fail = StringHelper.isEmpty(jobGroupName) || StringHelper.isEmpty(jobKey);
         if (fail) {
@@ -1366,6 +1366,28 @@ public class Curator4Scheduler {
         }
         return curatorClient.getData(path);
 
+    }
+
+    /**
+     * Gets a list of jobkeys that the Scheduler executes
+     *
+     * @param scheduler
+     * @return
+     */
+    public List <String> getJobKeyListByScheduler(String scheduler) {
+        List<String> jobKeyList = new ArrayList<>();
+        String path = new StringBuilder().append(Constant.ZK_ROOT).append(taskRoot).append(Constant.ZK_SEPARATOR).append(Constant.ZK_ONLINE_JOB).toString();
+        List<String> jobGroupNames = curatorClient.getChildren(path);
+        for(String jobGroupName:jobGroupNames) {
+            List<String> jobKeys = getJobKeys(jobGroupName);
+            for(String jobKey:jobKeys) {
+                List<String> jobSchedulerList = getJobScheduler(jobGroupName,jobKey);
+                if(jobSchedulerList.contains(scheduler)) {
+                    jobKeyList.add(jobKey);
+                }
+            }
+        }
+        return jobKeyList;
     }
 
 }
