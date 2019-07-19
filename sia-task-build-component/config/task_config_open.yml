@@ -12,9 +12,9 @@ zooKeeperHosts: 127.0.0.1:2181
 spring:
     datasource:
         name: test
-        url: jdbc:mysql://127.0.0.1:3306/skyworld_task?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
+        url: jdbc:mysql://127.0.0.1:3306/siatask?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
         username: root
-        password: ****
+        password: 123456
         # 使用druid数据源
         type: com.alibaba.druid.pool.DruidDataSource
         driver-class-name: com.mysql.jdbc.Driver
