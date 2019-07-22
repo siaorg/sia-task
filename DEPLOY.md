@@ -178,7 +178,9 @@ zookeeper的安装和配置详见官方文档，至少部署三个节点。
 2. Nginx准备
 
 ### 前端项目打包
-进入本地的项目,在~/sia-task/sia-task-config-display目录下执行如下命令进行前端代码打包：npm run build 
+进入本地的项目,在~/sia-task/sia-task-config-display目录下执行如下命令进行前端代码打包：
+- npm install 或 cnpm install(推荐) cnpm安装命令：npm install -g cnpm --registry=https://registry.npm.taobao.org
+- npm run build
 
 > 1、打包完成在当前目录下面生成dist文件夹，把dist文件夹放在nginx所在机器的app目录下 </br>
 > 2、修改前端配置的编排中心应用服务地址：nginx所在机器的app目录下 dist/static文件夹下面的site.map.js为后端服务配置（ip:port形式），根据项目需求自行更改（CESHI_API_HOST参数配置的地址即为编排中心服务地址）</br>
