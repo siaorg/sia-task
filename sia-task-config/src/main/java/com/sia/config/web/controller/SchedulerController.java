@@ -20,7 +20,6 @@
 
 package com.sia.config.web.controller;
 
-import com.sia.config.web.service.RegistryService;
 import com.sia.core.curator.Curator4Scheduler;
 import com.sia.core.helper.StringHelper;
 import com.sia.core.web.vo.ResultBody;
@@ -54,9 +53,6 @@ public class SchedulerController {
     @Autowired
     protected Curator4Scheduler curator4Scheduler;
 
-    @Autowired
-    protected RegistryService registryService;
-
     /**
      * Front-end call interface
      * Work scheduler list
@@ -67,8 +63,8 @@ public class SchedulerController {
     @RequestMapping(value = "/workinglist", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String getSchedulersOfWorking() {
-        List<String> blackList = registryService.getBlackList();
-        List<String> schedulers = registryService.getSchedulers();
+        List<String> blackList = curator4Scheduler.getBlackList();
+        List<String> schedulers = curator4Scheduler.getSchedulers();
         schedulers.removeAll(blackList);
         LOGGER.info(Constants.LOG_PREFIX + " get SchedulersOfWorking >>> success : schedulerInstance is {}", schedulers);
         return ResultBody.success(schedulers);
@@ -84,8 +80,8 @@ public class SchedulerController {
     @RequestMapping(value = "/blacklist", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String getSchedulerInfoOfBlacklist() {
-        List<String> blackList = registryService.getBlackList();
-        List<String> schedulers = registryService.getSchedulers();
+        List<String> blackList = curator4Scheduler.getBlackList();
+        List<String> schedulers = curator4Scheduler.getSchedulers();
         blackList.retainAll(schedulers);
         LOGGER.info(Constants.LOG_PREFIX + " get SchedulerInfoOfBlacklist >>> success : schedulerInstance is {}", blackList);
         return ResultBody.success(blackList);
@@ -101,8 +97,8 @@ public class SchedulerController {
     @RequestMapping(value = "/offline", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String getSchedulersOffLine() {
-        List<String> blackList = registryService.getBlackList();
-        List<String> schedulers = registryService.getSchedulers();
+        List<String> blackList = curator4Scheduler.getBlackList();
+        List<String> schedulers = curator4Scheduler.getSchedulers();
         blackList.removeAll(schedulers);
         LOGGER.info(Constants.LOG_PREFIX + " get SchedulersOffLine >>> success : schedulerInstance is {}", blackList);
         return ResultBody.success(blackList);
@@ -126,7 +122,7 @@ public class SchedulerController {
             String userName = userService.getCurrentUser();
             List<String> schedulerInstances = Arrays.asList(schedulerInstance.split(Constants.REGEX_COMMA));
             for (String instance : schedulerInstances) {
-                boolean openScheduler = registryService.openScheduler(instance);
+                boolean openScheduler = curator4Scheduler.openScheduler(instance);
                 if (!openScheduler) {
                     return ResultBody.failed();
                 }
@@ -157,7 +153,7 @@ public class SchedulerController {
             String userName = userService.getCurrentUser();
             List<String> schedulerInstances = Arrays.asList(schedulerInstance.split(Constants.REGEX_COMMA));
             for (String instance : schedulerInstances) {
-                boolean openScheduler = registryService.closeScheduler(instance);
+                boolean openScheduler = curator4Scheduler.closeScheduler(instance);
                 if (!openScheduler) {
                     return ResultBody.failed();
                 }
@@ -176,7 +172,7 @@ public class SchedulerController {
     @RequestMapping(value = "/getAuthList", method = {RequestMethod.POST, RequestMethod.GET})
     @ResponseBody
     public String getAuthList() {
-        List<String> authList = registryService.getAuthList();
+        List<String> authList = curator4Scheduler.getAuthList();
         return ResultBody.success(authList);
     }
 
@@ -196,7 +192,7 @@ public class SchedulerController {
             String userName = userService.getCurrentUser();
             if (!StringHelper.isEmpty(ip)) {
                 LOGGER.info(Constants.LOG_PREFIX + "username is: " + userName + " add IP whiteList,IP :{}", ip);
-                flag = registryService.addToAuth(ip);
+                flag = curator4Scheduler.addToAuth(ip);
             }
         } catch (Exception e) {
             LOGGER.error(Constants.LOG_PREFIX + " add IP whiteList Error ： ", e);
@@ -220,7 +216,7 @@ public class SchedulerController {
             String userName = userService.getCurrentUser();
             List<String> ips = Arrays.asList(ipList.split(Constants.REGEX_COMMA));
             for (String ip : ips) {
-                boolean flag = registryService.removeFromAuth(ip);
+                boolean flag = curator4Scheduler.removeFromAuth(ip);
                 if (!flag) {
                     LOGGER.info(Constants.LOG_PREFIX + " removeAuthList >>> fail : ip is {}", ip);
                     return ResultBody.failed();
