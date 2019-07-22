@@ -57,9 +57,6 @@ public class JobMTaskService {
     @Autowired
     private Curator4Scheduler curator4Scheduler;
 
-    @Autowired
-    private RegistryService registryService;
-
     /**
      * Delete task information for a Job configuration
      * @param jobGroup
@@ -127,7 +124,7 @@ public class JobMTaskService {
         jobMTasks = jobMTaskMapper.selectTaskMJobAndIPListByJobGroupAndKeyVO(param);
         for (JobMTaskVO jobMTask : jobMTasks) {
             List<String> addressList;
-            List<String> executorsFromZk = registryService.getExecutors(jobMTask.getTaskKey());
+            List<String> executorsFromZk = curator4Scheduler.getExecutors(jobMTask.getTaskKey());
             List<String> executorsFromDB = null;
             if (!StringHelper.isEmpty(jobMTask.getIpAndPortList())) {
                 executorsFromDB = Arrays.asList(jobMTask.getIpAndPortList().split(Constants.REGEX_COMMA));

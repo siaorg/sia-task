@@ -71,9 +71,6 @@ public class BasicJobService {
     @Autowired
     protected AuthInterceptor userService;
 
-    @Autowired
-    protected RegistryService registryService;
-
     /**
      * delete job
      * TODO: @********.cn需要清理
@@ -134,7 +131,7 @@ public class BasicJobService {
         //record
         List<BasicJob> basicJobs = basicJobMapper.selectByJobKeyAndJobGroupList(param);
         for (BasicJob basicJob : basicJobs) {
-            List<String> jobScheduler = registryService.getJobScheduler(basicJob.getJobGroup(), basicJob.getJobKey());
+            List<String> jobScheduler = curator4Scheduler.getJobScheduler(basicJob.getJobGroup(), basicJob.getJobKey());
             basicJob.setTriggerInstance(StringHelper.join(jobScheduler, ","));
         }
         //record count
@@ -181,9 +178,9 @@ public class BasicJobService {
 
     private void updateJobs(List<BasicJob> jobs){
         for (BasicJob basicJob : jobs) {
-            List<String> jobScheduler = registryService.getJobScheduler(basicJob.getJobGroup(), basicJob.getJobKey());
+            List<String> jobScheduler = curator4Scheduler.getJobScheduler(basicJob.getJobGroup(), basicJob.getJobKey());
             basicJob.setTriggerInstance(StringHelper.join(jobScheduler, ","));
-            String jobStatus = registryService.getJobStatus(basicJob.getJobGroup(), basicJob.getJobKey());
+            String jobStatus = curator4Scheduler.getJobStatus(basicJob.getJobGroup(), basicJob.getJobKey());
             basicJob.setJobDesc(jobStatus);
         }
     }
@@ -294,7 +291,19 @@ public class BasicJobService {
      * @return
      */
     public List <String> getJobKeyListByScheduler(String scheduler) {
-        return registryService.getJobKeyListByScheduler(scheduler);
+        List<String> jobKeyList = new ArrayList<>();
+        String path = new StringBuilder().append(Constant.ZK_ROOT).append(curator4Scheduler.getTaskRoot()).append(Constant.ZK_SEPARATOR).append(Constant.ZK_ONLINE_JOB).toString();
+        List<String> jobGroupNames = curator4Scheduler.getCuratorClient().getChildren(path);
+        for(String jobGroupName:jobGroupNames) {
+            List<String> jobKeys = curator4Scheduler.getJobKeys(jobGroupName);
+            for(String jobKey:jobKeys) {
+                List<String> jobSchedulerList = curator4Scheduler.getJobScheduler(jobGroupName,jobKey);
+                if(jobSchedulerList.contains(scheduler)) {
+                    jobKeyList.add(jobKey);
+                }
+            }
+        }
+        return jobKeyList;
     }
 
     /**
@@ -387,10 +396,10 @@ public class BasicJobService {
 
         String userName = userService.getCurrentUser();
         boolean jobStatus4User = false;
-        boolean flag = registryService.createJobKey(jobGroupName, jobKey);
+        boolean flag = curator4Scheduler.createJobKey(jobGroupName, jobKey);
         LOGGER.info(Constants.OPERATION_LOG_PREFIX + "username is: " + userName + "; operation is: activate job,jobKey is:" + jobKey);
         if (flag) {
-            jobStatus4User = registryService.casJobStatus4User(jobGroupName, jobKey, JobStatus.STOP.toString(), JobStatus.READY.toString());
+            jobStatus4User = curator4Scheduler.casJobStatus4User(jobGroupName, jobKey, JobStatus.STOP.toString(), JobStatus.READY.toString());
         }
         return jobStatus4User;
     }

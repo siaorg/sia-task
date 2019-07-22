@@ -65,6 +65,7 @@ public class TaskController {
     @Autowired
     protected Curator4Scheduler curator4Scheduler;
 
+
     /**
      * Permissions are filtered based on the role's corresponding group name
      *

@@ -61,14 +61,4 @@ public class OnlineTaskConstant {
      */
     public static final String LOGPREFIX = "OnlineTask->";
 
-    /**
-     * used for nacos
-     */
-    public static final String NACOS_ONLINE_AUTH = "Schindler";
-    public static final String NACOS_ONLINE_AUTH_GROUP = "SCHINDLER_GROUP";
-    public static final String HTTP_PREFIX = "http://";
-    public static final String NACOS_ONLINE_TASK = "Task";
-    public static final String NACOS_ONLINE_TASK_GROUP = "TASK_GROUP";
-    public static final String NACOS_KEY_SPLIT = "---";
-    public static final String NACOS_SEPARATOR = "/";
 }

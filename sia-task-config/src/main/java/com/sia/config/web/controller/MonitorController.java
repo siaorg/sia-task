@@ -70,6 +70,7 @@ public class MonitorController {
     @Autowired
     PortalStatisticsService portalStatisticsService;
 
+
     @RequestMapping(value = "/", method = {RequestMethod.POST, RequestMethod.GET})
     public String index() {
         return "index.html";

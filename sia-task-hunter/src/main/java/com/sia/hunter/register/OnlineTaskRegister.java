@@ -20,16 +20,9 @@
 
 package com.sia.hunter.register;
 
-import com.alibaba.nacos.api.exception.NacosException;
-import com.alibaba.nacos.api.naming.listener.Event;
-import com.alibaba.nacos.api.naming.listener.EventListener;
-import com.alibaba.nacos.api.naming.listener.NamingEvent;
-import com.alibaba.nacos.api.naming.pojo.Instance;
 import com.sia.hunter.constant.OnlineTaskAppProperty;
 import com.sia.hunter.helper.JSONHelper;
 import com.sia.hunter.helper.OnlineTaskHelper;
-import com.sia.hunter.nacos.NacosClient;
-import com.sia.hunter.nacos.NacosClient4LessInstance;
 import com.sia.hunter.pojo.OnlineTaskPojo;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.sia.hunter.annotation.OnlineTask;
@@ -95,17 +88,8 @@ public class OnlineTaskRegister implements ApplicationListener<ApplicationEvent>
 
     private static final AtomicBoolean START = new AtomicBoolean(false);
 
-    @Value("${enbaleRegistry}")
-    private String registry;
-
     @Value("${ZK_ONLINE_ROOT_PATH:SkyWorldOnlineTask}")
     private String zkOnlineRoot;
-
-    /***
-     * nacos相关
-     */
-    @Autowired
-    public NacosClient nacosClient;
 
     private String getZkOnlineRootPath() {
         StringBuilder zkOnlineRootPath = new StringBuilder().append(OnlineTaskConstant.ZK_SEPARATOR).append(zkOnlineRoot);
@@ -130,48 +114,42 @@ public class OnlineTaskRegister implements ApplicationListener<ApplicationEvent>
                 // 关键代码 try-catch
                 try {
                     onlineTaskDetector();
-                    if ("zookeeper".equals(registry)){
-                        onlineTaskUpload();
-                        // handle ConnectionState.LOST
-                        ConnectionStateListener listener = new ConnectionStateListener() {
+                    onlineTaskUpload();
+                    LOGGER.info(OnlineTaskConstant.LOGPREFIX + "upload OnlineTask OK");
+                    // handle ConnectionState.LOST
+                    ConnectionStateListener listener = new ConnectionStateListener() {
 
-                            @Override
-                            public void stateChanged(CuratorFramework client, ConnectionState newState) {
+                        @Override
+                        public void stateChanged(CuratorFramework client, ConnectionState newState) {
 
-                                LOGGER.info(OnlineTaskConstant.LOGPREFIX + "OnlineTaskRegister Zookeeper ConnectionState:"
-                                        + newState.name());
+                            LOGGER.info(OnlineTaskConstant.LOGPREFIX + "OnlineTaskRegister Zookeeper ConnectionState:"
+                                    + newState.name());
 
-                                if (newState == ConnectionState.LOST) {
-                                    while (true) {
-                                        try {
-                                            if (client.getZookeeperClient().blockUntilConnectedOrTimedOut()) {
-                                                LOGGER.info(OnlineTaskConstant.LOGPREFIX
-                                                        + "OnlineTaskRegister Zookeeper Reconnected");
-                                                onlineTaskUpload();
-                                                LOGGER.info(OnlineTaskConstant.LOGPREFIX
-                                                        + "OnlineTaskRegister onlineTaskUpload Redo");
+                            if (newState == ConnectionState.LOST) {
+                                while (true) {
+                                    try {
+                                        if (client.getZookeeperClient().blockUntilConnectedOrTimedOut()) {
+                                            LOGGER.info(OnlineTaskConstant.LOGPREFIX
+                                                    + "OnlineTaskRegister Zookeeper Reconnected");
+                                            onlineTaskUpload();
+                                            LOGGER.info(OnlineTaskConstant.LOGPREFIX
+                                                    + "OnlineTaskRegister onlineTaskUpload Redo");
 
-                                                break;
-                                            }
+                                            break;
                                         }
-                                        catch (InterruptedException e) {
-                                            LOGGER.error(OnlineTaskConstant.LOGPREFIX
-                                                            + "Zookeeper Reconnect FAIL, please mailto [***@********.cn]",
-                                                    e);
-                                        }
+                                    }
+                                    catch (InterruptedException e) {
+                                        LOGGER.error(OnlineTaskConstant.LOGPREFIX
+                                                + "Zookeeper Reconnect FAIL, please mailto [***@********.cn]",
+                                                e);
                                     }
                                 }
                             }
-                        };
-                        ThreadFactory namedThreadFactory = new ThreadFactoryBuilder().setNameFormat("Zookeeper-Reconnected-%d").build();
-                        ExecutorService pool =new ThreadPoolExecutor(4, 4, 0L, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>(1024), namedThreadFactory, new ThreadPoolExecutor.AbortPolicy());
-                        client.client().getConnectionStateListenable().addListener(listener, pool);
-                    }else if ("nacos".equals(registry)){
-                        onlineTaskUpload4Nacos();
-                    }
-
-                    LOGGER.info(OnlineTaskConstant.LOGPREFIX + "upload OnlineTask OK");
-
+                        }
+                    };
+                    ThreadFactory namedThreadFactory = new ThreadFactoryBuilder().setNameFormat("Zookeeper-Reconnected-%d").build();
+                    ExecutorService pool =new ThreadPoolExecutor(4, 4, 0L, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>(1024), namedThreadFactory, new ThreadPoolExecutor.AbortPolicy());
+                    client.client().getConnectionStateListenable().addListener(listener, pool);
                 }
                 catch (Exception e) {
                     LOGGER.error(OnlineTaskConstant.LOGPREFIX
@@ -359,6 +337,7 @@ public class OnlineTaskRegister implements ApplicationListener<ApplicationEvent>
 
     @PreDestroy
     public void destory() {
+
         if (checkRegister()) {
             try {
                 this.client.close();
@@ -678,151 +657,6 @@ public class OnlineTaskRegister implements ApplicationListener<ApplicationEvent>
     public static List<String> getAuthList() {
 
         return AUTH_LIST.get();
-    }
-
-////////////////////////////////--------------------NACOS-------------------///////////////////////////////
-
-    private void handleAuth4Nacos() throws NacosException {
-        for (int i = 0; i < MAX_TRY; i++) {
-            List<String> expect = AUTH_LIST.get();
-            List<Instance> instances = nacosClient.getAllInstances(OnlineTaskConstant.NACOS_ONLINE_AUTH, OnlineTaskConstant.NACOS_ONLINE_AUTH_GROUP, null);
-            List<String> whiteList = new ArrayList<>();
-            for (Instance instance : instances){
-                whiteList.add(instance.getIp());
-            }
-
-            if (whiteList == null) {
-                return;
-            }
-            if (AUTH_LIST.compareAndSet(expect, whiteList)) {
-                return;
-            }
-
-        }
-        LOGGER.warn("handleAuth fail [" + MAX_TRY + "]times, abort!");
-    }
-
-    private Map<String, String> buildTaskMetaData(OnlineTaskPojo instance){
-        Map<String, String> metadata = new HashMap<>();
-        metadata.put("groupName", instance.getGroupName());
-        metadata.put("applicationName", instance.getApplicationName());
-        metadata.put("httpPath", instance.getHttpPath());
-        metadata.put("ipAndPort", instance.getIpAndPort());
-        metadata.put("output", instance.getOutput());
-        metadata.put("input", JSONHelper.toString(instance.getInput()));
-        metadata.put("methodName", instance.getMethodName());
-        metadata.put("className", instance.getClassName());
-        metadata.put("beanName", instance.getBeanName());
-        metadata.put("httpMethod", JSONHelper.toString(instance.getHttpMethod()));
-        metadata.put("description", instance.getDescription());
-        return metadata;
-    }
-
-    /**
-     * 监听调度器HTTP调用授权路径（白名单）的变化
-     * @throws Exception
-     */
-    private void monitorAuth4Nacos() throws NacosException {
-        nacosClient.subscribe(OnlineTaskConstant.NACOS_ONLINE_AUTH, OnlineTaskConstant.NACOS_ONLINE_AUTH_GROUP, null, new EventListener() {
-            @Override
-            public void onEvent(Event event) {
-                try {
-                    handleAuth4Nacos();
-                } catch (NacosException e) {
-                    LOGGER.error(OnlineTaskConstant.LOGPREFIX + "handleAuth4Nacos: {}", e.getErrMsg());
-                }
-            }
-        });
-    }
-
-    /**
-     * OnlineTask upload for nacos
-     * {@link } can be checked for the result.
-     * @param
-     * @return
-     * @throws
-     */
-    private void onlineTaskUpload4Nacos() throws Exception {
-
-        // 是否存在调度器HTTP调用授权路径
-        if (!nacosClient.existNacosService(OnlineTaskConstant.NACOS_ONLINE_AUTH, OnlineTaskConstant.NACOS_ONLINE_AUTH_GROUP)) {
-            nacosClient.createNacosService(OnlineTaskConstant.NACOS_ONLINE_AUTH, OnlineTaskConstant.NACOS_ONLINE_AUTH_GROUP);
-        }
-        // 初始化授权白名单
-        try {
-            handleAuth4Nacos();
-        }
-        catch (Exception e) {
-            LOGGER.error(OnlineTaskConstant.LOGPREFIX, e);
-        }
-        // 监听授权白名单的变化
-        monitorAuth4Nacos();
-
-        // 是否存在Task路径
-        if (!nacosClient.existNacosService(OnlineTaskConstant.NACOS_ONLINE_TASK, OnlineTaskConstant.NACOS_ONLINE_TASK_GROUP)){
-            nacosClient.createNacosService(OnlineTaskConstant.NACOS_ONLINE_TASK, OnlineTaskConstant.NACOS_ONLINE_TASK_GROUP);
-        }
-
-        // ---------------预处理结束,task开始上传---------------------------
-
-        final List<String> paths = new LinkedList<>();
-        int count = 0;
-
-        try{
-            Map<String, OnlineTaskPojo> onlineTask = OnlineTaskCollector.getOnlineTask();
-            final int size = onlineTask.size();
-            for (Map.Entry<String, OnlineTaskPojo> onlineTaskEntry : onlineTask.entrySet()){
-                String httpPath = onlineTaskEntry.getKey();
-                OnlineTaskPojo instance = onlineTaskEntry.getValue();
-                String taskKeyMetaData = buildMetaData(instance);
-
-                // 装饰一下路径
-                String taskKey = onlineTaskAppProperty.getApplicationName() + OnlineTaskConstant.NACOS_KEY_SPLIT
-                        + httpPath.substring(1, httpPath.length());
-
-                //删除已有相同实例，防止因为启动频繁导致的问题
-                nacosClient.deleteNacosInstance(OnlineTaskConstant.NACOS_ONLINE_TASK, OnlineTaskConstant.NACOS_ONLINE_TASK_GROUP, taskKey, onlineTaskAppProperty.getIPAndPort(), true);
-                nacosClient.createNacosInstance(OnlineTaskConstant.NACOS_ONLINE_TASK, OnlineTaskConstant.NACOS_ONLINE_TASK_GROUP, taskKey, onlineTaskAppProperty.getIPAndPort(), buildTaskMetaData(instance), true);
-
-                count++;
-                paths.add(httpPath);
-            }
-        }catch (Exception ex){
-            LOGGER.error(OnlineTaskConstant.LOGPREFIX, ex);
-        }
-
-        LOGGER.info(OnlineTaskConstant.LOGPREFIX + "↓↓↓↓↓↓↓↓↓↓上传OnlineTask明细↓↓↓↓↓↓↓↓↓↓");
-
-        count = 0;
-        for (String path : paths) {
-            count++;
-            LOGGER.info(OnlineTaskConstant.LOGPREFIX + "序号:[" + count + "]，HTTP PATH:[" + path + "]");
-        }
-
-        LOGGER.info(OnlineTaskConstant.LOGPREFIX + "↑↑↑↑↑↑↑↑↑↑上传OnlineTask明细，共[" + count + "]个↑↑↑↑↑↑↑↑↑↑");
-        LOGGER.info(OnlineTaskConstant.LOGPREFIX + "↓↓↓↓↓↓↓↓↓↓以下是未上传的OnlineTask明细，分为两部分↓↓↓↓↓↓↓↓↓↓");
-        LOGGER.info(OnlineTaskConstant.LOGPREFIX + "↓↓↓↓↓↓↓↓↓↓第一部分：合规，但会访问异常(HTTP PATH 重复)OnlineTask信息明细↓↓↓↓↓↓↓↓↓↓");
-
-        count = 0;
-        Set<String> errorTaskPath = OnlineTaskCollector.getErrorTask().keySet();
-        for (String path : errorTaskPath) {
-            count++;
-            LOGGER.info(OnlineTaskConstant.LOGPREFIX + "第一部分，序号:[" + count + "]，重复的HTTP PATH:[" + path + "]");
-        }
-
-        LOGGER.info(OnlineTaskConstant.LOGPREFIX + "↑↑↑↑↑↑↑↑↑↑第一部分：合规，但会访问异常(HTTP PATH 重复)OnlineTask信息明细，共[" + count
-                + "]个↑↑↑↑↑↑↑↑↑↑");
-        LOGGER.info(OnlineTaskConstant.LOGPREFIX + "↓↓↓↓↓↓↓↓↓↓第二部分：不合规的OnlineTask信息明细↓↓↓↓↓↓↓↓↓↓");
-
-        count = 0;
-        Map<String, String> errorMsg = OnlineTaskCollector.getErrorMessage();
-        for (Entry<String, String> msg : errorMsg.entrySet()) {
-            count++;
-            LOGGER.info(OnlineTaskConstant.LOGPREFIX + "第二部分，序号:[" + count + "]，方法名:[" + msg.getKey() + "]，不合规的信息提示:["
-                    + msg.getValue() + "]");
-        }
-        LOGGER.info(OnlineTaskConstant.LOGPREFIX + "↑↑↑↑↑↑↑↑↑↑第二部分：不合规的OnlineTask信息明细，，共[" + count + "]个↑↑↑↑↑↑↑↑↑↑");
-        LOGGER.info(OnlineTaskConstant.LOGPREFIX + "↑↑↑↑↑↑↑↑↑↑以上是未上传的OnlineTask明细↑↑↑↑↑↑↑↑↑↑");
     }
 
 }
