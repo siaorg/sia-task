@@ -36,7 +36,7 @@ echo $(pwd)
 
 # Second, should I watch?
 working_directory=$(pwd)
-proc_watcher="yes"
+proc_watcher="no"
 if [ "$1" == "--no-watch" ]; then
     proc_watcher="no"
     shift
