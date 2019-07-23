@@ -180,4 +180,6 @@ public interface BasicTaskMapper {
      */
     List<Map<String, Integer>> selectGroupAndCountI(Map<String, Object> param);
 
+    List<BasicTask> selectTaskByTaskKey(Map<String, Object> param);
+
 }
