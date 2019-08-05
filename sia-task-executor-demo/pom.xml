@@ -96,18 +96,6 @@
 			<version>1.0.0</version>
 		</dependency>
 	</dependencies>
-	<!--<distributionManagement>
-		<repository>
-			<id>nexus-releases</id>
-			<name>MyCo Internal Repository - releases</name>
-			<url>http://nexus.creditease.corp/nexus/content/repositories/releases/</url>
-		</repository>
-		<snapshotRepository>
-			<id>nexus-snapshots</id>
-			<name>MyCo Internal Repository - snapshots</name>
-			<url>http://nexus.creditease.corp/nexus/content/repositories/snapshots/</url>
-		</snapshotRepository>
-	</distributionManagement>-->
 
 
 	<!-- 打包配置 -->
