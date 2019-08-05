@@ -54,6 +54,30 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>com.fasterxml.jackson.core</groupId>
+					<artifactId>jackson-databind</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.9.9.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>2.9.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>2.9.8</version>
 		</dependency>
 
 		<dependency>
@@ -69,9 +93,21 @@
 		<dependency>
 			<groupId>com.sia</groupId>
 			<artifactId>sia-task-hunter</artifactId>
-			<version>1.0.0</version>
+			<version>1.1.0</version>
 		</dependency>
 	</dependencies>
+	<!--<distributionManagement>
+		<repository>
+			<id>nexus-releases</id>
+			<name>MyCo Internal Repository - releases</name>
+			<url>http://nexus.creditease.corp/nexus/content/repositories/releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>nexus-snapshots</id>
+			<name>MyCo Internal Repository - snapshots</name>
+			<url>http://nexus.creditease.corp/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>-->
 
 
 	<!-- 打包配置 -->
