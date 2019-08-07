@@ -210,6 +210,12 @@ Log Manager
 
 ### 其他相关资料 
 
+## SIA相关开源产品链接：
+
++ [微服务路由网关](https://github.com/siaorg/sia-gateway)
+
++ [Rabbitmq队列服务PLUS](https://github.com/siaorg/sia-rabbitmq-plus)
+
 ## 关于我们
 
 * 邮件交流：sia.list@creditease.cn
