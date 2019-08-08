@@ -1,6 +1,5 @@
-package com.sia.hunter;
+package com.sia.hunter.helper;
 
-import com.sia.hunter.helper.OnlineTaskHelper;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
