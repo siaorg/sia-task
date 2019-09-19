@@ -1,3 +1,14 @@
+## 关于我们
+
+* 邮件交流：sia.list@creditease.cn
+
+* 提交issue:
+
+* 微信交流：
+
+    <img src="docs/images/newlog.jpeg" width="30%" height="30%">
+    
+
 微服务任务调度平台
 ===
 [使用指南](USERSGUIDE.md) </br>
@@ -216,15 +227,6 @@ Log Manager
 
 + [Rabbitmq队列服务PLUS](https://github.com/siaorg/sia-rabbitmq-plus)
 
-## 关于我们
-
-* 邮件交流：sia.list@creditease.cn
-
-* 提交issue:
-
-* 微信交流：
-
-    <img src="docs/images/newlog.jpeg" width="30%" height="30%">
     
 （待补充）
 
