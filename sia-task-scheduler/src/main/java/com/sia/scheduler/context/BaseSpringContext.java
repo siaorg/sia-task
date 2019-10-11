@@ -27,6 +27,9 @@ import com.sia.scheduler.service.JobLogService;
 import com.sia.scheduler.service.JobMTaskService;
 import com.sia.scheduler.service.TaskLogService;
 import com.sia.scheduler.service.common.EmailService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
 
 /**
  *
@@ -39,18 +42,18 @@ import com.sia.scheduler.service.common.EmailService;
  * @version V1.0.0
  **/
 public class BaseSpringContext {
-
-    protected TaskLogService taskLogService = SpringContext.getTaskLogService();
-
-    protected HttpCallbackFail httpCallbackLog = SpringContext.getAsyncBackLog();
-
-    protected Curator4Scheduler curator4Scheduler = SpringContext.getCurator4Scheduler();
-
-    protected JobMTaskService jobMTaskService = SpringContext.getJobMTaskService();
-
-    protected JobLogService jobLogService = SpringContext.getJobLogService();
-
-    protected BasicJobService basicJobService = SpringContext.getBasicJobService();
-
-    protected EmailService emailService = SpringContext.getEmailService();
+    @Autowired
+    protected TaskLogService taskLogService;
+    @Autowired
+    protected HttpCallbackFail httpCallbackLog;
+    @Autowired
+    protected Curator4Scheduler curator4Scheduler;
+    @Autowired
+    protected JobMTaskService jobMTaskService;
+    @Autowired
+    protected JobLogService jobLogService;
+    @Autowired
+    protected BasicJobService basicJobService;
+    @Autowired
+    protected EmailService emailService;
 }
