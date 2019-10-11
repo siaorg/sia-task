@@ -29,6 +29,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 /**
  * Scheduling project startup class
@@ -42,7 +44,7 @@ import org.springframework.web.client.RestTemplate;
 @MapperScan({"com.sia.core.mapper"})
 @SpringBootApplication(scanBasePackages = {"com.sia"})
 @EnableTransactionManagement
-public class SchedulerApplication {
+public class SchedulerApplication extends WebMvcConfigurerAdapter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SchedulerApplication.class);
 
@@ -56,5 +58,14 @@ public class SchedulerApplication {
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins("*")
+                .allowedHeaders("*")
+                .allowedMethods("*").maxAge(7200);
+        super.addCorsMappings(registry);
     }
 }

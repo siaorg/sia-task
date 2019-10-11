@@ -23,6 +23,7 @@ package com.sia.config.web.filter;
 import com.sia.config.web.constants.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -50,7 +51,7 @@ public class AuthInterceptor {
         List<String> roleNames;
         HttpSession session = request.getSession();
         roleNames = (List<String>) session.getAttribute("roleNames");
-        if (roleNames.contains(Constants.ADMIN_ROLE)) {
+        if (!CollectionUtils.isEmpty(roleNames) && roleNames.contains(Constants.ADMIN_ROLE)) {
             roleNames = null;
         }
         return roleNames;

@@ -114,10 +114,10 @@
         scheduler,
         job_call_count,
         task_call_count,
-        DATE_FORMAT(last_time,'%Y-%m-%d %H:%i:%s') as times
+        DATE_FORMAT(last_time,"%Y-%m-%d %H:%i:%s") as 'times'
         from skyworld_portal_stat
-        where last_time >= str_to_date(#{startTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
-                  and last_time &lt;= str_to_date(#{endTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+        where last_time >= str_to_date(#{startTime,jdbcType=VARCHAR},"%Y-%m-%d %H:%i:%s")
+                  and last_time &lt;= str_to_date(#{endTime,jdbcType=VARCHAR},"%Y-%m-%d %H:%i:%s")
         <if test="scheduler != null and scheduler != '' ">
             and scheduler = #{scheduler,jdbcType=VARCHAR}
         </if>
@@ -126,15 +126,15 @@
     <select id="getJobStatistics" resultMap="jobStatisticsMap" parameterType="java.util.HashMap">
         set @success := 0;
         set @fail := 0;
-        select  DATE_FORMAT(last_time,'%Y-%m-%d %H:%i:%s') as times,
-        max(@success := @success + job_finished_count) as successJobTotal,
-        max(@fail := @fail + job_exception_count) as failJobTotal
+        select  DATE_FORMAT(last_time,"%Y-%m-%d %H:%i:%s") as 'times',
+        max(@success := @success + job_finished_count) as 'successJobTotal',
+        max(@fail := @fail + job_exception_count) as 'failJobTotal'
         from
         (select
         job_exception_count, job_finished_count, last_time
         from skyworld_portal_stat
-        where last_time >= str_to_date(#{startTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
-            and last_time &lt;= str_to_date(#{endTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+        where last_time &gt;= str_to_date(#{startTime,jdbcType=VARCHAR},"%Y-%m-%d %H:%i:%s")
+            and last_time &lt;= str_to_date(#{endTime,jdbcType=VARCHAR},"%Y-%m-%d %H:%i:%s")
         <if test="scheduler != null and scheduler != '' ">
             and scheduler = #{scheduler,jdbcType=VARCHAR}
         </if>
@@ -145,15 +145,15 @@
     <select id="getTaskStatistics" resultMap="taskStatisticsMap" parameterType="java.util.HashMap">
         set @success := 0;
         set @fail := 0;
-        select  DATE_FORMAT(last_time,'%Y-%m-%d %H:%i:%s') as times,
+        select  DATE_FORMAT(last_time,"%Y-%m-%d %H:%i:%s") as 'times',
         max(@success := @success + task_finished_count) as successTaskTotal,
         max(@fail := @fail + task_exception_count) as failTaskTotal
         from
         (select
         task_exception_count, task_finished_count, last_time
         from skyworld_portal_stat
-        where last_time >= str_to_date(#{startTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
-        and last_time &lt;= str_to_date(#{endTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+        where last_time >= str_to_date(#{startTime,jdbcType=VARCHAR},"%Y-%m-%d %H:%i:%s")
+        and last_time &lt;= str_to_date(#{endTime,jdbcType=VARCHAR},"%Y-%m-%d %H:%i:%s")
         <if test="scheduler != null and scheduler != '' ">
             and scheduler = #{scheduler,jdbcType=VARCHAR}
         </if>
