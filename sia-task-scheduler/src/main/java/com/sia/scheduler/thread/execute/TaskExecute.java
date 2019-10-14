@@ -20,8 +20,10 @@
 
 package com.sia.scheduler.thread.execute;
 
+import com.sia.core.curator.Curator4Scheduler;
 import com.sia.core.entity.JobMTask;
 import com.sia.core.status.JobStatus;
+import com.sia.scheduler.context.SpringContext;
 import com.sia.scheduler.log.enums.JobLogEnum;
 import com.sia.scheduler.log.enums.TaskLogEnum;
 import com.sia.scheduler.http.impl.TaskHttpClient;
@@ -77,6 +79,7 @@ public class TaskExecute extends CommonService implements Execute<Boolean> {
         String jobKey = onlineTask.getJobKey();
         String taskKey = onlineTask.getTaskKey();
         try {
+            Curator4Scheduler curator4Scheduler= SpringContext.getCurator4Scheduler();
             String jobStatus = curator4Scheduler.getJobStatus(jobGroup, jobKey);
             List<String> jobScheduler = curator4Scheduler.getJobScheduler(jobGroup, jobKey);
             // 验证合法性
@@ -115,6 +118,7 @@ public class TaskExecute extends CommonService implements Execute<Boolean> {
             if (onlineTask.getPreTaskCounter().get() < onlineTask.getPreTask().size()) {
                 return Boolean.FALSE;
             }
+            Curator4Scheduler curator4Scheduler= SpringContext.getCurator4Scheduler();
             String jobStatus = curator4Scheduler.getJobStatus(jobGroup, jobKey);
             if (jobStatus.equals(JobStatus.RUNNING.toString())) {
                 // 修改状态值(本轮结束) : RUNNING >>> READY
@@ -135,8 +139,8 @@ public class TaskExecute extends CommonService implements Execute<Boolean> {
         } finally {
             try {
                 // 日志
-                taskLogService.recordTaskLog(onlineTask, TaskLogEnum.LOG_ENDTASK_FINISHED.toString(), null);
-                jobLogService.updateJobLog(onlineTask, JobLogEnum.LOG_ENDTASK_FINISHED.toString());
+                SpringContext.getTaskLogService().recordTaskLog(onlineTask, TaskLogEnum.LOG_ENDTASK_FINISHED.toString(), null);
+                SpringContext.getJobLogService().updateJobLog(onlineTask, JobLogEnum.LOG_ENDTASK_FINISHED.toString());
             } catch (Exception e) {
                 LOGGER.error(Constants.LOG_EX_PREFIX + "Log insertion exception", e);
             }

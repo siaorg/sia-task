@@ -22,6 +22,7 @@ package com.sia.scheduler.http.impl;
 
 import com.sia.core.entity.JobMTask;
 import com.sia.core.helper.JSONHelper;
+import com.sia.scheduler.context.SpringContext;
 import com.sia.scheduler.http.enums.FailoverEnum;
 import com.sia.scheduler.log.enums.TaskLogEnum;
 import com.sia.scheduler.http.enums.AsyncResponse;
@@ -29,6 +30,7 @@ import com.sia.scheduler.http.enums.ResponseStatus;
 import com.sia.scheduler.http.route.ExecutorRouteSharding;
 import com.sia.scheduler.http.route.RouteStrategyEnum;
 import com.sia.scheduler.http.route.RouteStrategyHandler;
+import com.sia.scheduler.service.TaskLogService;
 import com.sia.scheduler.thread.execute.TaskCommit;
 import com.sia.scheduler.util.constant.Constants;
 import org.slf4j.Logger;
@@ -75,6 +77,7 @@ public class OnlineListenableFutureCallback<T extends ResponseEntity<String>> ex
         String responseString = null;
         Map<String, String> responseTarget;
         AsyncResponse asyncResponse = null;
+        TaskLogService taskLogService=SpringContext.getTaskLogService();
         try {
             // 1解析返回的数据
             responseTarget = JSONHelper.toObject(resultBody, Map.class);
@@ -123,6 +126,7 @@ public class OnlineListenableFutureCallback<T extends ResponseEntity<String>> ex
 
     private boolean onFailure(JobMTask onlineTask, Throwable throwable) {
         boolean isCountDown;
+        HttpCallbackFail httpCallbackLog=SpringContext.getAsyncBackLog();
         switch (FailoverEnum.getByValue(onlineTask.getFailover().toLowerCase())) {
             case IGNORE:
                 isCountDown = httpCallbackLog.onIgnore(onlineTask, throwable);

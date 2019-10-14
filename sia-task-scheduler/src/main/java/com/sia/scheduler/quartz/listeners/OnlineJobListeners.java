@@ -20,6 +20,7 @@
 
 package com.sia.scheduler.quartz.listeners;
 
+import com.sia.scheduler.context.SpringContext;
 import com.sia.scheduler.service.common.CommonService;
 import com.sia.scheduler.util.constant.Constants;
 import com.sia.scheduler.zk.monitor.LoadBalanceHelper;
@@ -105,7 +106,7 @@ public class OnlineJobListeners extends CommonService implements AbstractJobList
                     if (removeJob(jobGroup, jobKey)) {
                         // 释放JOB，将JobKey下的临时节点删除，触发别的调度器抢占
                         sleep(1000);
-                        curator4Scheduler.releaseJob(jobGroup, jobKey, Constants.LOCALHOST);
+                        SpringContext.getCurator4Scheduler().releaseJob(jobGroup, jobKey, Constants.LOCALHOST);
                         // 获取JOB数减1
                         LoadBalanceHelper.updateScheduler(-1);
 
