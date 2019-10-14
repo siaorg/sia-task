@@ -1,0 +1,26 @@
+version: '3.1'
+services:
+  task_db:
+    image: mariadb:10.4.8-bionic
+    container_name: task_db
+    hostname: task_db
+    ports:
+      - 3306:3306
+    environment:
+      - "MYSQL_ROOT_PASSWORD=root"
+      - "MYSQL_DATABASE=siatask"
+      - "MYSQL_ROOT_HOST=%"
+    command: [
+      'mysqld',
+      '--innodb-buffer-pool-size=20M',
+      '--character-set-server=utf8',
+      '--collation-server=utf8_general_ci',
+      '--default-time-zone=+8:00',
+      '--lower-case-table-names=1'
+    ]
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+networks:
+  default:
+    external:
+      name: sia_net

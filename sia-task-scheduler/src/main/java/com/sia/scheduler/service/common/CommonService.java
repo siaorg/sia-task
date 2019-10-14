@@ -20,6 +20,7 @@
 
 package com.sia.scheduler.service.common;
 
+import com.sia.core.curator.Curator4Scheduler;
 import com.sia.core.dag.DAGHelper;
 import com.sia.core.entity.BasicJob;
 import com.sia.core.entity.JobMTask;
@@ -27,11 +28,11 @@ import com.sia.core.helper.JSONHelper;
 import com.sia.core.helper.ListHelper;
 import com.sia.core.helper.StringHelper;
 import com.sia.core.status.JobStatus;
-import com.sia.scheduler.context.BaseSpringContext;
 import com.sia.scheduler.context.SpringContext;
 import com.sia.scheduler.http.route.ExecutorRouteSharding;
 import com.sia.scheduler.quartz.impl.OnlineJob;
 import com.sia.scheduler.quartz.impl.OnlineSchedulerFactory;
+import com.sia.scheduler.service.BasicJobService;
 import com.sia.scheduler.util.constant.Constants;
 import org.quartz.SchedulerException;
 import org.slf4j.Logger;
@@ -46,12 +47,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * CommonService
  *
- * @see
  * @author maozhengwei
- * @date 2018-09-27 11:27
  * @version V1.0.0
+ * @date 2018-09-27 11:27
+ * @see
  **/
-public class CommonService extends BaseSpringContext {
+public class CommonService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommonService.class);
 
@@ -77,7 +78,7 @@ public class CommonService extends BaseSpringContext {
      * @throws Exception
      */
     public List<JobMTask> analyticalJob(String jobGroupName, String jobKey) {
-        List<JobMTask> jobMTasks = jobMTaskService.selectTaskMJobAndIPListByJobGroupAndKey(jobGroupName, jobKey);
+        List<JobMTask> jobMTasks = SpringContext.getJobMTaskService().selectTaskMJobAndIPListByJobGroupAndKey(jobGroupName, jobKey);
         List<JobMTask> jobMTasksBk = new ArrayList<>();
         jobMTasks.forEach(jobMTask -> {
             JobMTask jobMTaskClone = jobMTask.deepClone();
@@ -89,6 +90,7 @@ public class CommonService extends BaseSpringContext {
 
     /**
      * 任务编排
+     *
      * @param jobMTaskList
      * @return
      */
@@ -138,6 +140,7 @@ public class CommonService extends BaseSpringContext {
 
     /**
      * Check if there is a loop in the Task referenced by the job.
+     *
      * @param jobMTaskList
      * @return
      */
@@ -167,7 +170,7 @@ public class CommonService extends BaseSpringContext {
         try {
             if (isException) {
 
-                boolean casJobStatus4Scheduler = curator4Scheduler.casJobStatus4Scheduler(jobGroup, jobKey,
+                boolean casJobStatus4Scheduler = SpringContext.getCurator4Scheduler().casJobStatus4Scheduler(jobGroup, jobKey,
                         Constants.LOCALHOST, JobStatus.RUNNING.toString(), JobStatus.STOP.toString());
                 if (!casJobStatus4Scheduler) {
                     LOGGER.error(Constants.LOG_PREFIX + "task 运行异常，停止 JOB {} : jobGroup is {}, jobKey is {}",
@@ -175,7 +178,7 @@ public class CommonService extends BaseSpringContext {
                 }
                 //预警
                 message = onlineTask.toString() + Constants.REGEX_ARROW + " Exception : " + message;
-                emailService.sendEmail(onlineTask.getJobAlarmEmail(), message, "JOB 运行异常");
+                SpringContext.getEmailService().sendEmail(onlineTask.getJobAlarmEmail(), message, "JOB 运行异常");
                 return;
             }
         } catch (Exception e) {
@@ -194,6 +197,7 @@ public class CommonService extends BaseSpringContext {
     /**
      * Turn off thread pool resources，function for performing once
      * critical
+     *
      * @param pool
      */
     public static void shutdownExecutorService(ExecutorService pool) {
@@ -231,6 +235,7 @@ public class CommonService extends BaseSpringContext {
     /**
      * checkExists
      * 检查任务是否存在
+     *
      * @param jobGroupName
      * @param jobKey
      * @return
@@ -248,6 +253,7 @@ public class CommonService extends BaseSpringContext {
     /**
      * pauseJob Deprecated
      * 任务暂停
+     *
      * @param jobGroupName
      * @param jobKey
      * @return
@@ -267,6 +273,7 @@ public class CommonService extends BaseSpringContext {
     /**
      * resumeJob Deprecated
      * 任务恢复
+     *
      * @param jobGroupName
      * @param jobKey
      * @return
@@ -286,6 +293,7 @@ public class CommonService extends BaseSpringContext {
     /**
      * remove Job
      * 移除任务
+     *
      * @param jobGroupName
      * @param jobKey
      * @return
@@ -322,8 +330,9 @@ public class CommonService extends BaseSpringContext {
                             + " runJob jobGroupName or jobKey is null, jobGroupName is{}, jobKey is {}",
                     jobGroupName, jobKey);
         }
-        basicJobService.cleanJobCache(jobGroupName, jobKey);
-        BasicJob basicJob = basicJobService.getJob(jobGroupName, jobKey);
+        BasicJobService jobService = SpringContext.getBasicJobService();
+        jobService.cleanJobCache(jobGroupName, jobKey);
+        BasicJob basicJob = jobService.getJob(jobGroupName, jobKey);
         if (basicJob == null) {
             LOGGER.error(Constants.LOG_PREFIX + " 根据 {} And {} 从DB获取JOB信息为空, 请查看是否存在该JOB", jobGroupName, jobKey);
             throw new NullPointerException(
@@ -344,6 +353,7 @@ public class CommonService extends BaseSpringContext {
     /**
      * stop Job
      * 停止Job
+     *
      * @param jobGroupName
      * @param jobKey
      * @return
@@ -362,7 +372,7 @@ public class CommonService extends BaseSpringContext {
             /**
              * 从ZK上删除jobKey，会触发移除JOB的执行逻辑
              */
-            jobStatus4User = curator4Scheduler.deleteJobKey(jobGroupName, jobKey);
+            jobStatus4User = SpringContext.getCurator4Scheduler().deleteJobKey(jobGroupName, jobKey);
             if (!jobStatus4User) {
                 LOGGER.info(Constants.LOG_PREFIX + " REMOVE JOB FROM FAIL. jobGroupName is {} jobKey is {}",
                         jobGroupName, jobKey);
@@ -383,8 +393,8 @@ public class CommonService extends BaseSpringContext {
 
 
     /**
-     *
      * 启动后置子任务
+     *
      * @param basicJob
      * @return
      */
@@ -392,6 +402,7 @@ public class CommonService extends BaseSpringContext {
         BasicJob childJob = basicJob.getJobChild();
         boolean startStatus = false;
         if (childJob != null) {
+            Curator4Scheduler curator4Scheduler=SpringContext.getCurator4Scheduler();
             if (!JobStatus.STOP.toString().equals(curator4Scheduler.getJobStatus(childJob.getJobGroup(), childJob.getJobKey()))) {
                 boolean flag = curator4Scheduler.createJobKey(childJob.getJobGroup(), childJob.getJobKey());
                 if (flag) {
@@ -410,7 +421,7 @@ public class CommonService extends BaseSpringContext {
      */
     public boolean shouldStopPostTask(BasicJob basicJob) {
         if (!StringHelper.isEmpty(basicJob.getJobParentKey())) {
-            return curator4Scheduler.deleteJobKey(basicJob.getJobGroup(), basicJob.getJobKey());
+            return SpringContext.getCurator4Scheduler().deleteJobKey(basicJob.getJobGroup(), basicJob.getJobKey());
         }
         return false;
     }

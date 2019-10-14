@@ -1,0 +1,73 @@
+version: '3.1'
+services:
+  task_config:
+    container_name: task_config
+    build:
+      context: .
+      dockerfile: docker-resources/task-config/Dockerfile
+    hostname: task_config
+    expose:
+      - 10615
+      - 9009
+    ports:
+      - 10615:10615
+      - 9109:9009
+    environment:
+      JAVA_OPTS: -server -Xms128m -Xmx256m -Xss256k -XX:+UseConcMarkSweepGC -XX:+CMSIncrementalMode -XX:+CMSIncrementalPacing -XX:CMSIncrementalDutyCycleMin=0 -XX:CMSIncrementalDutyCycle=10 -XX:+UseParNewGC -XX:+UseCMSCompactAtFullCollection -XX:-CMSParallelRemarkEnabled -XX:CMSFullGCsBeforeCompaction=0 -XX:CMSInitiatingOccupancyFraction=70 -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=. -Xdebug -Xrunjdwp:transport=dt_socket,suspend=n,server=y,address=9009
+      ZOOKEEPERHOSTS: zoo1:2181
+      SPRING_DATASOURCE_URL: jdbc:mysql://task_db:3306/siatask?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
+      SPRING_DATASOURCE_PASSWORD: root
+  task_scheduler:
+    container_name: task_scheduler
+    build:
+      context: .
+      dockerfile: docker-resources/task-scheduler/Dockerfile
+    hostname: task_scheduler
+    expose:
+      - 19011
+      - 9009
+    ports:
+      - 19011:19011
+      - 9209:9009
+    environment:
+      JAVA_OPTS: -server -Xms128m -Xmx256m -Xss256k -XX:+UseConcMarkSweepGC -XX:+CMSIncrementalMode -XX:+CMSIncrementalPacing -XX:CMSIncrementalDutyCycleMin=0 -XX:CMSIncrementalDutyCycle=10 -XX:+UseParNewGC -XX:+UseCMSCompactAtFullCollection -XX:-CMSParallelRemarkEnabled -XX:CMSFullGCsBeforeCompaction=0 -XX:CMSInitiatingOccupancyFraction=70 -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=. -Xdebug -Xrunjdwp:transport=dt_socket,suspend=n,server=y,address=9009
+      ZOOKEEPERHOSTS: zoo1:2181
+      SPRING_DATASOURCE_URL: jdbc:mysql://task_db:3306/siatask?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
+      SPRING_DATASOURCE_PASSWORD: root
+  task_display:
+    container_name: task_display
+    build:
+      context: .
+      dockerfile: docker-resources/task-display/Dockerfile
+    hostname: task_display
+    volumes:
+      - ./sia-task-config-display/dist:/app/dist
+      - ./docker-resources/task-display/nginx.conf:/etc/nginx/nginx.conf:ro
+    environment:
+      NGINX_PORT: 80
+    ports:
+      - 9999:80
+    depends_on:
+      - task_config
+      - task_scheduler
+  task_demo:
+    build:
+      context: .
+      dockerfile: docker-resources/task-demo/Dockerfile
+    container_name: task_demo
+    hostname: task_demo
+    depends_on:
+      - task_display
+    expose:
+      - 10089
+    ports:
+      - 10089:10089
+      - 9309:9009
+    environment:
+      SERVER_PORT: 10089
+      JAVA_OPTS: -server -Xms128m -Xmx256m -Xss256k -XX:+UseConcMarkSweepGC -XX:+CMSIncrementalMode -XX:+CMSIncrementalPacing -XX:CMSIncrementalDutyCycleMin=0 -XX:CMSIncrementalDutyCycle=10 -XX:+UseParNewGC -XX:+UseCMSCompactAtFullCollection -XX:-CMSParallelRemarkEnabled -XX:CMSFullGCsBeforeCompaction=0 -XX:CMSInitiatingOccupancyFraction=70 -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=. -Xdebug -Xrunjdwp:transport=dt_socket,suspend=n,server=y,address=9009
+      ZOOKEEPERHOSTS: zoo1:2181
+networks:
+  default:
+    external:
+      name: sia_net

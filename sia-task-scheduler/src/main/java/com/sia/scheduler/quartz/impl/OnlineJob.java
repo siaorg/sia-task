@@ -79,7 +79,7 @@ public class OnlineJob extends CommonService implements Job, InterruptableJob {
         }
 
         LOGGER.info(Constants.LOG_PREFIX + "JOB执行开始， The jobGroup is {}, The jobKey is {}", jobGroup, jobKey);
-        jobLogService.insertJobLogAndTaskLog(jobGroup, jobKey, onlineTaskList);
+        SpringContext.getJobLogService().insertJobLogAndTaskLog(jobGroup, jobKey, onlineTaskList);
         onlineTaskList.forEach(jobMTask -> {
             jobMTask.setCountDownLatch(countDownLatch);
             TaskCommit.commit(jobMTask);

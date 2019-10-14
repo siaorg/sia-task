@@ -42,7 +42,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * the initialization of the Spring Context global variable is performed.
  * Provide a static method to get a concrete instance of the current class `static variable`。
  *
- * @see com.sia.scheduler.context.BaseSpringContext
+ * @see org.springframework.context.ApplicationContextAware
  * @author maozhengwei
  * @date 2018-08-28 10:52
  * @version V1.0.0

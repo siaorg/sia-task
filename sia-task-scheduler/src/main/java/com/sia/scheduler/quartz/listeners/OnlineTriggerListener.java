@@ -20,9 +20,12 @@
 
 package com.sia.scheduler.quartz.listeners;
 
+import com.sia.core.curator.Curator4Scheduler;
 import com.sia.core.entity.BasicJob;
 import com.sia.core.helper.StringHelper;
 import com.sia.core.status.JobStatus;
+import com.sia.scheduler.context.SpringContext;
+import com.sia.scheduler.service.BasicJobService;
 import com.sia.scheduler.service.common.CommonService;
 import com.sia.scheduler.util.constant.Constants;
 import com.sia.scheduler.zk.monitor.LoadBalanceHelper;
@@ -34,13 +37,12 @@ import java.util.List;
 
 
 /**
- *
  * OnlineJobListeners
  *
- * @see
  * @author maozhengwei
- * @date 2018-10-10 16:08
  * @version V1.0.0
+ * @date 2018-10-10 16:08
+ * @see
  **/
 public class OnlineTriggerListener extends CommonService implements AbstractTriggerListener {
     @Override
@@ -65,6 +67,9 @@ public class OnlineTriggerListener extends CommonService implements AbstractTrig
         LOGGER.info("vetoJobExecution " + context.getFireTime());
         String jobGroup = context.getTrigger().getJobKey().getGroup();
         String jobKey = context.getTrigger().getJobKey().getName();
+        //get curator client
+        Curator4Scheduler curator4Scheduler = SpringContext.getCurator4Scheduler();
+        BasicJobService basicJobService = SpringContext.getBasicJobService();
         // READY >>> RUNNING
         BasicJob basicJob = basicJobService.getJob(jobGroup, jobKey);
         //Plan Job

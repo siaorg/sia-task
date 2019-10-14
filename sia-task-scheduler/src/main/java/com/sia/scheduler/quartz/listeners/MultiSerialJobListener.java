@@ -23,6 +23,7 @@ package com.sia.scheduler.quartz.listeners;
 import com.sia.core.entity.BasicJob;
 import com.sia.core.helper.StringHelper;
 import com.sia.core.status.JobStatus;
+import com.sia.scheduler.context.SpringContext;
 import com.sia.scheduler.service.common.CommonService;
 import org.quartz.*;
 import org.quartz.impl.matchers.EverythingMatcher;
@@ -110,13 +111,13 @@ public class MultiSerialJobListener extends CommonService implements SchedulerPl
 
         String jobKey = context.getJobDetail().getKey().getName();
         String group = context.getJobDetail().getKey().getGroup();
-        BasicJob basicJob = basicJobService.getJob(group, jobKey);
+        BasicJob basicJob = SpringContext.getBasicJobService().getJob(group, jobKey);
         String jobParentKey = basicJob.getJobParentKey();
         String plan = basicJob.getJobPlan();
 
         if (!StringHelper.isEmpty(plan)) {
             //JOB运行完成
-            String jobStatus = curator4Scheduler.getJobStatus(basicJob.getJobGroup(), basicJob.getJobKey());
+            String jobStatus = SpringContext.getCurator4Scheduler().getJobStatus(basicJob.getJobGroup(), basicJob.getJobKey());
             if (JobStatus.READY.toString().equals(jobStatus)) {
 
                 shouldStartPostTask(basicJob);
