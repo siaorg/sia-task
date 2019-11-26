@@ -235,7 +235,12 @@ public class BasicTaskService {
             }
         }
         else{
-            executors = basicTask.getTaskAppIpPort();
+            Map<String, Object> param = new HashMap<>(4);
+            param.put("taskKey", basicTask.getTaskKey());
+            List<BasicTask> taskList = basicTaskMapper.selectTaskByTaskKey(param);
+            if(taskList!=null&&taskList.size()>0) {
+                executors = taskList.get(0).getTaskAppIpPort();
+            }
         }
         return executors;
     }

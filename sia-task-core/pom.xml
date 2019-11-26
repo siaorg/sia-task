@@ -1,11 +1,6 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<parent>
-		<artifactId>sia-task</artifactId>
-		<groupId>com.sia</groupId>
-		<version>1.0.0</version>
-	</parent>
 
 	<modelVersion>4.0.0</modelVersion>
 
@@ -17,6 +12,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<curator-version>2.11.1</curator-version>
+		<spring.boot.version>1.5.11.RELEASE</spring.boot.version>
 	</properties>
 
 	<dependencies>
@@ -24,6 +20,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
+			<version>${spring.boot.version}</version>
 		</dependency>
 
 		<dependency>
@@ -45,7 +42,7 @@
 		<dependency>
 			<groupId>org.apache.zookeeper</groupId>
 			<artifactId>zookeeper</artifactId>
-			<version>3.4.6</version>
+			<version>3.4.14</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.slf4j</groupId>

@@ -109,7 +109,7 @@ create table if not exists skyworld_portal_stat
   last_time            datetime      not null comment '上次统计时间',
   create_time          datetime      not null
 )
-  charset = utf8;;
+  charset = utf8;
 
 -- ----------------------------
 -- Table structure for skyworld_task_log
@@ -178,10 +178,12 @@ zookeeper的安装和配置详见官方文档，至少部署三个节点。
 2. Nginx准备
 
 ### 前端项目打包
-进入本地的项目,在~/sia-task/sia-task-config-display目录下执行如下命令进行前端代码打包：npm run build 
+进入本地的项目,在~/sia-task/sia-task-config-display目录下执行如下命令进行前端代码打包：
+- npm install 或 cnpm install(推荐) cnpm安装命令：npm install -g cnpm --registry=https://registry.npm.taobao.org
+- npm run build
 
-> 1、打包完成在当前目录下面生成dist文件夹，改文件夹为前端工程：在~/sia-task/sia-task-config/src/main/resources目录下新建static文件夹，将dist文件夹中的内容复制到static文件夹中 </br>
-> 2、修改前端配置的编排中心应用服务地址：static/static文件夹下面的site.map.js为后端服务配置（ip:port形式），根据项目需求自行更改（CESHI_API_HOST参数配置的地址即为编排中心服务地址）</br>
+> 1、打包完成在当前目录下面生成dist文件夹，把dist文件夹放在nginx所在机器的app目录下 </br>
+> 2、修改前端配置的编排中心应用服务地址：nginx所在机器的app目录下 dist/static文件夹下面的site.map.js为后端服务配置（ip:port形式），根据项目需求自行更改（CESHI_API_HOST参数配置的地址即为编排中心服务地址）</br>
 
 ### 前端项目部署
 1. nginx的代理配置，进入nginx的目录下nginx.conf，添加如下代理：
@@ -253,7 +255,7 @@ server {
 
 6. 访问项目
 
-访问sia-task微服务任务调度平台的访问入口(登录页面地址（即为前端配置的编排中心服务地址），如：http://localhost:10615 )。登录页面如下图所示：
+访问sia-task微服务任务调度平台的访问入口(登录页面地址（即为前端配置的编排中心服务地址），如：http://前端部署机器IP地址:8080 )。登录页面如下图所示：
 
 ![](docs/images/install-gantry-login.jpg)
 

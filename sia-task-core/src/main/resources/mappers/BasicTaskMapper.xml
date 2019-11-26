@@ -160,6 +160,11 @@
         group by bt.task_group_name,bt.task_app_name
     </select>
 
+    <select id="selectTaskByTaskKey" resultMap="BaseResultMap">
+        select sbt.* from skyworld_basic_task sbt
+        where sbt.task_key = #{taskKey,jdbcType=VARCHAR}
+    </select>
+
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from skyworld_basic_task
