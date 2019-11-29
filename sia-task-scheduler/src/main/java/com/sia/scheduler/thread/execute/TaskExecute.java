@@ -23,8 +23,6 @@ package com.sia.scheduler.thread.execute;
 import com.sia.core.entity.JobMTask;
 import com.sia.core.status.JobStatus;
 import com.sia.scheduler.context.SpringContext;
-import com.sia.scheduler.log.enums.JobLogEnum;
-import com.sia.scheduler.log.enums.TaskLogEnum;
 import com.sia.scheduler.http.impl.TaskHttpClient;
 import com.sia.scheduler.http.route.ExecutorRouteSharding;
 import com.sia.scheduler.http.route.RouteStrategyEnum;
@@ -40,12 +38,12 @@ import java.util.List;
 import java.util.concurrent.PriorityBlockingQueue;
 
 /**
- *
  * TaskExecute
- * @see
+ *
  * @author maozhengwei
- * @date 2018-09-28 20:10
  * @version V1.0.0
+ * @date 2018-09-28 20:10
+ * @see
  **/
 public class TaskExecute extends CommonService implements Execute<Boolean> {
     private static final Logger LOGGER = LoggerFactory.getLogger(TaskExecute.class);

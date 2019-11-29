@@ -26,9 +26,8 @@ import com.sia.core.entity.JobLog;
 import com.sia.core.entity.JobMTask;
 import com.sia.core.helper.DateFormatHelper;
 import com.sia.core.mapper.JobLogMapper;
-import com.sia.scheduler.log.enums.JobLogEnum;
-import com.sia.scheduler.log.jobfile.LoggerBuilder;
 import com.sia.scheduler.log.enums.LogStatusEnum;
+import com.sia.scheduler.log.jobfile.LoggerBuilder;
 import com.sia.scheduler.log.worker.LogTraceIdBuilder;
 import com.sia.scheduler.log.worker.service.LogProduceService;
 import com.sia.scheduler.util.constant.Constants;
@@ -194,7 +193,7 @@ public class JobLogService {
      * @param onlineTask
      * @param status
      */
-    public void updateJobLog(JobMTask onlineTask, String status) {
+    public void updateJobLog(JobMTask onlineTask, LogStatusEnum status) {
         JobLog jobLog = generateUpdateJoblog(onlineTask, status);
         //落盘该Job日志
         LoggerBuilder.getLogger(onlineTask.getJobKey()).info(jobLog.toString());

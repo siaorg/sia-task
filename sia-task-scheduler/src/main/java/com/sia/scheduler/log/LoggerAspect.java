@@ -21,8 +21,7 @@
 package com.sia.scheduler.log;
 
 import com.sia.core.entity.JobMTask;
-import com.sia.scheduler.log.enums.JobLogEnum;
-import com.sia.scheduler.log.enums.TaskLogEnum;
+import com.sia.scheduler.log.enums.LogStatusEnum;
 import com.sia.scheduler.service.JobLogService;
 import com.sia.scheduler.service.TaskLogService;
 import com.sia.scheduler.service.common.EmailService;
@@ -39,11 +38,11 @@ import org.springframework.stereotype.Component;
 /**
  * scheduler log aop
  *
- * @description
- * @see
  * @author maozhengwei
- * @date 2018-04-28 10:32
  * @version V1.0.0
+ * @description
+ * @date 2018-04-28 10:32
+ * @see
  **/
 @Aspect
 @Component
@@ -66,6 +65,7 @@ public class LoggerAspect {
     /**
      * 前置
      * TODO  优化switch
+     *
      * @param joinPoint
      */
     @Before("logAspect()")
@@ -102,44 +102,45 @@ public class LoggerAspect {
     }
 
     private void onTransfer(JobMTask onlineTask, Throwable throwable) {
-        LOGGER.info(Constants.LOG_PREFIX + " AOP Before >>> onTransfer [{}], [{}]",onlineTask, throwable);
-        recordDetailFail(onlineTask, throwable,false);
-        jobLogService.updateJobLog(onlineTask, JobLogEnum.LOG_JOB_FAIL_TRANSFER.toString());
+        LOGGER.info(Constants.LOG_PREFIX + " AOP Before >>> onTransfer [{}], [{}]", onlineTask, throwable);
+        recordDetailFail(onlineTask, throwable, false);
+        jobLogService.updateJobLog(onlineTask, LogStatusEnum.LOG_JOB_FAIL_TRANSFER);
     }
 
     private void onMultiCallsAndTransfer(JobMTask onlineTask, Throwable throwable) {
-        LOGGER.info(Constants.LOG_PREFIX + " AOP Before >>> onMultiCallsAndTransfer [{}], [{}]",onlineTask, throwable);
-        recordDetailFail(onlineTask, throwable,false);
-        jobLogService.updateJobLog(onlineTask, JobLogEnum.LOG_JOB_FAIL_MULTI_CALLS_TRANSFER.toString());
+        LOGGER.info(Constants.LOG_PREFIX + " AOP Before >>> onMultiCallsAndTransfer [{}], [{}]", onlineTask, throwable);
+        recordDetailFail(onlineTask, throwable, false);
+        jobLogService.updateJobLog(onlineTask, LogStatusEnum.LOG_JOB_FAIL_MULTI_CALLS_TRANSFER);
     }
 
     protected void onIgnore(JobMTask onlineTask, Throwable throwable) {
-        LOGGER.info(Constants.LOG_PREFIX + " AOP Before >>> onIgnore [{}], [{}]",onlineTask, throwable);
-        recordDetailFail(onlineTask,throwable,true);
-        jobLogService.updateJobLog(onlineTask, JobLogEnum.LOG_JOB_HANDLE_FAIL_STOP.toString());
+        LOGGER.info(Constants.LOG_PREFIX + " AOP Before >>> onIgnore [{}], [{}]", onlineTask, throwable);
+        recordDetailFail(onlineTask, throwable, true);
+        jobLogService.updateJobLog(onlineTask, LogStatusEnum.LOG_JOB_HANDLE_FAIL_STOP);
     }
 
-    protected void onStop(JobMTask onlineTask, Throwable throwable){
-        LOGGER.info(Constants.LOG_PREFIX + " AOP Before >>> onStop [{}], [{}]",onlineTask, throwable);
-        recordDetailFail(onlineTask,throwable,false);
-        jobLogService.updateJobLog(onlineTask, JobLogEnum.LOG_JOB_HANDLE_FAIL_STOP.toString());
+    protected void onStop(JobMTask onlineTask, Throwable throwable) {
+        LOGGER.info(Constants.LOG_PREFIX + " AOP Before >>> onStop [{}], [{}]", onlineTask, throwable);
+        recordDetailFail(onlineTask, throwable, false);
+        jobLogService.updateJobLog(onlineTask, LogStatusEnum.LOG_JOB_HANDLE_FAIL_STOP);
     }
 
     /**
      * 记录日志以及是否进行邮件预警
+     *
      * @param onlineTask
      * @param throwable
      * @param isEmail
      */
-    private void recordDetailFail(JobMTask onlineTask, Throwable throwable,boolean isEmail) {
+    private void recordDetailFail(JobMTask onlineTask, Throwable throwable, boolean isEmail) {
         try {
             String message = onlineTask.toString() + Constants.REGEX_ARROW;
             if (throwable != null) {
                 message = message + " Exception : " + throwable.getMessage() + Constants.REGEX_COLON + throwable.getLocalizedMessage();
             }
-            taskLogService.recordTaskLog(onlineTask, TaskLogEnum.LOG_TASK_FAIL_DETAIL.toString(), message);
-            LOGGER.info(Constants.LOG_PREFIX + " AOP Before >>> recordDetailFail >>> recordTaskLog finished [{}], [{}]",onlineTask, message);
-            if (isEmail){
+            taskLogService.recordTaskLog(onlineTask, LogStatusEnum.LOG_TASK_FAIL_DETAIL, message);
+            LOGGER.info(Constants.LOG_PREFIX + " AOP Before >>> recordDetailFail >>> recordTaskLog finished [{}], [{}]", onlineTask, message);
+            if (isEmail) {
                 emailService.sendLimitedEmail(onlineTask.getJobAlarmEmail(), message, Constants.EMAIL_SUBJECT, onlineTask.getFailover(), 1000 * 60 * 30);
             }
         } catch (Exception e) {

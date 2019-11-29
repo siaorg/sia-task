@@ -153,6 +153,9 @@
       <if test="jobId != null" >
         job_id,
       </if>
+      <if test="traceId != null" >
+        trace_id,
+      </if>
       <if test="jobTriggerCode != null" >
         job_trigger_code,
       </if>
@@ -179,6 +182,9 @@
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="jobId != null" >
         #{jobId,jdbcType=INTEGER},
+      </if>
+      <if test="traceId != null" >
+        #{traceId,jdbcType=VARCHAR},
       </if>
       <if test="jobTriggerCode != null" >
         #{jobTriggerCode,jdbcType=VARCHAR},
@@ -263,6 +269,10 @@
   </if>
     GROUP BY job_group
     ORDER BY job_group ASC,job_log_count DESC
+  </select>
+
+  <select id="selectJobLogIdByTraceId" parameterType="java.lang.String" resultType="java.lang.Integer">
+    select sjl.job_log_id jobLogId from skyworld_job_log sjl where sjl.trace_id = #{traceId,jdbcType=VARCHAR}
   </select>
 
 </mapper>

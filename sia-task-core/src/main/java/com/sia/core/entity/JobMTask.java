@@ -106,6 +106,8 @@ public @Data class JobMTask {
     /** jobLog ID in DB */
     private int jobLogId;
 
+    private String traceId;
+
     /** alarm email of job */
     private String jobAlarmEmail;
     /**

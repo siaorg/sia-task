@@ -14,6 +14,7 @@
         <module>sia-task-core</module>
         <module>sia-task-hunter</module>
         <module>sia-task-scheduler</module>
+        <module>sia-task-intask</module>
     </modules>
 
     <properties>

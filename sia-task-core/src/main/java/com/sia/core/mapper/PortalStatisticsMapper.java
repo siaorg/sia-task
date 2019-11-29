@@ -56,7 +56,7 @@ public interface PortalStatisticsMapper {
      * @return
      * @throws
      */
-    List<Map<String, Object>> selectCallExpFinFromJobLog(Map<String, Object> param);
+    List<Map<String, Object>> selectCallExpFinFromJobLogForPage(Map<String, Object> param);
 
     /**
      *
@@ -117,4 +117,46 @@ public interface PortalStatisticsMapper {
      * @throws
      */
     String getDbTime();
+
+    /**
+     * 获取basicJob和basicTask的总数数量
+     */
+    Map<String, Integer> getAllCount();
+    /**
+     *获取新增加的JOB信息
+     */
+    List<Map<String, Object>> getNewJobInfo(Map<String, Object> param);
+    /**
+     * 获取新增加的task信息
+     */
+    List<Map<String, Object>> getNewTaskInfo(Map<String, Object> param);
+    /**
+     * 从jobLog中获取时间区间JOB执行数量、成功数量、失败数量
+     * 日报数据统计
+     * @param param
+     * @return
+     */
+    List<Map<String, Object>> selectCallExpFinFromJobLogForReport(Map<String, Object> param);
+
+    /**
+     * 获取项目统计信息
+     * @param param
+     * @return
+     */
+    List<Map<String, Object>> selectProjectInfo(Map<String, Object> param);
+
+    /**
+     * 获取异常job
+     * @param param
+     * @return
+     */
+    List<Map<String, Object>> selectExpJobs(Map<String, Object> param);
+
+    /**
+     * 获取异常task信息
+     * @param param
+     * @return
+     */
+    List<Map<String, Object>> getExpTaskInfo(Map<String, Object> param);
+
 }

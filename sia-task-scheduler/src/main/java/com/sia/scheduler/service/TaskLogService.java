@@ -26,9 +26,8 @@ import com.sia.core.entity.TaskLog;
 import com.sia.core.helper.DateFormatHelper;
 import com.sia.core.mapper.JobLogMapper;
 import com.sia.core.mapper.TaskLogMapper;
-import com.sia.scheduler.log.enums.TaskLogEnum;
-import com.sia.scheduler.log.jobfile.LoggerBuilder;
 import com.sia.scheduler.log.enums.LogStatusEnum;
+import com.sia.scheduler.log.jobfile.LoggerBuilder;
 import com.sia.scheduler.log.worker.service.LogProduceService;
 import com.sia.scheduler.util.constant.Constants;
 import com.sia.scheduler.util.tools.StringFormat;
@@ -81,7 +80,7 @@ public class TaskLogService {
      * @param result
      * @throws Exception
      */
-    public void recordTaskLog(JobMTask jobMTask, String status, String result) {
+    public void recordTaskLog(JobMTask jobMTask, LogStatusEnum status, String result) {
         TaskLog taskLog = generateTaskLog(jobMTask, status, result);
         //将task日志落盘至关联的Job日志中
         LoggerBuilder.getLogger(jobMTask.getJobKey()).info(taskLog.toString());

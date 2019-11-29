@@ -38,6 +38,9 @@ public @Data class JobLog {
     /** JobLog ID in DB */
     private Integer jobLogId;
 
+    /** JobLog traceId */
+    private String traceId;
+
     /** Job ID in DB */
     private Integer jobId;
 
