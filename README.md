@@ -1,3 +1,14 @@
+## 关于我们
+
+* 邮件交流：sia.list@creditease.cn
+
+* 提交issue:
+
+* 微信交流：
+
+    <img src="docs/images/newlog.jpeg" width="30%" height="30%">
+    
+
 微服务任务调度平台
 ===
 [使用指南](USERSGUIDE.md) </br>
@@ -210,15 +221,12 @@ Log Manager
 
 ### 其他相关资料 
 
-## 关于我们
+## SIA相关开源产品链接：
 
-* 邮件交流：sia.list@creditease.cn
++ [微服务路由网关](https://github.com/siaorg/sia-gateway)
 
-* 提交issue:
++ [Rabbitmq队列服务PLUS](https://github.com/siaorg/sia-rabbitmq-plus)
 
-* 微信交流：
-
-    <img src="https://github.com/lijun006788/sia-task/blob/master/docs/images/siaopenWechatIMG3.jpeg" width="30%" height="30%">
     
 （待补充）
 
