@@ -102,21 +102,25 @@ public class LoggerAspect {
     }
 
     private void onTransfer(JobMTask onlineTask, Throwable throwable) {
+        LOGGER.info(Constants.LOG_PREFIX + " AOP Before >>> onTransfer [{}], [{}]",onlineTask, throwable);
         recordDetailFail(onlineTask, throwable,false);
         jobLogService.updateJobLog(onlineTask, JobLogEnum.LOG_JOB_FAIL_TRANSFER.toString());
     }
 
     private void onMultiCallsAndTransfer(JobMTask onlineTask, Throwable throwable) {
+        LOGGER.info(Constants.LOG_PREFIX + " AOP Before >>> onMultiCallsAndTransfer [{}], [{}]",onlineTask, throwable);
         recordDetailFail(onlineTask, throwable,false);
         jobLogService.updateJobLog(onlineTask, JobLogEnum.LOG_JOB_FAIL_MULTI_CALLS_TRANSFER.toString());
     }
 
     protected void onIgnore(JobMTask onlineTask, Throwable throwable) {
+        LOGGER.info(Constants.LOG_PREFIX + " AOP Before >>> onIgnore [{}], [{}]",onlineTask, throwable);
         recordDetailFail(onlineTask,throwable,true);
         jobLogService.updateJobLog(onlineTask, JobLogEnum.LOG_JOB_HANDLE_FAIL_STOP.toString());
     }
 
     protected void onStop(JobMTask onlineTask, Throwable throwable){
+        LOGGER.info(Constants.LOG_PREFIX + " AOP Before >>> onStop [{}], [{}]",onlineTask, throwable);
         recordDetailFail(onlineTask,throwable,false);
         jobLogService.updateJobLog(onlineTask, JobLogEnum.LOG_JOB_HANDLE_FAIL_STOP.toString());
     }
@@ -134,6 +138,7 @@ public class LoggerAspect {
                 message = message + " Exception : " + throwable.getMessage() + Constants.REGEX_COLON + throwable.getLocalizedMessage();
             }
             taskLogService.recordTaskLog(onlineTask, TaskLogEnum.LOG_TASK_FAIL_DETAIL.toString(), message);
+            LOGGER.info(Constants.LOG_PREFIX + " AOP Before >>> recordDetailFail >>> recordTaskLog finished [{}], [{}]",onlineTask, message);
             if (isEmail){
                 emailService.sendLimitedEmail(onlineTask.getJobAlarmEmail(), message, Constants.EMAIL_SUBJECT, onlineTask.getFailover(), 1000 * 60 * 30);
             }

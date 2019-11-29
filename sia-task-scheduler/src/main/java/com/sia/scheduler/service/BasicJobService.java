@@ -105,7 +105,7 @@ public class BasicJobService {
      * @return
      * @throws SchedulerException
      */
-    public boolean runOnce(String jobGroupName, String jobKey) throws SchedulerException {
+    public boolean runOnceJobKey(String jobGroupName, String jobKey) throws SchedulerException {
 
         if (!StringHelper.isEmpty(jobGroupName) || !StringHelper.isEmpty(jobKey)) {
             try {

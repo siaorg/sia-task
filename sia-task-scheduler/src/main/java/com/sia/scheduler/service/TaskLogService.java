@@ -20,11 +20,16 @@
 
 package com.sia.scheduler.service;
 
+import com.sia.core.constant.Constant;
 import com.sia.core.entity.JobMTask;
 import com.sia.core.entity.TaskLog;
 import com.sia.core.helper.DateFormatHelper;
+import com.sia.core.mapper.JobLogMapper;
 import com.sia.core.mapper.TaskLogMapper;
 import com.sia.scheduler.log.enums.TaskLogEnum;
+import com.sia.scheduler.log.jobfile.LoggerBuilder;
+import com.sia.scheduler.log.enums.LogStatusEnum;
+import com.sia.scheduler.log.worker.service.LogProduceService;
 import com.sia.scheduler.util.constant.Constants;
 import com.sia.scheduler.util.tools.StringFormat;
 import org.slf4j.Logger;
@@ -54,6 +59,8 @@ public class TaskLogService {
     @SuppressWarnings("all")
     private TaskLogMapper taskLogMapper;
 
+    @Autowired
+    private JobLogMapper jobLogMapper;
     /**
      * Insert the Task log
      * @param taskLog
@@ -75,13 +82,21 @@ public class TaskLogService {
      * @throws Exception
      */
     public void recordTaskLog(JobMTask jobMTask, String status, String result) {
+        TaskLog taskLog = generateTaskLog(jobMTask, status, result);
+        //将task日志落盘至关联的Job日志中
+        LoggerBuilder.getLogger(jobMTask.getJobKey()).info(taskLog.toString());
+
+        LogProduceService.produceLogs(jobMTask, result, status);
+    }
+
+    private TaskLog generateTaskLog(JobMTask jobMTask, LogStatusEnum status, String result){
         TaskLog taskLog = new TaskLog();
         String url = null;
         if (!jobMTask.getTaskKey().equals(Constants.ENDTASK)) {
             url = Constants.HTTP_PREFIX + jobMTask.getCurrentHandler() + jobMTask.getTaskKey().split(Constants.REGEX_COLON)[1];
         }
 
-        switch (TaskLogEnum.getByValue(status)) {
+        switch (status) {
             case LOG_TASK_HANDLE_BEGIN:
                 taskLog.setTaskStatus(Constants.LOG_START);
                 taskLog.setTaskMsg(StringFormat.logMessFormat(url));
@@ -90,7 +105,7 @@ public class TaskLogService {
                 taskLog.setTaskStatus(Constants.LOG_SUCCESS);
                 taskLog.setTaskMsg(StringFormat.logMessFormat(url,result));
                 break;
-            case LOG_ENDTASK_FINISHED:
+            case LOG_TASK_END_FINISHED:
                 taskLog.setTaskStatus(Constants.LOG_SUCCESS);
                 taskLog.setTaskMsg(StringFormat.logMessFormat(url,Constants.LOG_TASK_MSG_END));
                 break;
@@ -122,10 +137,34 @@ public class TaskLogService {
                 break;
         }
         taskLog.setTaskHandleTime( new Date());
-        taskLog.setJobLogId(jobMTask.getJobLogId());
+        taskLog.setTraceId(jobMTask.getTraceId());
         taskLog.setJobKey(jobMTask.getJobKey());
         taskLog.setTaskKey(jobMTask.getTaskKey());
-        insertSelective(taskLog);
+
+        return taskLog;
+    }
+
+    /**
+     * Record task scheduling process log
+     * @param jobMTask
+     * @param status
+     * @param result
+     * @throws Exception
+     */
+    public void recordTaskLog4Consumer(JobMTask jobMTask, LogStatusEnum status, String result) {
+        TaskLog taskLog = generateTaskLog(jobMTask, status, result);
+        Integer jobLogId = jobLogMapper.selectJobLogIdByTraceId(jobMTask.getTraceId());
+        if (jobLogId != null){
+            taskLog.setJobLogId(jobLogId);
+        } else {
+            LOGGER.error(Constant.LOG_PREFIX + "Not found jobLogId when insert task log: {}", taskLog);
+            return;
+        }
+        try {
+            insertSelective(taskLog);
+        } catch (Exception e) {
+            LOGGER.error(Constants.LOG_EX_PREFIX + "recordTaskLog 数据库插入数据操作异常",e);
+        }
     }
 
     /**

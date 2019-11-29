@@ -47,7 +47,7 @@ public class AsyncRestTemplateImpl extends AbstractRestTemplate {
      * ReadTimeout is the system's default timeout. >>> 60 * 60 * 1000;
      */
     public static final int CONNECTTIMEOUT_MAX = 30 * 1000;
-    public static final int READTIMEOUT_DEFULT = 24 * 60 * 60 * 1000;
+    public static final int READTIMEOUT_DEFULT = 60 * 60 * 1000;
 
 
     /**

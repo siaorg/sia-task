@@ -22,6 +22,7 @@ package com.sia.scheduler.http.impl;
 
 import com.sia.core.entity.JobMTask;
 import com.sia.core.helper.JSONHelper;
+import com.sia.scheduler.context.SpringContext;
 import com.sia.scheduler.http.enums.FailoverEnum;
 import com.sia.scheduler.log.enums.TaskLogEnum;
 import com.sia.scheduler.http.enums.AsyncResponse;
@@ -58,6 +59,9 @@ public class OnlineListenableFutureCallback<T extends ResponseEntity<String>> ex
 
     @Override
     protected void vFailure(Throwable ex) {
+
+        LOGGER.info(Constants.LOG_PREFIX + " vFailure [{}]", onlineTask);
+
         boolean isCountDown = onFailure(onlineTask, ex);
         if (isCountDown) {
             isExceptionCountDown(onlineTask, true, " onFailure is Exception : " + ex.getMessage());
@@ -66,79 +70,78 @@ public class OnlineListenableFutureCallback<T extends ResponseEntity<String>> ex
 
     @Override
     protected void vSuccess(T result) {
+
+        LOGGER.info(Constants.LOG_PREFIX + " vSuccess [{}]", result);
+
         String resultBody = result.getBody();
         onSuccess(onlineTask, resultBody);
     }
 
     private void onSuccess(JobMTask onlineTask, String resultBody) {
 
-        String responseString = null;
         Map<String, String> responseTarget;
-        AsyncResponse asyncResponse = null;
         try {
             // 1解析返回的数据
             responseTarget = JSONHelper.toObject(resultBody, Map.class);
-            if (responseTarget == null) {
-                asyncResponse = JSONHelper.toObject(resultBody, AsyncResponse.class);
-                responseTarget = asyncResponse.getTarget();
-            }
-            responseString = JSONHelper.toString(responseTarget);
-            onlineTask.setOutParam(responseString);
+            onlineTask.setOutParam(resultBody);
 
         } catch (Exception e) {
-            taskLogService.recordTaskLog(onlineTask, TaskLogEnum.LOG_TASK_CALLBACKERROR.toString(), responseString);
             LOGGER.error(Constants.LOG_PREFIX + " Parsing the returned object with an exception. responseEntityBody Exception : ", e);
-            isExceptionCountDown(onlineTask, true, " Parsing the returned object with an exception. responseEntityBody Exception : " + e.getMessage());
+            SpringContext.getTaskLogService().recordTaskLog(onlineTask, LogStatusEnum.LOG_TASK_CALLBACKERROR, resultBody);
+            isExceptionCountDown(onlineTask, true, "  Parsing the returned object with an exception.  responseEntityBody Exception : " + e.getMessage());
             return;
         }
 
         //2 TODO 记录日志 需要优化
-        if (asyncResponse != null && asyncResponse.getStatus().equals(ResponseStatus.SUCCESS)) {
-            //复位Task
-            reset(onlineTask);
-            LOGGER.info(Constants.LOG_PREFIX + " Task is {} execution completed, the result is ：{}", onlineTask.getTaskKey(), responseString);
-            taskLogService.recordTaskLog(onlineTask, TaskLogEnum.LOG_TASK_FINISHED.toString(), responseString);
-            commitSuccessTask(onlineTask);
-        } else if (responseTarget != null && responseTarget.get(AsyncResponse.STATUS).toUpperCase().equals(ResponseStatus.SUCCESS.toString())) {
-            //复位Task
-            reset(onlineTask);
-            responseTarget.get(responseTarget.get("result"));
-            LOGGER.info(Constants.LOG_PREFIX + " Task is {} execution completed, the result is ：{}", onlineTask.getTaskKey(), responseString);
-            taskLogService.recordTaskLog(onlineTask, TaskLogEnum.LOG_TASK_FINISHED.toString(), responseString);
-            commitSuccessTask(onlineTask);
-        } else {
-            try {
-                boolean isCountDown = onFailure(onlineTask, null);
-                if (isCountDown) {
-                    isExceptionCountDown(onlineTask, true, " Task execution completed, the result is ：" + responseString);
-                }
-                LOGGER.info(Constants.LOG_PREFIX + " Task execution completed, Return abnormal result : {}", responseString);
-            } catch (Exception e) {
-                LOGGER.error(" Task Task execution completed, an exception occurred during the process of processing the failed result : ", e);
-                isExceptionCountDown(onlineTask, true, " Task Task execution completed, an exception occurred during the process of processing the failed resul : " + e.getMessage());
+        if (responseTarget != null && responseTarget.containsKey(AsyncResponse.STATUS)) {
+            if (ResponseStatus.SUCCESS.toString().equals(responseTarget.get(AsyncResponse.STATUS).toUpperCase())) {
+                reset(onlineTask);
+                LOGGER.info(Constants.LOG_PREFIX + " responseTarget Task is {} execution completed, the result is {}", onlineTask.getTaskKey(), resultBody);
+                SpringContext.getTaskLogService().recordTaskLog(onlineTask, LogStatusEnum.LOG_TASK_FINISHED, resultBody);
+                commitSuccessTask(onlineTask);
+            } else {
+                toFailure(onlineTask, resultBody);
             }
+        } else {
+            toFailure(onlineTask, resultBody);
+        }
+    }
+
+
+    private void toFailure(JobMTask onlineTask, String resultBody) {
+        LOGGER.error(" toFailure >>> Task execution is completed, an exception is returned during the processing of an abnormal result : [{}], [{}]", onlineTask, resultBody);
+        try {
+            boolean isCountDown = onFailure(onlineTask, null);
+            if (isCountDown) {
+                isExceptionCountDown(onlineTask, true, " Task execution is completed and the result is ：" + resultBody);
+            }
+            LOGGER.info(Constants.LOG_PREFIX + " toFailure >>> Task execution completes and returns an abnormal result:{}", resultBody);
+        } catch (Exception e) {
+            LOGGER.error(" toFailure >>> Task execution is completed, an exception occurs during the processing of the returned abnormal result: ", e);
+            isExceptionCountDown(onlineTask, true, " Task execution completes and returns abnormal results >>> The method of toFailure has an exception : " + e.getMessage());
         }
     }
 
 
     private boolean onFailure(JobMTask onlineTask, Throwable throwable) {
         boolean isCountDown;
+        LOGGER.info(Constants.LOG_PREFIX + " Task [{}] >>> onFailure : [{}]", onlineTask, throwable);
         switch (FailoverEnum.getByValue(onlineTask.getFailover().toLowerCase())) {
             case IGNORE:
-                isCountDown = httpCallbackLog.onIgnore(onlineTask, throwable);
+                isCountDown = SpringContext.getAsyncBackLog().onIgnore(onlineTask, throwable);
                 commitSuccessTask(onlineTask);
                 break;
             case TRANSFER:
-                isCountDown = httpCallbackLog.onTransfer(onlineTask, throwable);
+                isCountDown = SpringContext.getAsyncBackLog().onTransfer(onlineTask, throwable);
                 break;
             case MULTI_CALLS_TRANSFER:
-                isCountDown = httpCallbackLog.onMultiCallsAndTransfer(onlineTask, throwable);
+                isCountDown = SpringContext.getAsyncBackLog().onMultiCallsAndTransfer(onlineTask, throwable);
                 break;
             case STOP:
-                isCountDown = httpCallbackLog.onStop(onlineTask, throwable);
+                isCountDown = SpringContext.getAsyncBackLog().onStop(onlineTask, throwable);
                 break;
             default:
-                isCountDown = httpCallbackLog.sharding(onlineTask, throwable);
+                isCountDown = SpringContext.getAsyncBackLog().onStop(onlineTask, throwable);
         }
         return isCountDown;
     }

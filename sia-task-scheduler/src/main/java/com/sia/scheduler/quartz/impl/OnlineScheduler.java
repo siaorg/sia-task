@@ -21,11 +21,13 @@
 package com.sia.scheduler.quartz.impl;
 
 import com.sia.core.helper.StringHelper;
+import com.sia.scheduler.log.jobfile.LoggerBuilder;
 import com.sia.scheduler.quartz.BaseScheduler;
 import com.sia.scheduler.quartz.trigger.TriggerBuildHandler;
 import com.sia.scheduler.thread.ExecutorPoolService;
 import com.sia.scheduler.util.constant.Constants;
 import org.quartz.*;
+import org.quartz.impl.matchers.GroupMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +45,7 @@ public class OnlineScheduler extends BaseScheduler {
     private final static Logger LOGGER = LoggerFactory.getLogger(OnlineScheduler.class);
 
     /**
-     * loadJob
+     * scheduleJob
      *
      * @param jobKey
      * @param jobGroup
@@ -51,7 +53,7 @@ public class OnlineScheduler extends BaseScheduler {
      * @param trigerValue
      * @param clazz
      */
-    public void loadJob(String jobKey, String jobGroup, String trigerType, String trigerValue, Class<? extends Job> clazz) {
+    public void scheduleJob(String jobKey, String jobGroup, String trigerType, String trigerValue, Class<? extends Job> clazz) {
         try {
             Trigger trigger = TriggerBuildHandler.build(jobKey, jobGroup, trigerType, trigerValue);
             JobDetail jobDetail = JobBuilder.newJob(clazz)
@@ -59,7 +61,7 @@ public class OnlineScheduler extends BaseScheduler {
             scheduler.scheduleJob(jobDetail, trigger);
             startJob();
         } catch (SchedulerException e) {
-            LOGGER.error(Constants.LOG_PREFIX + "loadJob fail:", e);
+            LOGGER.error(Constants.LOG_PREFIX + "scheduleJob fail:", e);
         }
     }
 
@@ -133,7 +135,13 @@ public class OnlineScheduler extends BaseScheduler {
         try {
             interrupt(jobKey, jobGroup);
             removeResult = scheduler.deleteJob(JobKey.jobKey(jobKey, jobGroup));
-            ExecutorPoolService.releaseExecutorService(jobKey);
+            if(scheduler.getJobKeys(GroupMatcher.groupEquals(jobGroup)).size() == 0) {
+                ExecutorPoolService.releaseExecutorService(jobGroup);
+            }
+            if(removeResult) {
+                LoggerBuilder.releaseLogger(jobKey);
+            }
+
         } catch (Exception e) {
             LOGGER.info(Constants.LOG_PREFIX + " removeJob Exception : ", e);
         }
@@ -169,7 +177,6 @@ public class OnlineScheduler extends BaseScheduler {
      */
     public boolean checkExists(String jobKey, String jobGroup) throws SchedulerException {
 
-        TriggerKey triggerKey = TriggerKey.triggerKey(jobKey, jobGroup);
-        return scheduler.checkExists(triggerKey);
+        return  scheduler.checkExists(JobKey.jobKey(jobKey, jobGroup)) || scheduler.checkExists(TriggerKey.triggerKey(jobKey, jobGroup));
     }
 }
