@@ -62,7 +62,6 @@ pagehelper:
 #############################################################
 logging.file: ./logs/${spring.application.name}.
 
-#address.kibana: 10.143.131.86:5601
 
 # task根路径
 # 可选参数，需要overwritten此参数时，打开注释并填写指定的ZK根路径，否则默认为SkyWorldOnlineTask

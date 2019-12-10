@@ -80,6 +80,7 @@ create table if not exists skyworld_job_log
   job_log_id               int auto_increment comment '主键ID AUTO_INCREMENT'
     primary key,
   job_id                   int           not null,
+  trace_id                 varchar(40)   null,
   job_trigger_code         varchar(45)   null comment '调度-结果状态',
   job_trigger_msg          varchar(2048) null comment '调度-日志',
   job_trigger_time         datetime      null comment '调度-时间',
@@ -121,6 +122,7 @@ create table if not exists skyworld_task_log
     primary key,
   job_log_id         int           not null comment 'task计数;',
   job_key            varchar(255)  null,
+  trace_id           varchar(40)   null,
   task_key           varchar(255)  not null comment 'task_id',
   task_msg           varchar(2048) null comment '状态描述信息,如：异常信息，SUCCESS等',
   task_status        varchar(45)   null comment '状态值：ready,running,finished,exception',
