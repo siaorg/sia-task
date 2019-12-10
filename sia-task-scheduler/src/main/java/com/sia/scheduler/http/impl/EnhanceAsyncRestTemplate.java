@@ -53,7 +53,7 @@ public class EnhanceAsyncRestTemplate extends AbstractRestTemplate {
     @Override
     public <T> ListenableFuture<ResponseEntity<T>> postAsyncForEntity(Request request, Class<T> responseType, Object... uriVariables) {
         //增强处理
-        LOGGER.info(Constants.LOG_PREFIX + " task asynchronous scheduling request starts");
+        LOGGER.info(Constants.LOG_PREFIX + " task asynchronous scheduling request starts [{}]", request.buildUrl());
         return restTemplate.postAsyncForEntity(request, responseType, uriVariables);
 
     }

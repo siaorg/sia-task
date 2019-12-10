@@ -1,0 +1,140 @@
+<html>
+<head>
+  <!--<meta charset="UTF-8">-->
+</head>
+<body style="color: #666;font-size: 14px;max-width:1200px;min-width:800px;margin:0 auto;font-family:'Helvetica Neue','Helvetica','PingFang SC','Hiragino Sans GB','Microsoft YaHei','Arial','sans-serif';padding: 0 20px;">
+<div style="padding: 0;margin: 0;height: auto;width: 100%;overflow: auto;margin:0 auto; ">
+  <div class="header" style="height: 50px;width: 100%;background:#99CCCC;">
+    <h3 style="margin: 0;padding: 0;display:inline-block;text-align:center;width:100%;line-height:60px;font-size:35px;color:#000000;">SIA-TASK微服务任务调度平台日报</h3>
+  </div>
+  <div style="padding:0 0px;">
+    <table style="margin-top:10px;width:100%;border-collapse:collapse;border:0;font-size:15px;height:120px;">
+      <tbody>
+      <tr style="color:#191818;height:120px;padding:0;">
+        <td style="height:120px;width: 50%;padding:0 10px;background:#3399CC;border-radius:4px;color: #fff;">
+          <p style="height:30px;width: 100%;margin:0;padding:0;font-size:20px;">激活JOB数/JOB总数</p>
+          <p style="height:70px;width: 100%;padding:0;margin:0;line-height: 50px;text-align:center;font-size:50px;">activeJobNum/jobTotalNum</p>
+        </td>
+        <td style="height:120px;width:1.25%;"></td>
+        <td style="height:120px;width: 50%;padding:0 10px;background:#5351F0;border-radius:4px;color: #fff;">
+          <p style="height:30px;width: 100%;margin:0;padding:0;font-size:20px;">当前TASK总数</p>
+          <p style="height:70px;width: 100%;padding:0;margin:0;line-height: 50px;text-align:center;font-size:50px;">currentTaskTotalNum</p>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="container" style="padding:0 5px;margin:15px 0 0 0; ">
+      <h4 style="padding:0;margin:0;height: 40px;line-height: 40px;font-size: 16px; background: #99CCCC;">
+        <i style="padding:0;margin:0 5px 0 0;display: inline-block;font-style: normal;vertical-align: middle;height: 14px;border-radius: 5px;border: 2px solid #4A90E2;"></i>
+        <i style="padding:0;margin:0;display: inline-block;font-style: normal;vertical-align: middle;font-size: 30px;font-weight: 600;color: #4A4A4A;">新增JOB详情<em style="padding:0;margin:0 10px;font-style: normal;color: #4A90E2;">newAddJobNum</em>条</i>
+      </h4>
+      <table class="list" style="margin:10px 0 25px 0;width:100%;border-collapse:collapse;border-top:1px solid #DFDEDE; font-size:12px;">
+        <thead>
+        <tr style="border: 1px solid #DFDEDE;color:#191818;height:35px;line-height:35px;background:#DDDDDD;">
+          <td style="padding:6px 10px; line-height: 150%;width:33.3%; color:#000000; font-weight:bold; font-size: 15px;">job_key</td>
+          <td style="padding:6px 10px; line-height: 150%;width:33.3%; color:#000000; font-weight:bold; font-size: 15px;">job_group</td>
+          <td style="padding:6px 10px; line-height: 150%;width:33.3%; color:#000000; font-weight:bold; font-size: 15px;">job_alarm_email</td>
+        </tr>
+        </thead>
+        <tbody>
+          NEW-JOB-INFO
+        </tbody>
+      </table>
+      <h4 style="padding:0;margin:0;height: 40px;line-height: 40px;font-size: 16px; background: #99CCCC;">
+        <i style="padding:0;margin:0 10px 0 0;display: inline-block;font-style: normal;vertical-align: middle;height: 14px;border-radius: 5px;border: 2px solid #4A90E2;"></i>
+        <i style="padding:0;margin:0;display: inline-block;font-style: normal;vertical-align: middle;font-size: 30px;font-weight: 600;color: #4A4A4A;">新增TASK详情<em style="padding:0;margin:0 10px;font-style: normal;color: #4A90E2;">newAddTaskNum</em>条</i>
+      </h4>
+      <table class="list" style="margin:10px 0 25px 0;width:100%;border-collapse:collapse;border-top:1px solid #DFDEDE; font-size:12px;">
+        <thead>
+        <tr style="border: 1px solid #DFDEDE;color:#191818;height:35px;line-height:35px;background:#DDDDDD;">
+          <td style="padding:6px 10px; line-height: 150%;width:33.3%; color:#000000; font-weight:bold; font-size: 15px;">task_key</td>
+          <td style="padding:6px 10px; line-height: 150%;width:33.3%; color:#000000; font-weight:bold; font-size: 15px;">task_app_name</td>
+          <td style="padding:6px 10px; line-height: 150%;width:33.3%; color:#000000; font-weight:bold; font-size: 15px;">task_group_name</td>
+        </tr>
+        </thead>
+        <tbody>
+          NEW-TASK-INFO
+        </tbody>
+      </table>
+      <h4 style="padding:0;margin:0;height: 40px;line-height: 40px;font-size: 16px; background: #99CCCC;">
+        <i style="padding:0;margin:0 5px 0 0;display: inline-block;font-style: normal;vertical-align: middle;height: 14px;border-radius: 5px;border: 2px solid #4A90E2;"></i>
+        <i style="padding:0;margin:0;display: inline-block;font-style: normal;vertical-align: middle;font-size: 30px;font-weight: 600;color: #4A4A4A;">调度器调度信息</i>
+      </h4>
+      <table style="margin-top:10px;width:100%;border-collapse:collapse;border:0;font-size:12px;height:120px;">
+        <tbody>
+        <tr style="color:#191818;height:120px;padding:0;">
+          <td style="height:120px;width: 23.5%;padding:0 10px;background:#66CCCC;border-radius:4px;">
+            <p style="height:30px;width: 100%;margin:0;padding:0;color:#FFFFFF;font-size: 20px;">JOB调度次数</p>
+            <p style="height:70px;width: 100%;padding:0;margin:0;line-height: 40px;color:#FFFFFF;text-align:center;font-size:42px;">jobDispatchNum</p>
+          </td>
+          <td style="height:120px;width:1.5%;"></td>
+          <td style="height:120px;width: 23.5%;padding:0 10px;background:#66CCCC;border-radius:4px;">
+            <p style="height:30px;width: 100%;margin:0;padding:0;color:#FFFFFF;font-size: 20px;">TASK调度次数</p>
+            <p style="height:70px;width: 100%;padding:0;margin:0;line-height: 40px;color:#FFFFFF;text-align:center;font-size:42px;">taskDispatchNum</p>
+          </td>
+          <td style="height:120px;width:1.5%;"></td>
+          <td style="height:120px;width: 23.5%;padding:0 10px;background:#FF9999;border-radius:4px;">
+            <p style="height:30px;width: 100%;margin:0;padding:0;color:#FFFFFF;font-size: 20px;">异常JOB数量</p>
+            <p style="height:70px;width: 100%;padding:0;margin:0;line-height: 40px;color:#CC0033;text-align:center;font-size:42px;">jobErrorNum</p>
+          </td>
+          <td style="height:120px;width:1.5%;"></td>
+          <td style="height:120px;width: 23.5%;padding:0 10px;background:#FF9999;border-radius:4px;">
+            <p style="height:30px;width: 100%;margin:0;padding:0;color:#FFFFFF;font-size: 20px;">异常TASK数量</p>
+            <p style="height:70px;width: 100%;padding:0;margin:0;line-height: 40px;color:#CC0033;text-align:center;font-size:42px;">taskErrorNum</p>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <table style="margin:10px 0 25px 0;width:100%;border-collapse:collapse;border-top:1px solid #DFDEDE; font-size:12px;">
+        <thead>
+        <tr style="border: 1px solid #DFDEDE;color:#191818;height:35px;line-height:35px;background:#DDDDDD;">
+          <td style="padding:6px 10px; line-height: 150%;width:32%; color:#000000; font-weight:bold; font-size: 15px;">调度器</td>
+          <td style="padding:6px 10px; line-height: 150%;width:17%; color:#000000; font-weight:bold; font-size: 15px;">JOB调度次数</td>
+          <td style="padding:6px 10px; line-height: 150%;width:17%; color:#000000; font-weight:bold; font-size: 15px;">TASK调度次数</td>
+          <td style="padding:6px 10px; line-height: 150%;width:17%; color:#000000; font-weight:bold; font-size: 15px;">异常JOB数量</td>
+          <td style="padding:6px 10px; line-height: 150%;width:17%; color:#000000; font-weight:bold; font-size: 15px;">异常TASK数量</td>
+        </tr>
+        </thead>
+        <tbody>
+          SCHEDULER-ALL-INFO
+        </tbody>
+      </table>
+      <h4 style="padding:0;margin:0;height: 40px;line-height: 40px;font-size: 16px; background: #99CCCC;">
+        <i style="padding:0;margin:0 5px 0 0;display: inline-block;font-style: normal;vertical-align: middle;height: 14px;border-radius: 5px;border: 2px solid #4A90E2;"></i>
+        <i style="padding:0;margin:0;display: inline-block;font-style: normal;vertical-align: middle;font-size: 30px;font-weight: 600;color: #4A4A4A;">异常TASK信息</i>
+      </h4>
+      <table style="margin:10px 0 25px 0;width:100%;border-collapse:collapse;border-top:1px solid #DFDEDE; font-size:12px;">
+        <thead>
+        <tr style="border: 1px solid #DFDEDE;color:#191818;height:35px;line-height:35px;background:#DDDDDD;">
+          <td style="padding:6px 10px; line-height: 150%;width:17%; color:#000000; font-weight:bold; font-size: 15px;">task_key</td>
+          <td style="padding:6px 10px; line-height: 150%;width:17%; color:#000000; font-weight:bold; font-size: 15px;">所属job_key</td>
+          <td style="padding:6px 10px; line-height: 150%;width:17%; color:#000000; font-weight:bold; font-size: 15px;">异常执行次数</td>
+        </tr>
+        </thead>
+        <tbody>
+          EXP-TASK-INFO
+        </tbody>
+      </table>
+      <h4 style="padding:0;margin:0;height: 40px;line-height: 40px;font-size: 16px; background: #99CCCC;">
+        <i style="padding:0;margin:0 5px 0 0;display: inline-block;font-style: normal;vertical-align: middle;height: 14px;border-radius: 5px;border: 2px solid #4A90E2;"></i>
+        <i style="padding:0;margin:0;display: inline-block;font-style: normal;vertical-align: middle;font-size: 30px;font-weight: 600;color: #4A4A4A;">项目信息</i>
+      </h4>
+      <table style="margin:10px 0 25px 0;width:100%;border-collapse:collapse;border-top:1px solid #DFDEDE;color:#191818;font-size:12px;">
+        <thead>
+        <tr style="border: 1px solid #DFDEDE;color:#191818;height:35px;line-height:35px;background:#DDDDDD;">
+          <td style="padding:6px 10px; line-height: 150%;width:32%; color:#000000; font-weight:bold; font-size: 15px;">项目名称</td>
+          <td style="padding:6px 10px; line-height: 150%;width:17%; color:#000000; font-weight:bold; font-size: 15px;">JOB数量</td>
+          <td style="padding:6px 10px; line-height: 150%;width:17%; color:#000000; font-weight:bold; font-size: 15px;">TASK数量</td>
+          <td style="padding:6px 10px; line-height: 150%;width:17%; color:#000000; font-weight:bold; font-size: 15px;">调度次数</td>
+          <td style="padding:6px 10px; line-height: 150%;width:17%; color:#000000; font-weight:bold; font-size: 15px;">异常job</td>
+        </tr>
+        </thead>
+        <tbody>
+          PROJECT-ALL-INFO
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</body>
+</html>

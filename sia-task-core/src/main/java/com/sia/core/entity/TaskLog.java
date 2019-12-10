@@ -37,6 +37,8 @@ public @Data class TaskLog {
     /** TaskLog ID in DB */
     private Integer taskLogId;
 
+    private String traceId;
+
     /** JobLog ID in DB */
     private Integer jobLogId;
 

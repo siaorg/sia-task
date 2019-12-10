@@ -279,16 +279,12 @@ public class JobMonitor extends CommonService implements CommandLineRunner {
         boolean acquireJobStatus = curator4Scheduler.acquireJob(jobGroup, jobKey, schedulerIPAndPort);
         // 第二步，如果抢占成功则进行调度操作
         if (acquireJobStatus) {
-
-            LOGGER.info(
-                    Constants.LOG_PREFIX
-                            + " 调度器 ：{} 尝试抢占JOB IS SUCCESS , 开始启动JOB; JobGroupName is {} JobKey is {}",
-                    schedulerIPAndPort, jobGroup, jobKey);
+            LOGGER.info(Constants.LOG_PREFIX + " 抢占Job成功, 注册Job; instance [{}]; group [{}], key [{}]", schedulerIPAndPort, jobGroup, jobKey);
             boolean checkExists = checkExists(jobGroup, jobKey);
             if (!checkExists) {
-                if (runJob(jobGroup, jobKey)) {
+                if (scheduleJob(jobGroup, jobKey)) {
+                    LOGGER.info(Constants.LOG_PREFIX + "注册Job成功，group [{}], key [{}]", jobGroup, jobKey);
                     // 获取JOB数增1
-
                     LoadBalanceHelper.updateScheduler(1);
                     /**
                      * JOB个数达到预警阈值，发送预警邮件
@@ -298,19 +294,17 @@ public class JobMonitor extends CommonService implements CommandLineRunner {
                         String message = curator4Scheduler.getSchedulerInfo(Constants.LOCALHOST);
                         emailService.sendEmail(null, message, Constants.LOCALHOST + "->Jobs reach threshold");
                     }
+                }else {
+                    LOGGER.info(Constants.LOG_PREFIX + "释放Job : 注册Job失败，group [{}], key [{}]", jobGroup, jobKey);
+                    curator4Scheduler.releaseJob(jobGroup, jobKey, schedulerIPAndPort);
                 }
+                return;
             }
-            LOGGER.info(
-                    Constants.LOG_PREFIX
-                            + " 尝试抢占JOB IS SUCCESS , schedulerIPAndPort is {}; JobGroupName is {} JobKey is {}",
-                    schedulerIPAndPort, jobGroup, jobKey);
-        }
-        // 否则，本次抢占JOB失败
-        else {
-            LOGGER.info(
-                    Constants.LOG_PREFIX
-                            + " 尝试抢占JOB IS FAILED , schedulerIPAndPort is {}; JobGroupName is {} JobKey is {}",
-                    schedulerIPAndPort, jobGroup, jobKey);
+            LOGGER.info(Constants.LOG_PREFIX + "抢占Job成功 , 注册Job已存在，不做处理，可能原因Job没有释放 , instance [{}]; group [{}], key [{}]", schedulerIPAndPort, jobGroup, jobKey);
+
+        }else {
+            // 否则，本次抢占JOB失败
+            LOGGER.info(Constants.LOG_PREFIX + " 抢占Job失败, instance [{}]; group [{}], key [{}]", schedulerIPAndPort, jobGroup, jobKey);
         }
     }
 
