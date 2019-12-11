@@ -119,6 +119,14 @@ public class Constant {
      * separation character in job_key
      */
     public static final String JOBKEY_SEPARATOR = "_";
+    /**
+     * encoding format
+     */
+    public static final String UTF8 = "utf-8";
+    /**
+     * log prefix
+     */
+    public static final String LOG_PREFIX = ">>>>>>>>>>";
 
 
 }

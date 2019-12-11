@@ -23,6 +23,7 @@ package com.sia.scheduler.quartz.listeners;
 import com.sia.core.entity.BasicJob;
 import com.sia.core.helper.StringHelper;
 import com.sia.core.status.JobStatus;
+import com.sia.scheduler.context.SpringContext;
 import com.sia.scheduler.service.common.CommonService;
 import com.sia.scheduler.util.constant.Constants;
 import com.sia.scheduler.zk.monitor.LoadBalanceHelper;
@@ -50,7 +51,7 @@ public class OnlineTriggerListener extends CommonService implements AbstractTrig
 
     @Override
     public void triggerFired(Trigger trigger, JobExecutionContext context) {
-        LOGGER.info("triggerFired " + trigger.getJobKey().getName() + " > > > > " + context.getFireTime());
+        LOGGER.info("触发JobTrigger事件：[TriggerFired] [{}], [{}]" , context.getFireTime(),context.getJobDetail().getKey().getName());
     }
 
     /**
@@ -62,16 +63,16 @@ public class OnlineTriggerListener extends CommonService implements AbstractTrig
      */
     @Override
     public boolean vetoJobExecution(Trigger trigger, JobExecutionContext context) {
-        LOGGER.info("vetoJobExecution " + context.getFireTime());
+        LOGGER.info("触发JobTrigger事件：[vetoJobExecution] [{}], [{}]" , context.getFireTime(),context.getJobDetail().getKey().getName());
         String jobGroup = context.getTrigger().getJobKey().getGroup();
         String jobKey = context.getTrigger().getJobKey().getName();
         // READY >>> RUNNING
-        BasicJob basicJob = basicJobService.getJob(jobGroup, jobKey);
+        BasicJob basicJob = SpringContext.getBasicJobService().getJob(jobGroup, jobKey);
         //Plan Job
         if (!StringHelper.isEmpty(basicJob.getJobPlan())) {
             BasicJob jobChild = basicJob.getJobChild();
             if (null != jobChild) {
-                String jobStatus = curator4Scheduler.getJobStatus(jobChild.getJobGroup(), jobChild.getJobKey());
+                String jobStatus = SpringContext.getCurator4Scheduler().getJobStatus(jobChild.getJobGroup(), jobChild.getJobKey());
                 //后置任务是否运行正常
                 if (!StringHelper.isEmpty(jobStatus)) {
                     return true;
@@ -80,8 +81,8 @@ public class OnlineTriggerListener extends CommonService implements AbstractTrig
             }
         }
 
-        String jobStatus = curator4Scheduler.getJobStatus(jobGroup, jobKey);
-        boolean casJobStatus = curator4Scheduler.casJobStatus4Scheduler(jobGroup, jobKey, Constants.LOCALHOST,
+        String jobStatus = SpringContext.getCurator4Scheduler().getJobStatus(jobGroup, jobKey);
+        boolean casJobStatus = SpringContext.getCurator4Scheduler().casJobStatus4Scheduler(jobGroup, jobKey, Constants.LOCALHOST,
                 JobStatus.READY.toString(), JobStatus.RUNNING.toString());
 
         if (!casJobStatus) {
@@ -90,7 +91,7 @@ public class OnlineTriggerListener extends CommonService implements AbstractTrig
                             + "The job failed to run and change Job status is failed, job is {},schedulerIPAndPort is {},job old status is {},expected job status is {}",
                     jobKey, Constants.LOCALHOST, jobStatus, JobStatus.RUNNING.toString());
             try {
-                List<String> jobScheduler = curator4Scheduler.getJobScheduler(jobGroup, jobKey);
+                List<String> jobScheduler = SpringContext.getCurator4Scheduler().getJobScheduler(jobGroup, jobKey);
                 // 重新连接 判断任务还是否属于自己，不是则进行释放
                 if (!jobScheduler.isEmpty() && !jobScheduler.contains(Constants.LOCALHOST)) {
                     LOGGER.info(Constants.LOG_PREFIX + " remove job , currentScheduler is {},job own scheduler is {}", Constants.LOCALHOST, jobScheduler.get(0));
@@ -101,6 +102,8 @@ public class OnlineTriggerListener extends CommonService implements AbstractTrig
                 }
             } catch (SchedulerException e) {
                 LOGGER.error("vetoJobExecution remove job is error : ", e);
+            } catch (Exception e) {
+                LOGGER.error("vetoJobExecution remove job is unknown error : ", e);
             }
             return true;
         }
@@ -115,11 +118,11 @@ public class OnlineTriggerListener extends CommonService implements AbstractTrig
      */
     @Override
     public void triggerMisfired(Trigger trigger) {
-        LOGGER.info("triggerMisfired " + trigger.getJobKey().getName() + " > > > > " + trigger.getStartTime());
+        LOGGER.info("Event : [triggerMisfired] [{}], [{}]", trigger.getStartTime(), trigger.getJobKey().getName());
     }
 
     @Override
     public void triggerComplete(Trigger trigger, JobExecutionContext context, Trigger.CompletedExecutionInstruction triggerInstructionCode) {
-
+        LOGGER.info("Event：[triggerComplete] [{}], [{}]", trigger.getStartTime(), trigger.getJobKey().getName());
     }
 }

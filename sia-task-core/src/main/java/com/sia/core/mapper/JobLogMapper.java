@@ -23,6 +23,7 @@ package com.sia.core.mapper;
 import com.sia.core.entity.JobLog;
 import com.sia.core.web.vo.JobAndTaskLogVO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -98,5 +99,12 @@ public interface JobLogMapper {
      * @throws
      */
     List<Map<String, Integer>>  selectCountGroupsJobLogs(Map<String, Object> param);
+
+    /**
+     * 通过traceId从JobLog中得到JobLogId
+     * @param traceId
+     * @return
+     */
+    Integer selectJobLogIdByTraceId(@Param("traceId") String traceId);
 
 }
