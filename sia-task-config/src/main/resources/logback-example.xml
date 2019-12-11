@@ -34,10 +34,6 @@
         </layout>
 
     </appender>
-    <!-- 	<appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-            <destination>10.100.32.12:4560</destination>
-            <encoder charset="UTF-8" class="net.logstash.logback.encoder.LogstashEncoder"/>
-        </appender> -->
 
     <!-- 日志输出级别 -->
     <root level="INFO">
