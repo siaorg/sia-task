@@ -31,24 +31,55 @@
         <result column="failTaskTotal"  property="failTaskTotal" jdbcType="INTEGER"/>
     </resultMap>
 
+    <resultMap id="newJobInfoMap" type="java.util.Map">
+        <result column="job_key"  property="job_key" jdbcType="VARCHAR"/>
+        <result column="job_group"  property="job_group" jdbcType="VARCHAR"/>
+        <result column="job_alarm_email"  property="job_alarm_email" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="newTaskInfoMap" type="java.util.Map">
+        <result column="task_key"  property="task_key" jdbcType="VARCHAR"/>
+        <result column="task_group_name"  property="task_group_name" jdbcType="VARCHAR"/>
+        <result column="task_app_name"  property="task_app_name" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="projectInfoMap" type="java.util.Map">
+        <result column="ggroup"  property="ggroup" jdbcType="VARCHAR"/>
+        <result column="job_num"  property="job_num" jdbcType="INTEGER"/>
+        <result column="task_num"  property="task_num" jdbcType="INTEGER"/>
+        <result column="call_num"  property="call_num" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <resultMap id="expJobsMap" type="java.util.Map">
+        <result column="ggroup"  property="ggroup" jdbcType="VARCHAR"/>
+        <result column="job_key"  property="job_key" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="expTaskMap" type="java.util.Map">
+        <result column="task_key"  property="task_key" jdbcType="VARCHAR"/>
+        <result column="job_key"  property="job_key" jdbcType="VARCHAR"/>
+        <result column="exp_task_count"  property="exp_task_count" jdbcType="INTEGER"/>
+    </resultMap>
+
+
     <select id="getNearestTime" resultType="java.util.Date">
       select max(last_time) from skyworld_portal_stat;
     </select>
 
-    <select id="selectCallExpFinFromJobLog" resultMap="jobLogResultMap" parameterType="java.util.HashMap" >
-        select
-        sjl.job_trigger_msg as scheduler,
+    <select id="selectCallExpFinFromJobLogForPage" resultMap="jobLogResultMap" parameterType="java.util.HashMap" >
+        select sjl.job_trigger_msg as scheduler,
         count(distinct sjl.job_log_id) as job_call_count,
         count(distinct case when sjl.job_handle_code='FAIL' then sjl.job_log_id else null end) as job_exception_count,
         count(distinct case when sjl.job_handle_code='SUCCESS' then sjl.job_log_id else null end) as job_finished_count,
-        count(distinct case when stl.task_key!="endTask" then stl.task_log_id else null end) as task_call_count,
-        count(distinct case when stl.task_status='FAIL' and stl.task_key!="endTask" then stl.task_log_id else null end) as task_exception_count,
-        count(distinct case when stl.task_status='SUCCESS' and stl.task_key!="endTask" then stl.task_log_id else null end) as task_finished_count
-        from skyworld_job_log sjl left join skyworld_task_log stl
-        on stl.job_log_id=sjl.job_log_id
+        count(distinct stl.task_log_id) as task_call_count,
+        count(distinct case when stl.task_status='FAIL' then stl.task_log_id else null end) as task_exception_count,
+        count(distinct case when stl.task_status='SUCCESS' then stl.task_log_id else null end) as task_finished_count
+        from skyworld_task_log stl, skyworld_job_log sjl
         where sjl.job_handle_finished_time >= str_to_date(#{startTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
-                  and sjl.job_handle_finished_time &lt; str_to_date(#{endTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
-        group by scheduler;
+          and sjl.job_handle_finished_time &lt; str_to_date(#{endTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+          and stl.job_log_id=sjl.job_log_id
+          and stl.task_key != "endTask"
+        group by sjl.job_trigger_msg;
     </select>
 
     <insert id="insertPortalStatistics" parameterType="java.util.HashMap" >
@@ -117,7 +148,7 @@
         DATE_FORMAT(last_time,'%Y-%m-%d %H:%i:%s') as times
         from skyworld_portal_stat
         where last_time >= str_to_date(#{startTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
-                  and last_time &lt;= str_to_date(#{endTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+        and last_time &lt;= str_to_date(#{endTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
         <if test="scheduler != null and scheduler != '' ">
             and scheduler = #{scheduler,jdbcType=VARCHAR}
         </if>
@@ -134,7 +165,7 @@
         job_exception_count, job_finished_count, last_time
         from skyworld_portal_stat
         where last_time >= str_to_date(#{startTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
-            and last_time &lt;= str_to_date(#{endTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+        and last_time &lt;= str_to_date(#{endTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
         <if test="scheduler != null and scheduler != '' ">
             and scheduler = #{scheduler,jdbcType=VARCHAR}
         </if>
@@ -169,6 +200,86 @@
 
     <select id="getDbTime" resultType="java.lang.String">
         select DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s') as times;
+    </select>
+
+
+    <select id="getAllCount" resultType="java.util.HashMap">
+        select
+        (select count(job_id) from skyworld_basic_job) as jobAllCount,
+        (select count(task_id) from skyworld_basic_task) as taskAllCount;
+    </select>
+
+    <select id="getNewJobInfo" resultMap="newJobInfoMap" parameterType="java.util.HashMap">
+        select
+        job_key, job_group, job_alarm_email
+        from skyworld_basic_job where job_create_time >= str_to_date(#{startTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+        and job_create_time &lt;= str_to_date(#{endTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s');
+    </select>
+
+    <select id="getNewTaskInfo" resultMap="newTaskInfoMap" parameterType="java.util.HashMap">
+        select
+        task_key, task_group_name, task_app_name
+        from skyworld_basic_task where create_time >= str_to_date(#{startTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+        and create_time &lt;= str_to_date(#{endTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s');
+    </select>
+
+    <select id="selectCallExpFinFromJobLogForReport" resultMap="jobLogResultMap" parameterType="java.util.HashMap" >
+        select
+        sjl_tmp.job_trigger_msg as scheduler,
+        count(distinct sjl_tmp.job_log_id) as job_call_count,
+        count(distinct case when sjl_tmp.job_handle_code='FAIL' then sjl_tmp.job_log_id else null end) as job_exception_count,
+        count(distinct case when sjl_tmp.job_handle_code='SUCCESS' then sjl_tmp.job_log_id else null end) as job_finished_count,
+        count(distinct case when stl_tmp.task_key!="endTask" then stl_tmp.task_log_id else null end) as task_call_count,
+        count(distinct case when stl_tmp.task_status='FAIL' and stl_tmp.task_key!="endTask" then stl_tmp.task_log_id else null end) as task_exception_count,
+        count(distinct case when stl_tmp.task_status='SUCCESS' and stl_tmp.task_key!="endTask" then stl_tmp.task_log_id else null end) as task_finished_count
+        from (select sjl.job_log_id, sjl.job_trigger_msg, sjl.job_handle_code, sjl.job_handle_finished_time from skyworld_job_log sjl) sjl_tmp
+        left join (select stl.task_log_id, stl.task_key, stl.task_status, stl.job_log_id from skyworld_task_log stl) stl_tmp
+        on stl_tmp.job_log_id=sjl_tmp.job_log_id
+        where sjl_tmp.job_handle_finished_time >= str_to_date(#{startTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+        and sjl_tmp.job_handle_finished_time &lt; str_to_date(#{endTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+        group by scheduler;
+    </select>
+    <select id="selectProjectInfo" resultMap="projectInfoMap" parameterType="java.util.HashMap">
+        select
+        sbt.task_group_name as ggroup,
+        count(distinct sbj.job_id) as job_num,
+        count(distinct sbt.task_id) as task_num,
+        count(distinct sjl_tmp.job_log_id) as call_num
+        from skyworld_basic_job sbj
+        right join skyworld_basic_task sbt on sbt.task_group_name = sbj.job_group
+        left join (select sjl.job_id, sjl.job_log_id from skyworld_job_log sjl
+        where sjl.job_handle_finished_time >= str_to_date(#{startTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+        and sjl.job_handle_finished_time &lt;= str_to_date(#{endTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')) sjl_tmp
+        on sjl_tmp.job_id = sbj.job_id
+        group by ggroup
+        order by call_num desc
+    </select>
+
+    <select id="selectExpJobs" resultMap="expJobsMap" parameterType="java.util.HashMap">
+        select
+        sbj.job_group as ggroup,
+        sbj.job_key as job_key
+        from skyworld_basic_job sbj
+        where sbj.job_id in (select
+        sjl.job_id as job_id
+        from skyworld_job_log sjl
+        where sjl.job_handle_code='FAIL' and sjl.job_handle_finished_time >= str_to_date(#{startTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+        and sjl.job_handle_finished_time &lt;= str_to_date(#{endTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s'))
+    </select>
+
+    <select id="getExpTaskInfo" resultMap="expTaskMap" parameterType="java.util.HashMap" >
+        select
+        stl_tmp.task_key as task_key,
+        stl_tmp.job_key as job_key,
+        count(task_key) as exp_task_count
+        from (select sjl.job_log_id, sjl.job_handle_finished_time from skyworld_job_log sjl) sjl_tmp
+        right join (select stl.task_log_id, stl.task_key, stl.job_key, stl.job_log_id from skyworld_task_log stl where stl.task_status='FAIL' and stl.task_key!="endTask") stl_tmp
+        on stl_tmp.job_log_id=sjl_tmp.job_log_id
+        where sjl_tmp.job_handle_finished_time >= str_to_date(#{startTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+        and sjl_tmp.job_handle_finished_time &lt; str_to_date(#{endTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+        group by task_key
+        order by exp_task_count desc
+        limit 0, 10
     </select>
 
 </mapper>

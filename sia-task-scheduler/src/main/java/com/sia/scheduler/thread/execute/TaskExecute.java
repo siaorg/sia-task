@@ -22,12 +22,12 @@ package com.sia.scheduler.thread.execute;
 
 import com.sia.core.entity.JobMTask;
 import com.sia.core.status.JobStatus;
-import com.sia.scheduler.log.enums.JobLogEnum;
-import com.sia.scheduler.log.enums.TaskLogEnum;
+import com.sia.scheduler.context.SpringContext;
 import com.sia.scheduler.http.impl.TaskHttpClient;
 import com.sia.scheduler.http.route.ExecutorRouteSharding;
 import com.sia.scheduler.http.route.RouteStrategyEnum;
 import com.sia.scheduler.http.route.RouteStrategyHandler;
+import com.sia.scheduler.log.enums.LogStatusEnum;
 import com.sia.scheduler.service.common.CommonService;
 import com.sia.scheduler.thread.Execute;
 import com.sia.scheduler.util.constant.Constants;
@@ -38,12 +38,12 @@ import java.util.List;
 import java.util.concurrent.PriorityBlockingQueue;
 
 /**
- *
  * TaskExecute
- * @see
+ *
  * @author maozhengwei
- * @date 2018-09-28 20:10
  * @version V1.0.0
+ * @date 2018-09-28 20:10
+ * @see
  **/
 public class TaskExecute extends CommonService implements Execute<Boolean> {
     private static final Logger LOGGER = LoggerFactory.getLogger(TaskExecute.class);
@@ -77,11 +77,11 @@ public class TaskExecute extends CommonService implements Execute<Boolean> {
         String jobKey = onlineTask.getJobKey();
         String taskKey = onlineTask.getTaskKey();
         try {
-            String jobStatus = curator4Scheduler.getJobStatus(jobGroup, jobKey);
-            List<String> jobScheduler = curator4Scheduler.getJobScheduler(jobGroup, jobKey);
+            String jobStatus = SpringContext.getCurator4Scheduler().getJobStatus(jobGroup, jobKey);
+            List<String> jobScheduler = SpringContext.getCurator4Scheduler().getJobScheduler(jobGroup, jobKey);
             // 验证合法性
             if (jobStatus.equals(JobStatus.RUNNING.toString()) && jobScheduler.contains(Constants.LOCALHOST)) {
-
+                LOGGER.info(Constants.LOG_PREFIX + "runTask---start calling task");
                 runAsync(onlineTask);
 
                 return Boolean.TRUE;
@@ -95,9 +95,9 @@ public class TaskExecute extends CommonService implements Execute<Boolean> {
                 return Boolean.FALSE;
             }
         } catch (Exception e) {
-            LOGGER.error(Constants.LOG_EX_PREFIX + "Task 执行进行提交线程失败 : jobGroup is {},jobKey is {} taskKey is {}", jobGroup, jobKey, taskKey);
-            LOGGER.error(Constants.LOG_EX_PREFIX + "Task 执行异常 :", e);
-            isExceptionCountDown(onlineTask, true, "Task 执行进行提交线程失败" + e.getMessage());
+            LOGGER.error(Constants.LOG_EX_PREFIX + "Task submit thread failed : jobGroup is {},jobKey is {} taskKey is {}", jobGroup, jobKey, taskKey);
+            LOGGER.error(Constants.LOG_EX_PREFIX + "Task execution exception :", e);
+            isExceptionCountDown(onlineTask, true, "Task submit thread failed " + e.getMessage());
         }
         return Boolean.FALSE;
     }
@@ -115,10 +115,10 @@ public class TaskExecute extends CommonService implements Execute<Boolean> {
             if (onlineTask.getPreTaskCounter().get() < onlineTask.getPreTask().size()) {
                 return Boolean.FALSE;
             }
-            String jobStatus = curator4Scheduler.getJobStatus(jobGroup, jobKey);
+            String jobStatus = SpringContext.getCurator4Scheduler().getJobStatus(jobGroup, jobKey);
             if (jobStatus.equals(JobStatus.RUNNING.toString())) {
                 // 修改状态值(本轮结束) : RUNNING >>> READY
-                boolean casJobStatus = curator4Scheduler.casJobStatus4Scheduler(jobGroup, jobKey, Constants.LOCALHOST, jobStatus, JobStatus.READY.toString());
+                boolean casJobStatus = SpringContext.getCurator4Scheduler().casJobStatus4Scheduler(jobGroup, jobKey, Constants.LOCALHOST, jobStatus, JobStatus.READY.toString());
                 if (casJobStatus) {
                     LOGGER.info(Constants.LOG_PREFIX
                                     + "The execution of this task is completed and the status is successfully modified.jobKey ：{},schedulerIPAndPort is {},old status is {},expected status is {}",
@@ -135,8 +135,8 @@ public class TaskExecute extends CommonService implements Execute<Boolean> {
         } finally {
             try {
                 // 日志
-                taskLogService.recordTaskLog(onlineTask, TaskLogEnum.LOG_ENDTASK_FINISHED.toString(), null);
-                jobLogService.updateJobLog(onlineTask, JobLogEnum.LOG_ENDTASK_FINISHED.toString());
+                SpringContext.getTaskLogService().recordTaskLog(onlineTask, LogStatusEnum.LOG_TASK_END_FINISHED, null);
+                SpringContext.getJobLogService().updateJobLog(onlineTask, LogStatusEnum.LOG_JOB_ENDTASK_FINISHED);
             } catch (Exception e) {
                 LOGGER.error(Constants.LOG_EX_PREFIX + "Log insertion exception", e);
             }
@@ -175,6 +175,7 @@ public class TaskExecute extends CommonService implements Execute<Boolean> {
             onlineTask.setCurrentHandler(instance);
             new TaskHttpClient().async(onlineTask);
         }
+        LOGGER.info(Constants.LOG_PREFIX + "runAsync >>> Acquired the executor instance and started sending http requests");
     }
 
 }

@@ -60,7 +60,7 @@ public class JobMTaskService {
      * @return
      */
     @Cacheable(value = "taskList", key = "#jobKey + #jobGroup")
-    public List<JobMTask> selectTaskMJobAndIPListByJobGroupAndKey(String jobGroup, String jobKey) {
+    public List<JobMTask> selectJobMTask(String jobGroup, String jobKey) {
         LOGGER.info(Constants.LOG_PREFIX + " load JobMTask data from database, jobKey={}", jobKey);
         if (jobKey == null) {
             LOGGER.warn(Constants.LOG_PREFIX + " select JobMTask fail, jobKey invalid, mappingId={}", jobKey);
@@ -69,7 +69,13 @@ public class JobMTaskService {
         Map<String, String> param = new HashMap<>(2);
         param.put("jobGroup", jobGroup);
         param.put("jobKey", jobKey);
-        return jobMTaskMapper.selectTaskMJobAndIPListByJobGroupAndKey(param);
+        List<JobMTask> jobMTaskList = null;
+        try{
+            jobMTaskList = jobMTaskMapper.selectTaskMJobAndIPListByJobGroupAndKey(param);
+        }catch(Exception e) {
+            LOGGER.error(Constants.LOG_EX_PREFIX + " selectTaskMJobAndIPListByJobGroupAndKey 数据库查询操作异常", e);
+        }
+        return jobMTaskList;
     }
 
     /**

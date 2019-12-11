@@ -20,6 +20,7 @@
 
 package com.sia.scheduler.quartz.listeners;
 
+import com.sia.scheduler.context.SpringContext;
 import com.sia.scheduler.service.common.CommonService;
 import com.sia.scheduler.util.constant.Constants;
 import com.sia.scheduler.zk.monitor.LoadBalanceHelper;
@@ -49,17 +50,17 @@ public class OnlineJobListeners extends CommonService implements AbstractJobList
 
     @Override
     public void jobToBeExecuted(JobExecutionContext context) {
-        LOGGER.info("jobToBeExecuted " + context.getFireTime());
+        LOGGER.info("触发Job事件：[jobToBeExecuted] [{}], [{}]", context.getFireTime(), context.getJobDetail().getKey().getName());
     }
 
     @Override
     public void jobExecutionVetoed(JobExecutionContext context) {
-        LOGGER.info("jobExecutionVetoed " + context.getFireTime());
+        LOGGER.info("触发Job事件：[jobExecutionVetoed], [{}], [{}]", context.getFireTime(), context.getJobDetail().getKey().getName());
     }
 
     @Override
     public void jobWasExecuted(JobExecutionContext context, JobExecutionException jobException) {
-        LOGGER.info("jobWasExecuted " + context.getFireTime());
+        LOGGER.info("触发Job事件：[jobWasExecuted], [{}], [{}]", context.getFireTime(), context.getJobDetail().getKey().getName());
         String jobGroup = context.getTrigger().getJobKey().getGroup();
         String jobKey = context.getTrigger().getJobKey().getName();
         // 移除JOB 释放资源 针对非Cron Job
@@ -89,7 +90,7 @@ public class OnlineJobListeners extends CommonService implements AbstractJobList
                 }
             }
         }
-        LOGGER.info(Constants.LOG_PREFIX + "JOB执行结束 ： jobGroupName is {},jobKey is {}", jobGroup, jobKey);
+        LOGGER.info(Constants.LOG_PREFIX + "Job执行完成 ： group [{}], key [{}]", jobGroup, jobKey);
         /**
          * Job执行结束后，检查开关的状态，如果已关，表示本调度器要下线，则本调度器不再获取新的Job（这部分在JobMonitor中实现）。
          * <p>
@@ -97,24 +98,28 @@ public class OnlineJobListeners extends CommonService implements AbstractJobList
          * <p>
          * 以下是释放逻辑
          */
-        if (shouldIRelease()) {
-            try {
+
+        try {
+            if (shouldIRelease()) {
+                LOGGER.info(Constants.LOG_PREFIX + "Job执行完成,  检测调度器实例拥有的任务实例已经超过阈值，进人任务转移： group [{}], key [{}]", jobGroup, jobKey);
                 boolean checkExists = checkExists(jobGroup, jobKey);
                 if (checkExists) {
-
                     if (removeJob(jobGroup, jobKey)) {
                         // 释放JOB，将JobKey下的临时节点删除，触发别的调度器抢占
                         sleep(1000);
-                        curator4Scheduler.releaseJob(jobGroup, jobKey, Constants.LOCALHOST);
+                        SpringContext.getCurator4Scheduler().releaseJob(jobGroup, jobKey, Constants.LOCALHOST);
                         // 获取JOB数减1
                         LoadBalanceHelper.updateScheduler(-1);
 
                     }
                 }
-            } catch (SchedulerException e) {
-                LOGGER.error(Constants.LOG_EX_PREFIX + "removeJob An exception occurs ", e);
             }
+        } catch (SchedulerException e) {
+            LOGGER.error(Constants.LOG_EX_PREFIX + " Job执行完成，尝试释放Job发生异常 {}", jobKey, e);
+        } catch (Exception e){
+            LOGGER.error(Constants.LOG_EX_PREFIX + " Job执行完成，尝试释放Job发生未知异常 {}", jobKey, e);
         }
+
     }
 
 

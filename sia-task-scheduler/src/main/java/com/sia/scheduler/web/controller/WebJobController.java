@@ -63,7 +63,7 @@ public class WebJobController {
             return JSONHelper.toString(Constants.FAIL);
         }
         try {
-            boolean status = basicJobService.runOnce(jobGroupName, jobKey);
+            boolean status = basicJobService.runOnceJobKey(jobGroupName, jobKey);
             return JSONHelper.toString(status);
         } catch (SchedulerException e) {
             LOGGER.error(Constants.LOG_PREFIX + " runOnce jobs Exception : ", e);

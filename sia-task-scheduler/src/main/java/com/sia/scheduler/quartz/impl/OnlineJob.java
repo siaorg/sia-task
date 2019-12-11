@@ -23,6 +23,7 @@ package com.sia.scheduler.quartz.impl;
 import com.sia.core.entity.JobMTask;
 import com.sia.scheduler.context.SpringContext;
 import com.sia.scheduler.http.route.ExecutorRouteSharding;
+import com.sia.scheduler.service.JobLogService;
 import com.sia.scheduler.service.common.CommonService;
 import com.sia.scheduler.thread.execute.TaskCommit;
 import com.sia.scheduler.util.constant.Constants;
@@ -78,7 +79,9 @@ public class OnlineJob extends CommonService implements Job, InterruptableJob {
             return;
         }
 
-        LOGGER.info(Constants.LOG_PREFIX + "JOB执行开始， The jobGroup is {}, The jobKey is {}", jobGroup, jobKey);
+        LOGGER.info(Constants.LOG_PREFIX + "JOB execution begins， The jobGroup is {}, The jobKey is {}", jobGroup, jobKey);
+        JobLogService jobLogService = SpringContext.getJobLogService();
+
         jobLogService.insertJobLogAndTaskLog(jobGroup, jobKey, onlineTaskList);
         onlineTaskList.forEach(jobMTask -> {
             jobMTask.setCountDownLatch(countDownLatch);
@@ -86,8 +89,7 @@ public class OnlineJob extends CommonService implements Job, InterruptableJob {
         });
         try {
             countDownLatch.await();
-            //释放分片缓存数据
-            ExecutorRouteSharding.clean(jobKey);
+            //ExecutorRouteSharding.clean(jobKey);
         } catch (InterruptedException e) {
             LOGGER.error(Constants.LOG_EX_PREFIX + " JOB execution is complete，countDownLatch InterruptedException", e);
         }
