@@ -10,7 +10,7 @@ sleep 3
 
 # start config project
 javaOpts="-server -Xms128m -Xmx256m -Xss256k -XX:+UseConcMarkSweepGC -XX:+CMSIncrementalMode -XX:+CMSIncrementalPacing -XX:CMSIncrementalDutyCycleMin=0 -XX:CMSIncrementalDutyCycle=10 -XX:+UseParNewGC -XX:+UseCMSCompactAtFullCollection -XX:-CMSParallelRemarkEnabled -XX:CMSFullGCsBeforeCompaction=0 -XX:CMSInitiatingOccupancyFraction=70 -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=."
-java $javaOpts -XX:OnOutOfMemoryError='kill -9 %p'  -Dspring.config.location=/app/jar/ROOT/jarConfig/ -Dspring.profiles.active=config  -jar /app/jar/ROOT/jarPackage/sia-task-config-1.1.0.jar &
+java $javaOpts -XX:OnOutOfMemoryError='kill -9 %p'  -Dspring.config.location=/app/jar/ROOT/jarConfig/ -Dspring.profiles.active=config  -jar /app/jar/ROOT/jarPackage/sia-task-config-1.0.0.jar &
 
 sleep 3
 
