@@ -1,7 +1,7 @@
 spring.application.name: sia-task-scheduler
 spring.application.cnname: 任务调度中心
 #应用端口号
-server.port: 19015
+server.port: 19011
 #配置报警邮箱，当该服务出现问题后会触发报警(建议配置成组邮箱)，如下：
 eureka.instance.metadataMap.alarmEmail: your-team.list@creditease.cn
 
