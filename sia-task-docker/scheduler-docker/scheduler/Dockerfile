@@ -46,7 +46,7 @@ RUN  curl -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Ce
 RUN localedef -c -f UTF-8 -i zh_CN zh_CN.utf8
 ENV LC_ALL "zh_CN.UTF-8"
 
-ADD ./jarPackage/sia-task-config-1.1.0.jar  /app/jar/ROOT/jarPackage/
+ADD ./jarPackage/sia-task-config-1.0.0.jar  /app/jar/ROOT/jarPackage/
 ADD ./jarPackage/sia-task-scheduler-1.0.0.jar  /app/jar/ROOT/jarPackage/
 ADD ./jarPackage/dist/ /app/jar/ROOT/dist/
 ADD ./jarConfig/ /app/jar/ROOT/jarConfig/

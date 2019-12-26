@@ -7,5 +7,5 @@ volums_path=""
 fi
 
 # -v /etc/localtime:/etc/localtime
-docker run --name scheduler-test -d  ${volums_path}  -p 10615:10615 -p 8081:8081 -p 19011:19011 --restart=on-failure:10  --privileged=true sia/scheduler:v1 /bin/bash -c " /app/jar/ROOT/docker-start-scheduler.sh "
+docker run --name scheduler-test -d  ${volums_path}  -p 10615:10615 -p 8081:8081 -p 19011:19011 -p 2181:2181 --restart=on-failure:10  --privileged=true sia/scheduler:v1 /bin/bash -c " /app/jar/ROOT/docker-start-scheduler.sh "
 
