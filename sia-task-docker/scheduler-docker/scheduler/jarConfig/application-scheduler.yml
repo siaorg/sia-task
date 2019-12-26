@@ -52,6 +52,7 @@ mybatis:
   configuration.default-statement-timeout: 60
 
 # 预警邮件配置 选配
+SKYTRAIN_DEFAULT_EMAIL:
 EMAIL_SERVICE_REQUESTPATH: http://xxx-EMAIL-ALARM/v1/sendEmail
 
 # 调度器执行的JOB个数阈值，超过则通知添加资源
