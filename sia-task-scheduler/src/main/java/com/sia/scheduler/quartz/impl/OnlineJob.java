@@ -20,9 +20,9 @@
 
 package com.sia.scheduler.quartz.impl;
 
+import com.sia.core.entity.BasicJob;
 import com.sia.core.entity.JobMTask;
 import com.sia.scheduler.context.SpringContext;
-import com.sia.scheduler.http.route.ExecutorRouteSharding;
 import com.sia.scheduler.service.JobLogService;
 import com.sia.scheduler.service.common.CommonService;
 import com.sia.scheduler.thread.execute.TaskCommit;
@@ -70,7 +70,10 @@ public class OnlineJob extends CommonService implements Job, InterruptableJob {
 
         String jobGroup = context.getTrigger().getJobKey().getGroup();
         String jobKey = context.getTrigger().getJobKey().getName();
-        SpringContext.getRunningJob().get(jobKey).setTriggerInstance(Constants.LOCALHOST);
+        BasicJob job = SpringContext.getRunningJob().get(jobKey);
+        if (job != null) {
+            job.setTriggerInstance(Constants.LOCALHOST);
+        }
 
         List<JobMTask> onlineTaskList = analyticalJob(jobGroup, jobKey);
 

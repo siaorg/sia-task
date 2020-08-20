@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -50,6 +51,9 @@ public class AuthInterceptor {
         List<String> roleNames;
         HttpSession session = request.getSession();
         roleNames = (List<String>) session.getAttribute("roleNames");
+        if (roleNames == null) {
+            roleNames = Collections.emptyList();
+        }
         if (roleNames.contains(Constants.ADMIN_ROLE)) {
             roleNames = null;
         }

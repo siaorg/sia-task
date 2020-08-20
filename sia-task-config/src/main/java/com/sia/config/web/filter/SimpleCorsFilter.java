@@ -23,7 +23,6 @@ package com.sia.config.web.filter;
 import com.sia.core.helper.StringHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
@@ -31,8 +30,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
@@ -55,23 +52,17 @@ public class SimpleCorsFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
-        httpServletResponse.setHeader("Access-Control-Allow-Origin",  httpServletRequest.getHeader("Origin"));
-        httpServletResponse.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE，PUT");
+        String origin = httpServletRequest.getHeader("Origin");
+        if(origin == null) {
+            origin = httpServletRequest.getHeader("Referer");
+        }
+        httpServletResponse.setHeader("Access-Control-Allow-Origin",  origin);
+        httpServletResponse.setHeader("Access-Control-Allow-Methods", "GET, HEAD, POST, PUT, DELETE, OPTIONS, PATCH");
         httpServletResponse.setHeader("Access-Control-Max-Age", "3600");
         httpServletResponse.setHeader("Access-Control-Allow-Headers", "Authentication,Origin,X-Requested-With,Content-Type,Accept");
         httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
         httpServletResponse.setHeader("XDomainRequestAllowed","1");
-
-        String method = httpServletRequest.getMethod();
-
-        if (METHOD_OPTIONS.equals(method)){
-            filterChain.doFilter(httpServletRequest, servletResponse);
-        } if (httpServletRequest.getRequestURI().contains("login")){
-            filterChain.doFilter(httpServletRequest, httpServletResponse);
-        }
-        else{
-            filterChain.doFilter(httpServletRequest, httpServletResponse);
-        }
+        filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
 
 
