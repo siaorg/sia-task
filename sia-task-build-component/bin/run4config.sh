@@ -36,6 +36,7 @@ echo $(pwd)
 
 # Second, should I watch?
 working_directory=$(pwd)
+log_dir=$working_directory/../logs
 proc_watcher="no"
 if [ "$1" == "--no-watch" ]; then
     proc_watcher="no"
@@ -49,7 +50,7 @@ echo "using workspace $working_directory"
 echo "proc_watch:  $proc_watcher"
 
 javaOpts="-server -Xms128m -Xmx256m -Xss256k -XX:+UseConcMarkSweepGC -XX:+CMSIncrementalMode -XX:+CMSIncrementalPacing -XX:CMSIncrementalDutyCycleMin=0 -XX:CMSIncrementalDutyCycle=10 -XX:+UseParNewGC -XX:+UseCMSCompactAtFullCollection -XX:-CMSParallelRemarkEnabled -XX:CMSFullGCsBeforeCompaction=0 -XX:CMSInitiatingOccupancyFraction=70 -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=."
-java $javaOpts -XX:OnOutOfMemoryError='kill -9 %p'  -Dspring.config.location=../config/$task_config  -jar  $working_directory/$2 &
+java $javaOpts -XX:OnOutOfMemoryError='kill -9 %p'  -Dspring.config.location=../config/$task_config -Dlog.dir=$log_dir -jar  $working_directory/$2 &
 
 # Fourth, add crontab process watcher
 if [ "$proc_watcher" == "yes" ]; then
