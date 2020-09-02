@@ -96,6 +96,7 @@ create table if not exists skyworld_job_log
 -- ----------------------------
 -- Table structure for skyworld_portal_stat
 -- sia-task 统计表，监控使用
+-- @Deprecated
 -- ----------------------------
 create table if not exists skyworld_portal_stat
 (
