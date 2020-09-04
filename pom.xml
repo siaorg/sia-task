@@ -7,17 +7,18 @@
     <groupId>com.sia</groupId>
     <artifactId>sia-task</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0</version>
+    <version>${sia-task-version}</version>
 
     <modules>
-        <module>sia-task-config</module>
+        <module>sia-task-admin</module>
         <module>sia-task-core</module>
-        <module>sia-task-hunter</module>
+        <module>sia-task-client</module>
         <module>sia-task-scheduler</module>
-        <module>sia-task-intask</module>
+        <module>sia-task-executor</module>
     </modules>
 
     <properties>
+        <sia-task-version>0.0.1</sia-task-version>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.version>4.3.15.RELEASE</spring.version>

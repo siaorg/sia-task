@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<configuration>
-    <!-- 日志基本配置 -->
-    <include resource="org/springframework/boot/logging/logback/base.xml" />
-    <jmxConfigurator />
-</configuration>
