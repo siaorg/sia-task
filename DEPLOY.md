@@ -22,29 +22,22 @@ use skyworld_task;
 -- Table structure for skyworld_basic_job
 -- job 元数据 手动录入
 -- ----------------------------
-create table if not exists skyworld_basic_job
-(
-  job_id           int auto_increment,
-  job_key          varchar(255) not null comment '除ID外的 唯一标识 KEY',
-  job_group        varchar(100) not null comment '命名空间：name+group组成一个唯一key',
-  job_triger_type  varchar(25)  null comment '触发器类型',
-  job_triger_value varchar(128) null comment '触发器类型值',
-  job_desc         varchar(250) null comment 'job描述信息',
-  job_alarm_email  varchar(100) null comment 'job预警邮箱',
-  job_create_time  datetime     not null,
-  job_update_time  datetime     not null,
-  job_parent_key   varchar(255) null comment 'job父jobKey',
-  job_plan         varchar(255) null comment 'job级联',
-  constraint job_id_UNIQUE
-    unique (job_id),
-  constraint job_key_UNIQUE
-    unique (job_key)
-)
-  charset = utf8;
-
-alter table skyworld_basic_job
-  add primary key (job_id);
-
+create table if not exists skyworld_basic_job (
+  `job_id` int(11) NOT NULL AUTO_INCREMENT,
+  `job_key` varchar(255) NOT NULL COMMENT '除ID外的 唯一标识 KEY',
+  `job_group` varchar(100) NOT NULL COMMENT '命名空间：name+group组成一个唯一key',
+  `job_triger_type` varchar(25) DEFAULT NULL COMMENT '触发器类型',
+  `job_triger_value` varchar(128) DEFAULT NULL COMMENT '触发器类型值',
+  `job_desc` varchar(250) DEFAULT NULL COMMENT 'job描述信息',
+  `job_alarm_email` varchar(100) DEFAULT NULL COMMENT 'job预警邮箱',
+  `job_create_time` datetime NOT NULL,
+  `job_update_time` datetime NOT NULL,
+  `job_plan` varchar(255) DEFAULT NULL COMMENT '增加job级联类型',
+  `job_parent_key` varchar(255) DEFAULT NULL COMMENT '父jobKey',
+  PRIMARY KEY (`job_id`),
+  UNIQUE KEY `job_key_UNIQUE` (`job_key`),
+  UNIQUE KEY `job_id_UNIQUE` (`job_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=620 DEFAULT CHARSET=utf8
 -- ----------------------------
 -- Table structure for skyworld_basic_task
 -- task 元数据 自动获取/手动录入
@@ -76,22 +69,25 @@ alter table skyworld_basic_task
 -- Table structure for skyworld_job_log
 -- job—log 日志表，Job 调度日志
 -- ----------------------------
-create table if not exists skyworld_job_log
-(
-  job_log_id               int auto_increment comment '主键ID AUTO_INCREMENT'
-    primary key,
-  job_id                   int           not null,
-  trace_id                 varchar(40)   null,
-  job_trigger_code         varchar(45)   null comment '调度-结果状态',
-  job_trigger_msg          varchar(2048) null comment '调度-日志',
-  job_trigger_time         datetime      null comment '调度-时间',
-  job_handle_code          varchar(45)   null comment '执行结果-状态',
-  job_handle_msg           varchar(2048) null comment '执行结果-日志',
-  job_handle_time          datetime      null comment '执行-时间',
-  job_handle_finished_time datetime      null comment '执行完成时间',
-  create_time              datetime      null
-)
-  charset = utf8;
+create table if not exists skyworld_job_log (
+  `job_log_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键ID AUTO_INCREMENT',
+  `job_id` int(11) DEFAULT NULL,
+  `job_trigger_code` varchar(45) DEFAULT NULL COMMENT '调度-结果状态',
+  `job_trigger_msg` varchar(2048) DEFAULT NULL COMMENT '调度-日志',
+  `job_trigger_time` datetime DEFAULT NULL COMMENT '调度-时间',
+  `job_handle_code` varchar(45) DEFAULT NULL COMMENT '执行结果-状态',
+  `job_handle_msg` varchar(2048) DEFAULT NULL COMMENT '执行结果-日志',
+  `job_handle_time` datetime DEFAULT NULL COMMENT '执行-时间',
+  `job_handle_finished_time` datetime DEFAULT NULL COMMENT '执行完成时间',
+  `create_time` datetime DEFAULT NULL,
+  `trace_id` varchar(64) DEFAULT NULL,
+  `job_group` varchar(255) DEFAULT NULL,
+  `job_key` varchar(255) NOT NULL DEFAULT 'test_job_test',
+  PRIMARY KEY (`job_log_id`),
+  KEY `trace_id_index` (`trace_id`),
+  KEY `job_key_index` (`job_key`),
+  KEY `create_time_handle_code_group_index` (`create_time`,`job_handle_code`,`job_group`)
+) ENGINE=InnoDB AUTO_INCREMENT=25803002 DEFAULT CHARSET=utf8
 
 -- ----------------------------
 -- Table structure for skyworld_portal_stat
@@ -119,48 +115,44 @@ create table if not exists skyworld_portal_stat
 -- task-log 日志表，task 调度日志
 -- ----------------------------
 create table if not exists skyworld_task_log
-(
-  task_log_id        int auto_increment
-    primary key,
-  job_log_id         int           not null comment 'task计数;',
-  job_key            varchar(255)  null,
-  trace_id           varchar(40)   null,
-  task_key           varchar(255)  not null comment 'task_id',
-  task_msg           varchar(2048) null comment '状态描述信息,如：异常信息，SUCCESS等',
-  task_status        varchar(45)   null comment '状态值：ready,running,finished,exception',
-  task_handle_time   datetime      null,
-  task_finished_time datetime      null,
-  create_time        datetime      null
-)
-  charset = utf8;
+  `task_log_id` int(11) NOT NULL AUTO_INCREMENT,
+  `job_log_id` int(11) DEFAULT NULL COMMENT 'task计数',
+  `job_key` varchar(255) DEFAULT NULL,
+  `task_key` varchar(255) NOT NULL COMMENT 'task_id',
+  `task_msg` varchar(2048) DEFAULT NULL COMMENT '状态描述信息,如：异常信息，SUCCESS等',
+  `task_status` varchar(45) DEFAULT NULL COMMENT '状态值：ready,running,finished,exception',
+  `task_handle_time` datetime DEFAULT NULL,
+  `task_finished_time` datetime DEFAULT NULL,
+  `create_time` datetime DEFAULT NULL,
+  `trace_id` varchar(64) DEFAULT NULL,
+  PRIMARY KEY (`task_log_id`),
+  KEY `trace_id_index` (`trace_id`),
+  KEY `create_time_task_status_task_key_index` (`create_time`,`task_status`,`task_key`,`job_key`)
+) ENGINE=InnoDB AUTO_INCREMENT=52369829 DEFAULT CHARSET=utf8
 
 -- ----------------------------
 -- Table structure for task_mapping_job
 -- 编排关系 job-task 关系表
 -- ----------------------------
 create table if not exists task_mapping_job
-(
-  task_map_job_id int auto_increment
-    primary key,
-  job_id          int                                      not null,
-  job_key         varchar(255)                             not null,
-  job_group       varchar(255)                             not null,
-  task_id         int                                      not null,
-  task_key        varchar(255)                             not null,
-  pre_task_key    varchar(255)                             null comment '前置任务',
-  input_type      varchar(255) default 'from_ui'           not null comment 'task入参来源：{from_ui,from_task}',
-  input_value     varchar(255)                             null comment 'task入参参数值',
-  route_strategy  varchar(45)  default 'ROUTE_TYPE_RANDOM' null comment '路由策略{ROUTE_TYPE_FIRST,ROUTE_TYPE_RANDOM,ROUTE_TYPE_LAST,ROUTE_TYPE_ROUND}',
-  failover        varchar(45)                              null comment '失败恢复策略',
-  fix_ip          varchar(45)                              null comment '预估执行时间',
-  update_time     datetime                                 null comment '更新时间',
-  create_time     datetime                                 not null comment '创建时间',
-  read_timeout    int                                      null comment '接口数据返回超时时间',
-  constraint uni_ind_job_task_id
-    unique (job_key, job_group, task_key)
-)
-  charset = utf8;
-
+  `task_map_job_id` int(11) NOT NULL AUTO_INCREMENT,
+  `job_id` int(11) NOT NULL,
+  `job_key` varchar(255) NOT NULL,
+  `job_group` varchar(255) NOT NULL,
+  `task_id` int(11) NOT NULL,
+  `task_key` varchar(255) NOT NULL,
+  `pre_task_key` varchar(255) DEFAULT NULL COMMENT 'List',
+  `input_type` varchar(255) NOT NULL DEFAULT 'from_ui' COMMENT '{from_ui,from_task}',
+  `input_value` varchar(255) DEFAULT NULL COMMENT '参数值',
+  `route_strategy` varchar(45) DEFAULT 'ROUTE_TYPE_RANDOM' COMMENT '路由策略{ROUTE_TYPE_FIRST,ROUTE_TYPE_RANDOM,ROUTE_TYPE_LAST,ROUTE_TYPE_ROUND}',
+  `failover` varchar(45) DEFAULT NULL COMMENT '失败恢复策略',
+  `fix_ip` varchar(45) DEFAULT NULL COMMENT '预估执行时间',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  `create_time` datetime NOT NULL COMMENT '创建时间',
+  `read_timeout` int(11) DEFAULT NULL COMMENT '接口数据返回超时时间',
+  PRIMARY KEY (`task_map_job_id`),
+  UNIQUE KEY `uni_ind_job_task_id` (`job_key`,`job_group`,`task_key`)
+) ENGINE=InnoDB AUTO_INCREMENT=1610 DEFAULT CHARSET=utf8
 
 ```
 
@@ -175,14 +167,14 @@ zookeeper的安装和配置详见官方文档，至少部署三个节点。
 三. 微服务任务调度平台前端部署
 ---
 
-微服务任务调度平台采用前后分离模式，前端代码在sia-task-config-display目录下。
+微服务任务调度平台采用前后分离模式，前端代码在sia-task-admin-display目录下。
 
 ### 环境准备
 1. node环境安装 => https://nodejs.org/en/download/
 2. Nginx准备
 
 ### 前端项目打包
-进入本地的项目,在~/sia-task/sia-task-config-display目录下执行如下命令进行前端代码打包：
+进入本地的项目,在~/sia-task/sia-task-admin-display目录下执行如下命令进行前端代码打包：
 - npm install 或 cnpm install(推荐) cnpm安装命令：npm install -g cnpm --registry=https://registry.npm.taobao.org
 - npm run build
 
@@ -234,11 +226,11 @@ server {
     * 打包成功后，会在~/sia-task/sia-task-build-component 目录下出现target文件，target文件中的.zip文件即为项目安装包。
     * 打开安装包所在文件夹，将安装包解压，得到task目录，其中包括四个子目录：
           
-        * bin：存放`sia-task-config`和`sia-task-scheduler`两个工程的jar包及各类shell脚本，如下图所示：
+        * bin：存放`sia-task-admin`和`sia-task-scheduler`两个工程的jar包及各类shell脚本，如下图所示：
               
         ![](docs/images/install-build-task.jpg)
               
-        * config：存放`sia-task-config`和`sia-task-scheduler`两个工程的配置文件，如下图所示：
+        * config：存放`sia-task-admin`和`sia-task-scheduler`两个工程的配置文件，如下图所示：
               
         ![](docs/images/install-build-config.jpg)
               
@@ -251,8 +243,8 @@ server {
 
 	将config文件夹下的sia-task-config工程的配置文件task_config_open.yml，以及sia-task-scheduler工程下的配置文件task_scheduler_open.yml中的zookeeper和Mysql的链接修改为自己的地址。
 
-4. 启动`sia-task-config`工程
-> sh start_task_config_open.sh   
+4. 启动`sia-task-admin`工程
+> sh start_task_admin_open.sh   
 
 5. 启动`sia-task-scheduler`工程
 > sh start_task_scheduler_open.sh
