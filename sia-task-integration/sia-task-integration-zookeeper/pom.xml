@@ -12,5 +12,23 @@
 
     <artifactId>sia-task-integration-zookeeper</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-recipes</artifactId>
+            <version>2.11.1</version>
+        </dependency>
 
+        <dependency>
+            <groupId>com.sia</groupId>
+            <artifactId>sia-task-core</artifactId>
+            <version>${sia-task-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>4.3.15.RELEASE</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
 </project>

@@ -10,5 +10,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>sia-task-mapper</artifactId>
+    <packaging>pom</packaging>
 
+    <modules>
+        <module>sia-task-mapper-mybatis</module>
+    </modules>
 </project>
