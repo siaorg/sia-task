@@ -9,12 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>sia-task-collector</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>sia-task-collector-log</module>
-        <module>sia-task-collector-actuator</module>
-    </modules>
+    <artifactId>sia-task-executor-springboot</artifactId>
 
 
 </project>

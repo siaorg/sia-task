@@ -20,6 +20,8 @@
         <module>sia-task-mapper</module>
         <module>sia-task-quartz</module>
         <module>sia-task-register</module>
+        <module>sia-task-executor/sia-task-executor-springboot</module>
+        <module>sia-task-executor/sia-task-executor-spring</module>
     </modules>
 
     <properties>
