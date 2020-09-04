@@ -11,4 +11,8 @@
 	<artifactId>sia-task-executor</artifactId>
 	<packaging>pom</packaging>
 
+	<modules>
+		<module>sia-task-executor-springboot</module>
+		<module>sia-task-executor-spring</module>
+	</modules>
 </project>

@@ -11,5 +11,7 @@
 
     <artifactId>sia-task-integration</artifactId>
 
-
+    <modules>
+        <module>sia-task-integration-zookeeper</module>
+    </modules>
 </project>

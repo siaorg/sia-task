@@ -11,8 +11,8 @@
 
     <artifactId>sia-task-register</artifactId>
     <packaging>pom</packaging>
+
     <modules>
         <module>sia-task-register-zookeeper</module>
     </modules>
-
 </project>
