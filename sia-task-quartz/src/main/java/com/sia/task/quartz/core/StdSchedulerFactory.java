@@ -232,15 +232,15 @@ public class StdSchedulerFactory implements SchedulerFactory {
                     throw new SchedulerConfigException("Unable to find a class loader on the current thread or class.");
 
                 in = cl.getResourceAsStream(
-                        "mquartz.properties");
+                        "quartz.properties");
 
                 if (in == null) {
                     in = cl.getResourceAsStream(
-                            "/mquartz.properties");
+                            "/quartz.properties");
                 }
                 if (in == null) {
                     in = cl.getResourceAsStream(
-                            "com/sia/task/mquartz/core/mquartz.properties");
+                            "com/sia/task/quartz/core/quartz.properties");
                 }
                 if (in == null) {
                     initException = new SchedulerException(
@@ -251,7 +251,7 @@ public class StdSchedulerFactory implements SchedulerFactory {
                     props.load(in);
                 } catch (IOException ioe) {
                     initException = new SchedulerException(
-                            "Resource properties file: 'com/sia/mquartz/core/quartz.properties' "
+                            "Resource properties file: 'com/sia/task/quartz/core/quartz.properties' "
                                     + "could not be read from the classpath.", ioe);
                     throw initException;
                 }
@@ -421,7 +421,7 @@ public class StdSchedulerFactory implements SchedulerFactory {
 
         classLoadHelperClass = cfg.getStringProperty(
                 QuartzInitConfiguration.MQUARTZ_CLASS_LOAD_HELPER_CLASS,
-                "com.sia.mquartz.core.simpl.CascadingClassLoadHelper");
+                "com.sia.task.quartz.core.simpl.CascadingClassLoadHelper");
 
         jobFactoryClass = cfg.getStringProperty(
                 QuartzInitConfiguration.MQUARTZ_JOB_FACTORY_CLASS, null);
@@ -429,7 +429,7 @@ public class StdSchedulerFactory implements SchedulerFactory {
         idleWaitTime = cfg.getLongProperty(QuartzInitConfiguration.MQUARTZ_IDLE_WAIT_TIME,
                 idleWaitTime);
         if(idleWaitTime > -1 && idleWaitTime < 1000) {
-            throw new SchedulerException("com.mquartz.scheduler.idleWaitTime of less than 1000ms is not legal.");
+            throw new SchedulerException("com.task.quartz.scheduler.idleWaitTime of less than 1000ms is not legal.");
         }
 
 

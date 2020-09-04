@@ -35,7 +35,7 @@ import com.sia.task.quartz.utils.Key;
  * entities via a Domain-Specific Language (DSL).  The DSL can best be
  * utilized through the usage of static imports of the methods on the classes
  * <code>TriggerBuilder</code>, <code>JobBuilder</code>, 
- * <code>DateBuilder</code>, <code>JobKey</code>, <code>com.sia.mquartz.key.trigger.TriggerKey</code>
+ * <code>DateBuilder</code>, <code>JobKey</code>, <code>com.sia.sia.task.quartz.key.trigger.TriggerKey</code>
  * and the various <code>ScheduleBuilder</code> implementations.</p>
  * 
  * <p>Client code can then use the DSL to write code such as this:</p>

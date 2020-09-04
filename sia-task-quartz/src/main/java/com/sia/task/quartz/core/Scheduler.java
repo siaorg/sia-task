@@ -410,7 +410,7 @@ public interface Scheduler {
      * not durable, then the job will also be deleted.</p>
      *
      * <p>Note that while this bulk operation is likely more efficient than
-     * invoking <code>unscheduleJob(com.sia.mquartz.key.trigger.TriggerKey triggerKey)</code> several
+     * invoking <code>unscheduleJob(com.sia.task.quartz.key.trigger.TriggerKey triggerKey)</code> several
      * times, it may have the adverse affect of holding data locks for a
      * single long duration of time (rather than lots of small durations
      * of time).</p>

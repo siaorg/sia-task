@@ -5,38 +5,38 @@ MQuartz : 改进说明 ---
 
 | Property Name | Required | Type | Default Value |
 |---|---|---|---|
-| com.mquartz.scheduler.instanceName | No | String | DefaultMQuartzScheduler |
-| com.mquartz.scheduler.threadName | No | String | _MQuartzSchedulerThread_Worker-N |
+| com.sia.task.quartz.scheduler.instanceName | No | String | DefaultMQuartzScheduler |
+| com.sia.task.quartz.scheduler.threadName | No | String | _MQuartzSchedulerThread_Worker-N |
 | org.quartz.scheduler.batchTriggerAcquisitionMaxCount | No | Int | 1 |
 | org.quartz.scheduler.batchTriggerAcquisitionFireAheadTimeWindow | No | Int | 0 |
-| com.mquartz.scheduler.idleWaitTime | No | int | 30s |
-| com.mquartz.scheduler.makeSchedulerThreadDaemon | No | boolean | false |
+| com.sia.task.quartz.scheduler.idleWaitTime | No | int | 30s |
+| com.sia.task.quartz.scheduler.makeSchedulerThreadDaemon | No | boolean | false |
 | A4 | B4 | C4 | D4 |
 | A4 | B4 | C4 | D4 |
 
 
 * **InstanceName**
 
-`PROP_SCHED_INSTANCE_NAME=com.mquartz.scheduler.instanceName`   
+`PROP_SCHED_INSTANCE_NAME=com.sia.task.quartz.scheduler.instanceName`   
 
 ```properties 
-com.mquartz.scheduler.instanceName:DefaultMQuartzScheduler 
+com.sia.task.quartz.scheduler.instanceName:DefaultMQuartzScheduler 
 ```
 Can be any string, and the value has no meaning to the scheduler itself - but rather serves as a mechanism for client code to distinguish schedulers when multiple instances are used within the same program.
 
 
 * **threadName**
 
-`PROP_SCHED_THREAD_NAME = "com.mquartz.scheduler.threadName"`   
+`PROP_SCHED_THREAD_NAME = "com.sia.task.quartz.scheduler.threadName"`   
 
 ```properties 
-com.mquartz.scheduler.threadName:_MQuartzSchedulerThread
+com.sia.task.quartz.scheduler.threadName:_MQuartzSchedulerThread
 ```
-Can be any String that is a valid name for a java thread. If this property is not specified, the thread will receive the scheduler's name ("com.mquartz.scheduler.instanceName") plus an the appended string '_QuartzSchedulerThread'.
+Can be any String that is a valid name for a java thread. If this property is not specified, the thread will receive the scheduler's name ("com.sia.task.quartz.scheduler.instanceName") plus an the appended string '_QuartzSchedulerThread'.
 
 * **batchTriggerAcquisitionMaxCount**   
 
-`PROP_SCHED_MAX_BATCH_SIZE=com.mquartz.scheduler.batchTriggerAcquisitionMaxCount`  
+`PROP_SCHED_MAX_BATCH_SIZE=com.sia.task.quartz.scheduler.batchTriggerAcquisitionMaxCount`  
 
  ```java triggers = qsRsrcs.getJobStore().acquireNextTriggers(
  now + idleWaitTime, Math.min( availThreadCount, qsRsrcs.getMaxBatchSize()), qsRsrcs.getBatchTimeWindow());  
@@ -46,7 +46,7 @@ Can be any String that is a valid name for a java thread. If this property is no
 
 * **batchTriggerAcquisitionFireAheadTimeWindow**   
 
-`PROP_SCHED_BATCH_TIME_WINDOW = "com.mquartz.scheduler.batchTriggerAcquisitionFireAheadTimeWindow"`  
+`PROP_SCHED_BATCH_TIME_WINDOW = "com.sia.task.quartz.scheduler.batchTriggerAcquisitionFireAheadTimeWindow"`  
 
  ```java triggers = qsRsrcs.getJobStore().acquireNextTriggers(
  now + idleWaitTime, Math.min( availThreadCount, qsRsrcs.getMaxBatchSize()), qsRsrcs.getBatchTimeWindow());  
@@ -55,7 +55,7 @@ Can be any String that is a valid name for a java thread. If this property is no
 
 * **idleWaitTime**   
 
-`PROP_SCHED_IDLE_WAIT_TIME = "com.mquartz.scheduler.idleWaitTime"`  
+`PROP_SCHED_IDLE_WAIT_TIME = "com.sia.task.quartz.scheduler.idleWaitTime"`  
 
  ```java triggers = qsRsrcs.getJobStore().acquireNextTriggers(
  now + idleWaitTime, Math.min( availThreadCount, qsRsrcs.getMaxBatchSize()), qsRsrcs.getBatchTimeWindow());  
@@ -64,7 +64,7 @@ Can be any String that is a valid name for a java thread. If this property is no
 
 * **makeSchedulerThreadDaemon**   
 
-`PROP_SCHED_IDLE_WAIT_TIME = "com.mquartz.scheduler.idleWaitTime"`  
+`PROP_SCHED_IDLE_WAIT_TIME = "com.sia.task.quartz.scheduler.idleWaitTime"`  
 
  ```java triggers = qsRsrcs.getJobStore().acquireNextTriggers(
  now + idleWaitTime, Math.min( availThreadCount, qsRsrcs.getMaxBatchSize()), qsRsrcs.getBatchTimeWindow());  

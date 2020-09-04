@@ -274,7 +274,7 @@ public interface Trigger extends Serializable, Cloneable, Comparable<Trigger> {
     public ScheduleBuilder<? extends Trigger> getScheduleBuilder();
 
     /**
-     * Trigger equality is based upon the equality of the com.sia.mquartz.key.trigger.TriggerKey.
+     * Trigger equality is based upon the equality of the com.sia.task.quartz.key.trigger.TriggerKey.
      * 
      * @return true if the key of this Trigger equals that of the given Trigger.
      */

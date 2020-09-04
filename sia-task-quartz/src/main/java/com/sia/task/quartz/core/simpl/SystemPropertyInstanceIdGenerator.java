@@ -41,7 +41,7 @@ public class SystemPropertyInstanceIdGenerator implements InstanceIdGenerator {
   /**
    * System property to read the instanceId from
    */
-  public static final String SYSTEM_PROPERTY = "com.mquartz.scheduler.instanceId";
+  public static final String SYSTEM_PROPERTY = "com.sia.task.quartz.scheduler.instanceId";
 
   private String prepend = null;
   private String postpend = null;

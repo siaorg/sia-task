@@ -525,7 +525,7 @@ public class CronTriggerImpl extends AbstractTrigger<CronTrigger> implements Cro
      * 
      * <p>
      * Note that the date returned is NOT validated against the related
-     * com.sia.mquartz.core.Calendar (if any)
+     * com.sia.task.quartz.core.Calendar (if any)
      * </p>
      */
     @Override
@@ -657,7 +657,7 @@ public class CronTriggerImpl extends AbstractTrigger<CronTrigger> implements Cro
      * 
      * <p>
      * Note that the value returned is NOT validated against the related
-     * com.sia.mquartz.core.Calendar (if any)
+     * com.sia.task.quartz.core.Calendar (if any)
      * </p>
      * 
      * @param test the date to compare

@@ -70,7 +70,7 @@ public class QuartzScheduler implements IQuartzScheduler {
         Properties props = new Properties();
         InputStream is = null;
         try {
-            is = QuartzScheduler.class.getClassLoader().getResourceAsStream("com/sia/task/mquartz/quartz-build.properties");
+            is = QuartzScheduler.class.getClassLoader().getResourceAsStream("com/sia/task/quartz/quartz-build.properties");
 
             if (is != null) {
                 props.load(is);
