@@ -104,23 +104,9 @@
 	<profiles>
 		<profile>
 			<!-- 开发环境 -->
-			<id>dev</id>
+			<id>open</id>
 			<properties>
-				<envFlag>dev</envFlag>
-			</properties>
-		</profile>
-		<profile>
-			<!-- 测试环境 -->
-			<id>test</id>
-			<properties>
-				<envFlag>test</envFlag>
-			</properties>
-		</profile>
-		<profile>
-			<!-- 生产环境 -->
-			<id>pro</id>
-			<properties>
-				<envFlag>pro</envFlag>
+				<envFlag>open</envFlag>
 			</properties>
 		</profile>
 	</profiles>
@@ -132,9 +118,7 @@
 				<filtering>true</filtering>
 				<excludes>
 					<exclude>application.yml</exclude>
-					<exclude>application-dev.yml</exclude>
-					<exclude>application-test.yml</exclude>
-					<exclude>application-pro.yml</exclude>
+					<exclude>application-open.yml</exclude>
 				</excludes>
 			</resource>
 			<resource>
@@ -142,7 +126,7 @@
 				<filtering>true</filtering>
 				<includes>
 					<include>application.yml</include>
-					<include>application-${envFlag}.yml</include>
+					<include>application-open.yml</include>
 				</includes>
 			</resource>
 		</resources>
