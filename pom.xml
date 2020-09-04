@@ -15,6 +15,11 @@
         <module>sia-task-client</module>
         <module>sia-task-scheduler</module>
         <module>sia-task-executor</module>
+        <module>sia-task-collector</module>
+        <module>sia-task-integration</module>
+        <module>sia-task-mapper</module>
+        <module>sia-task-quartz</module>
+        <module>sia-task-register</module>
     </modules>
 
     <properties>
