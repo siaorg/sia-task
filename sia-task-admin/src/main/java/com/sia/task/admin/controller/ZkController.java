@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,12 +28,12 @@ import javax.annotation.Resource;
 import java.util.Map;
 
 /**
- * TASK API
+ * 编排中心zookeeper的API类
  *
- * @author: LXS
- * @Description: 编排中心ZK的API类
- * @date 2019/7/1111:24
- */
+ * @author maozhengwei
+ * @version V1.0.0
+ * @date 2020/9/4 6:36 下午
+ **/
 @RestController
 @RequestMapping("/zkapi")
 public class ZkController {
