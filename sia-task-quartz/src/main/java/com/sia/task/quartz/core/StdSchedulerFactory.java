@@ -22,7 +22,7 @@ package com.sia.task.quartz.core;
 
 
 import com.sia.task.quartz.ClassLoadHelper;
-import com.sia.task.quartz.MQuartzInitConfiguration;
+import com.sia.task.quartz.QuartzInitConfiguration;
 import com.sia.task.quartz.ThreadPool;
 import com.sia.task.quartz.core.simpl.DefaultThreadExecutor;
 import com.sia.task.quartz.core.simpl.RAMJobStore;
@@ -175,7 +175,7 @@ public class StdSchedulerFactory implements SchedulerFactory {
             throw initException;
         }
 
-        String requestedFile = System.getProperty(MQuartzInitConfiguration.PROPERTIES_FILE);
+        String requestedFile = System.getProperty(QuartzInitConfiguration.PROPERTIES_FILE);
         String propFileName = requestedFile != null ? requestedFile
                 : "quartz.properties";
         File propFile = new File(propFileName);
@@ -413,20 +413,20 @@ public class StdSchedulerFactory implements SchedulerFactory {
         // Get Scheduler Properties
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        String schedName = cfg.getStringProperty(MQuartzInitConfiguration.MQUARTZ_INSTANCE_NAME,
+        String schedName = cfg.getStringProperty(QuartzInitConfiguration.MQUARTZ_INSTANCE_NAME,
                 "MQuartzScheduler");
 
-        String threadName = cfg.getStringProperty(MQuartzInitConfiguration.MQUARTZ_THREAD_NAME,
+        String threadName = cfg.getStringProperty(QuartzInitConfiguration.MQUARTZ_THREAD_NAME,
                 schedName + "_M-Q-S-Thread");
 
         classLoadHelperClass = cfg.getStringProperty(
-                MQuartzInitConfiguration.MQUARTZ_CLASS_LOAD_HELPER_CLASS,
+                QuartzInitConfiguration.MQUARTZ_CLASS_LOAD_HELPER_CLASS,
                 "com.sia.mquartz.core.simpl.CascadingClassLoadHelper");
 
         jobFactoryClass = cfg.getStringProperty(
-                MQuartzInitConfiguration.MQUARTZ_JOB_FACTORY_CLASS, null);
+                QuartzInitConfiguration.MQUARTZ_JOB_FACTORY_CLASS, null);
 
-        idleWaitTime = cfg.getLongProperty(MQuartzInitConfiguration.MQUARTZ_IDLE_WAIT_TIME,
+        idleWaitTime = cfg.getLongProperty(QuartzInitConfiguration.MQUARTZ_IDLE_WAIT_TIME,
                 idleWaitTime);
         if(idleWaitTime > -1 && idleWaitTime < 1000) {
             throw new SchedulerException("com.mquartz.scheduler.idleWaitTime of less than 1000ms is not legal.");
@@ -434,19 +434,19 @@ public class StdSchedulerFactory implements SchedulerFactory {
 
 
         boolean makeSchedulerThreadDaemon =
-            cfg.getBooleanProperty(MQuartzInitConfiguration.MQUARTZ_MAKE_SCHEDULER_THREAD_DAEMON);
+            cfg.getBooleanProperty(QuartzInitConfiguration.MQUARTZ_MAKE_SCHEDULER_THREAD_DAEMON);
 
         boolean threadsInheritInitalizersClassLoader =
-            cfg.getBooleanProperty(MQuartzInitConfiguration.MQUARTZ_SCHEDULER_THREADS_INHERIT_CONTEXT_CLASS_LOADER_OF_INITIALIZING_THREAD);
+            cfg.getBooleanProperty(QuartzInitConfiguration.MQUARTZ_SCHEDULER_THREADS_INHERIT_CONTEXT_CLASS_LOADER_OF_INITIALIZING_THREAD);
 
-        long batchTimeWindow = cfg.getLongProperty(MQuartzInitConfiguration.MQUARTZ_BATCH_TIME_WINDOW, 0L);
-        int maxBatchSize = cfg.getIntProperty(MQuartzInitConfiguration.MQUARTZ_MAX_BATCH_SIZE, 1);
+        long batchTimeWindow = cfg.getLongProperty(QuartzInitConfiguration.MQUARTZ_BATCH_TIME_WINDOW, 0L);
+        int maxBatchSize = cfg.getIntProperty(QuartzInitConfiguration.MQUARTZ_MAX_BATCH_SIZE, 1);
 
-        boolean interruptJobsOnShutdown = cfg.getBooleanProperty(MQuartzInitConfiguration.MQUARTZ_INTERRUPT_JOBS_ON_SHUTDOWN, false);
-        boolean interruptJobsOnShutdownWithWait = cfg.getBooleanProperty(MQuartzInitConfiguration.MQUARTZ_INTERRUPT_JOBS_ON_SHUTDOWN_WITH_WAIT, false);
+        boolean interruptJobsOnShutdown = cfg.getBooleanProperty(QuartzInitConfiguration.MQUARTZ_INTERRUPT_JOBS_ON_SHUTDOWN, false);
+        boolean interruptJobsOnShutdownWithWait = cfg.getBooleanProperty(QuartzInitConfiguration.MQUARTZ_INTERRUPT_JOBS_ON_SHUTDOWN_WITH_WAIT, false);
 
 
-        Properties schedCtxtProps = cfg.getPropertyGroup(MQuartzInitConfiguration.MQUARTZ_CONTEXT_PREFIX, true);
+        Properties schedCtxtProps = cfg.getPropertyGroup(QuartzInitConfiguration.MQUARTZ_CONTEXT_PREFIX, true);
 
 
         // Create class load helper
@@ -473,7 +473,7 @@ public class StdSchedulerFactory implements SchedulerFactory {
                                 + e.getMessage(), e);
             }
 
-            tProps = cfg.getPropertyGroup(MQuartzInitConfiguration.MQUARTZ_JOB_FACTORY_PREFIX, true);
+            tProps = cfg.getPropertyGroup(QuartzInitConfiguration.MQUARTZ_JOB_FACTORY_PREFIX, true);
             try {
                 setBeanProps(jobFactory, tProps);
             } catch (Exception e) {
@@ -487,7 +487,7 @@ public class StdSchedulerFactory implements SchedulerFactory {
         // Get ThreadPool Properties
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        String tpClass = cfg.getStringProperty(MQuartzInitConfiguration.MQUARTZ_THREAD_POOL_CLASS, SimpleThreadPool.class.getName());
+        String tpClass = cfg.getStringProperty(QuartzInitConfiguration.MQUARTZ_THREAD_POOL_CLASS, SimpleThreadPool.class.getName());
 
         if (tpClass == null) {
             initException = new SchedulerException(
@@ -502,7 +502,7 @@ public class StdSchedulerFactory implements SchedulerFactory {
                     + tpClass + "' could not be instantiated.", e);
             throw initException;
         }
-        tProps = cfg.getPropertyGroup(MQuartzInitConfiguration.MQUARTZ_THREAD_POOL_PREFIX, true);
+        tProps = cfg.getPropertyGroup(QuartzInitConfiguration.MQUARTZ_THREAD_POOL_PREFIX, true);
         try {
             setBeanProps(tp, tProps);
         } catch (Exception e) {
@@ -514,7 +514,7 @@ public class StdSchedulerFactory implements SchedulerFactory {
         // Get JobStore Properties
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        String jsClass = cfg.getStringProperty(MQuartzInitConfiguration.MQUARTZ_JOB_STORE_CLASS,
+        String jsClass = cfg.getStringProperty(QuartzInitConfiguration.MQUARTZ_JOB_STORE_CLASS,
                 RAMJobStore.class.getName());
 
         if (jsClass == null) {
@@ -535,7 +535,7 @@ public class StdSchedulerFactory implements SchedulerFactory {
         SchedulerDetailsSetter.setDetails(jobStore, schedName, null);
 
 
-        tProps = cfg.getPropertyGroup(MQuartzInitConfiguration.MQUARTZ_JOB_STORE_PREFIX,true);
+        tProps = cfg.getPropertyGroup(QuartzInitConfiguration.MQUARTZ_JOB_STORE_PREFIX,true);
         try {
             setBeanProps(jobStore, tProps);
         } catch (Exception e) {
@@ -547,13 +547,13 @@ public class StdSchedulerFactory implements SchedulerFactory {
         // Set up any SchedulerPlugins
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        String[] pluginNames = cfg.getPropertyGroups(MQuartzInitConfiguration.MQUARTZ_PLUGIN_PREFIX);
+        String[] pluginNames = cfg.getPropertyGroups(QuartzInitConfiguration.MQUARTZ_PLUGIN_PREFIX);
         SchedulerPlugin[] plugins = new SchedulerPlugin[pluginNames.length];
         for (int i = 0; i < pluginNames.length; i++) {
-            Properties pp = cfg.getPropertyGroup(MQuartzInitConfiguration.MQUARTZ_PLUGIN_PREFIX + "."
+            Properties pp = cfg.getPropertyGroup(QuartzInitConfiguration.MQUARTZ_PLUGIN_PREFIX + "."
                     + pluginNames[i], true);
 
-            String plugInClass = pp.getProperty(MQuartzInitConfiguration.MQUARTZ_PLUGIN_CLASS, null);
+            String plugInClass = pp.getProperty(QuartzInitConfiguration.MQUARTZ_PLUGIN_CLASS, null);
 
             if (plugInClass == null) {
                 initException = new SchedulerException(
@@ -587,13 +587,13 @@ public class StdSchedulerFactory implements SchedulerFactory {
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         Class<?>[] strArg = new Class[] { String.class };
-        String[] jobListenerNames = cfg.getPropertyGroups(MQuartzInitConfiguration.MQUARTZ_JOB_LISTENER_PREFIX);
+        String[] jobListenerNames = cfg.getPropertyGroups(QuartzInitConfiguration.MQUARTZ_JOB_LISTENER_PREFIX);
         JobListener[] jobListeners = new JobListener[jobListenerNames.length];
         for (int i = 0; i < jobListenerNames.length; i++) {
-            Properties lp = cfg.getPropertyGroup(MQuartzInitConfiguration.MQUARTZ_JOB_LISTENER_PREFIX + "."
+            Properties lp = cfg.getPropertyGroup(QuartzInitConfiguration.MQUARTZ_JOB_LISTENER_PREFIX + "."
                     + jobListenerNames[i], true);
 
-            String listenerClass = lp.getProperty(MQuartzInitConfiguration.MQUARTZ_LISTENER_CLASS, null);
+            String listenerClass = lp.getProperty(QuartzInitConfiguration.MQUARTZ_LISTENER_CLASS, null);
 
             if (listenerClass == null) {
                 initException = new SchedulerException(
@@ -635,13 +635,13 @@ public class StdSchedulerFactory implements SchedulerFactory {
         // Set up any TriggerListeners
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        String[] triggerListenerNames = cfg.getPropertyGroups(MQuartzInitConfiguration.MQUARTZ_TRIGGER_LISTENER_PREFIX);
+        String[] triggerListenerNames = cfg.getPropertyGroups(QuartzInitConfiguration.MQUARTZ_TRIGGER_LISTENER_PREFIX);
         TriggerListener[] triggerListeners = new TriggerListener[triggerListenerNames.length];
         for (int i = 0; i < triggerListenerNames.length; i++) {
-            Properties lp = cfg.getPropertyGroup(MQuartzInitConfiguration.MQUARTZ_TRIGGER_LISTENER_PREFIX + "."
+            Properties lp = cfg.getPropertyGroup(QuartzInitConfiguration.MQUARTZ_TRIGGER_LISTENER_PREFIX + "."
                     + triggerListenerNames[i], true);
 
-            String listenerClass = lp.getProperty(MQuartzInitConfiguration.MQUARTZ_LISTENER_CLASS, null);
+            String listenerClass = lp.getProperty(QuartzInitConfiguration.MQUARTZ_LISTENER_CLASS, null);
 
             if (listenerClass == null) {
                 initException = new SchedulerException(
@@ -685,9 +685,9 @@ public class StdSchedulerFactory implements SchedulerFactory {
         // Get ThreadExecutor Properties
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-        String threadExecutorClass = cfg.getStringProperty(MQuartzInitConfiguration.MQUARTZ_THREAD_EXECUTOR_CLASS);
+        String threadExecutorClass = cfg.getStringProperty(QuartzInitConfiguration.MQUARTZ_THREAD_EXECUTOR_CLASS);
         if (threadExecutorClass != null) {
-            tProps = cfg.getPropertyGroup(MQuartzInitConfiguration.MQUARTZ_THREAD_EXECUTOR, true);
+            tProps = cfg.getPropertyGroup(QuartzInitConfiguration.MQUARTZ_THREAD_EXECUTOR, true);
             try {
                 threadExecutor = (ThreadExecutor) loadHelper.loadClass(threadExecutorClass).newInstance();
                 log.info("Using custom implementation for ThreadExecutor: " + threadExecutorClass);
@@ -931,7 +931,7 @@ public class StdSchedulerFactory implements SchedulerFactory {
     }
 
     private String getSchedulerName() {
-        return cfg.getStringProperty(MQuartzInitConfiguration.MQUARTZ_INSTANCE_NAME,
+        return cfg.getStringProperty(QuartzInitConfiguration.MQUARTZ_INSTANCE_NAME,
                 "QuartzScheduler");
     }
 

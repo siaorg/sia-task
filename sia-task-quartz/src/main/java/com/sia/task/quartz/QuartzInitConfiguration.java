@@ -31,7 +31,7 @@ import com.sia.task.quartz.core.Scheduler;
  * @data 2019-06-25 21:24
  * @version V1.0.0
  **/
-public class MQuartzInitConfiguration {
+public class QuartzInitConfiguration {
     /**
      * key-name-of-the-system-configuration
      */
