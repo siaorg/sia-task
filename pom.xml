@@ -35,7 +35,6 @@
 
     <dependencyManagement>
         <dependencies>
-
             <dependency>
                 <!-- Import dependency management from Spring Boot -->
                 <groupId>org.springframework.boot</groupId>
@@ -158,10 +157,7 @@
                     </licenseMapping>
                 </configuration>
             </plugin>
-
-
         </plugins>
-
     </build>
 
 </project>
