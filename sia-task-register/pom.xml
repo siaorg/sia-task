@@ -5,7 +5,7 @@
     <parent>
         <artifactId>sia-task</artifactId>
         <groupId>com.sia</groupId>
-        <version>0.0.1</version>
+        <version>${sia-task-version}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 

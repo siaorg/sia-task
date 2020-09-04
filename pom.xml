@@ -22,6 +22,7 @@
         <module>sia-task-register</module>
         <module>sia-task-executor/sia-task-executor-springboot</module>
         <module>sia-task-executor/sia-task-executor-spring</module>
+        <module>sia-task-integration/sia-task-integration-zookeeper</module>
     </modules>
 
     <properties>

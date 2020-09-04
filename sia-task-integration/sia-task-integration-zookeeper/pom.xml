@@ -6,10 +6,11 @@
         <artifactId>sia-task</artifactId>
         <groupId>com.sia</groupId>
         <version>${sia-task-version}</version>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>sia-task-integration</artifactId>
+    <artifactId>sia-task-integration-zookeeper</artifactId>
 
 
 </project>
