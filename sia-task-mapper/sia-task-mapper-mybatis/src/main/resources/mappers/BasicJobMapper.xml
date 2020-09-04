@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sia.task.mapper.BasicJobMapper">
+
+    <resultMap id="BaseResultMap" type="com.sia.task.core.entity.BasicJob">
+        <id column="job_id" property="jobId" jdbcType="INTEGER"/>
+        <result column="job_key" property="jobKey" jdbcType="VARCHAR"/>
+        <result column="job_group" property="jobGroup" jdbcType="VARCHAR"/>
+        <result column="job_triger_type" property="jobTrigerType" jdbcType="VARCHAR"/>
+        <result column="job_triger_value" property="jobTrigerValue" jdbcType="VARCHAR"/>
+        <result column="job_desc" property="jobDesc" jdbcType="VARCHAR"/>
+        <result column="job_alarm_email" property="jobAlarmEmail" jdbcType="VARCHAR"/>
+        <result column="job_create_time" property="jobCreateTime" jdbcType="TIMESTAMP"/>
+        <result column="job_update_time" property="jobUpdateTime" jdbcType="TIMESTAMP"/>
+        <result column="job_parent_key" property="jobParentKey" jdbcType="VARCHAR"/>
+        <result column="job_plan" property="jobPlan" jdbcType="VARCHAR"/>
+        <association property="jobChild" column="job_key" javaType="com.sia.task.core.entity.BasicJob"
+                     select="selectJob4Childs"/>
+    </resultMap>
+    <resultMap id="GroupMap" type="com.sia.task.core.entity.BasicJob">
+        <result column="job_key" property="jobKey" jdbcType="VARCHAR"/>
+        <result column="job_group" property="jobGroup" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="GroupJobCountMap" type="java.util.Map">
+        <result column="job_group" property="jobGroupName" jdbcType="VARCHAR"/>
+        <result column="group_job_num" property="jobNum" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+    job_id, job_key,job_group, job_triger_type, job_triger_value, job_desc, job_alarm_email,
+    job_create_time, job_update_time, job_parent_key, job_plan
+  </sql>
+
+    <!--
+          临时分组查询 后期去掉
+      -->
+    <select id="selectGroupByAuth" resultMap="GroupMap" parameterType="java.lang.String">
+
+        SELECT bt.task_group_name as job_group ,bj.job_key
+        FROM skyworld_basic_job bj
+        right JOIN skyworld_basic_task bt on bt.task_group_name = bj.job_group
+        where 1=1
+        <if test="list != null and list.size() > 0">
+            and job_group IN
+            <foreach item="roleNames" collection="list" separator="," open="(" close=")" index="">
+                #{roleNames, jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        group by job_key
+    </select>
+
+
+    <select id="selectJobCountByCondition" resultType="java.lang.Integer" parameterType="java.util.HashMap">
+        select count(*)
+        from skyworld_basic_job
+        where
+        1=1
+        <if test="jobGroup != null and jobGroup != '' ">
+            and job_group = #{jobGroup,jdbcType=VARCHAR}
+        </if>
+        <if test="jobKey != null and jobKey != '' ">
+            and job_key = #{jobKey,jdbcType=VARCHAR}
+        </if>
+        <if test="jobDesc != null and jobDesc != '' ">
+            and job_desc LIKE CONCAT('%',#{jobDesc,jdbcType=VARCHAR},'%')
+        </if>
+    </select>
+
+    <select id="selectJobsByCondition" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+        select
+        <include refid="Base_Column_List"/>
+        from skyworld_basic_job
+        WHERE
+        1=1
+        <if test="groups != null and groups.size() > 0">
+            and job_group IN
+            <foreach item="group" collection="groups" separator="," open="(" close=")" index="">
+                #{group, jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        <if test="jobKey != null and jobKey != '' ">
+            and job_key = #{jobKey,jdbcType=VARCHAR}
+        </if>
+        <if test="jobDesc != null and jobDesc != '' ">
+            and job_desc LIKE CONCAT('%',#{jobDesc,jdbcType=VARCHAR},'%')
+        </if>
+    </select>
+
+
+    <delete id="deleteByJobKeyAndJobGroup" parameterType="java.lang.String">
+    delete from skyworld_basic_job
+    where job_key = #{jobKey,jdbcType=VARCHAR} and job_group = #{jobGroup,jdbcType=VARCHAR}
+  </delete>
+
+    <insert id="insertSelective" parameterType="com.sia.task.core.entity.BasicJob">
+        insert ignore into skyworld_basic_job
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="jobKey != null">
+                job_key,
+            </if>
+            <if test="jobGroup != null">
+                job_group,
+            </if>
+            <if test="jobTrigerType != null">
+                job_triger_type,
+            </if>
+            <if test="jobTrigerValue != null">
+                job_triger_value,
+            </if>
+            <if test="jobDesc != null">
+                job_desc,
+            </if>
+            <if test="jobAlarmEmail != null">
+                job_alarm_email,
+            </if>
+            <if test="jobParentKey != null">
+                job_parent_key,
+            </if>
+            <if test="jobPlan != null">
+                job_plan,
+            </if>
+            job_create_time,
+            job_update_time
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="jobKey != null">
+                #{jobKey,jdbcType=VARCHAR},
+            </if>
+            <if test="jobGroup != null">
+                #{jobGroup,jdbcType=VARCHAR},
+            </if>
+            <if test="jobTrigerType != null">
+                #{jobTrigerType,jdbcType=VARCHAR},
+            </if>
+            <if test="jobTrigerValue != null">
+                #{jobTrigerValue,jdbcType=VARCHAR},
+            </if>
+            <if test="jobDesc != null">
+                #{jobDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="jobAlarmEmail != null">
+                #{jobAlarmEmail,jdbcType=VARCHAR},
+            </if>
+            <if test="jobPlan != null">
+                #{jobPlan,jdbcType=VARCHAR},
+            </if>
+            <if test="jobParentKey != null">
+                #{jobParentKey,jdbcType=VARCHAR},
+            </if>
+            NOW(), NOW()
+        </trim>
+    </insert>
+
+    <update id="updateByPrimaryKey" parameterType="com.sia.task.core.entity.BasicJob">
+    update skyworld_basic_job
+    set job_group = #{jobGroup,jdbcType=VARCHAR},
+      job_triger_type = #{jobTrigerType,jdbcType=VARCHAR},
+      job_triger_value = #{jobTrigerValue,jdbcType=VARCHAR},
+      job_desc = #{jobDesc,jdbcType=VARCHAR},
+      job_alarm_email = #{jobAlarmEmail,jdbcType=VARCHAR},
+      job_plan = #{jobPlan,jdbcType=VARCHAR},
+      job_parent_key = #{jobParentKey,jdbcType=VARCHAR},
+      job_update_time = NOW()
+    where job_key = #{jobKey,jdbcType=VARCHAR}
+  </update>
+
+    <select id="selectByJobKeyList" resultMap="BaseResultMap" parameterType="java.util.HashMap">
+        select
+        <include refid="Base_Column_List"/>
+        from skyworld_basic_job
+        WHERE
+        1=1
+        <if test="jobKeys != null and jobKeys.size() > 0">
+            and job_key IN
+            <foreach item="jobKeys" collection="jobKeys" separator="," open="(" close=")" index="">
+                #{jobKeys, jdbcType=VARCHAR}
+            </foreach>
+        </if>
+
+    </select>
+
+    <!--schedulerMapper-->
+    <select id="selectJob" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from skyworld_basic_job
+        WHERE
+        1=1
+        <if test="jobGroup != null and jobGroup != '' ">
+            and job_group = #{jobGroup,jdbcType=VARCHAR}
+        </if>
+        <if test="jobKey != null and jobKey != '' ">
+            and job_key = #{jobKey,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+
+    <select id="selectJob4Childs" resultMap="BaseResultMap">
+    select
+    *
+    from skyworld_basic_job
+    WHERE
+    job_parent_key = #{jobKey}
+  </select>
+
+    <select id="selectJopCount4Group" resultMap="GroupJobCountMap" parameterType="java.util.HashMap">
+        select
+        job_group,
+        count(job_group) as group_job_num
+        from skyworld_basic_job
+        WHERE
+        1=1
+        <if test="groups != null and groups.size() > 0">
+            and job_group IN
+            <foreach item="group" collection="groups" separator="," open="(" close=")" index="">
+                #{group, jdbcType=VARCHAR}
+            </foreach>
+        </if>
+        group by job_group
+    </select>
+    <select id="selectJobsByPlan" resultMap="BaseResultMap">
+    select
+    *
+    from skyworld_basic_job
+    WHERE
+    job_plan = #{jobPlan}
+  </select>
+
+</mapper>

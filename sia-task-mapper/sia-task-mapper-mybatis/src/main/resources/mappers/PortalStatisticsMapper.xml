@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sia.task.mapper.PortalStatisticsMapper">
+
+
+    <resultMap id="jobLogInfoResultMap" type="java.util.Map">
+        <result column="scheduler" property="scheduler" jdbcType="VARCHAR"/>
+        <result column="job_handle_code" property="job_handle_code" jdbcType="VARCHAR"/>
+        <result column="trace_id" property="trace_id" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="taskLogInfoResultMap" type="java.util.Map">
+        <result column="task_log_id" property="task_log_id" jdbcType="INTEGER"/>
+        <result column="task_key" property="task_key" jdbcType="VARCHAR"/>
+        <result column="task_status" property="task_status" jdbcType="VARCHAR"/>
+        <result column="trace_id" property="trace_id" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="newJobInfoMap" type="java.util.Map">
+        <result column="job_key" property="job_key" jdbcType="VARCHAR"/>
+        <result column="job_group" property="job_group" jdbcType="VARCHAR"/>
+        <result column="job_alarm_email" property="job_alarm_email" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="newTaskInfoMap" type="java.util.Map">
+        <result column="task_key" property="task_key" jdbcType="VARCHAR"/>
+        <result column="task_group_name" property="task_group_name" jdbcType="VARCHAR"/>
+        <result column="task_app_name" property="task_app_name" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="projectInfoMap" type="java.util.Map">
+        <result column="ggroup" property="ggroup" jdbcType="VARCHAR"/>
+        <result column="job_num" property="job_num" jdbcType="INTEGER"/>
+        <result column="call_num" property="call_num" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <resultMap id="expJobsMap" type="java.util.Map">
+        <result column="ggroup" property="ggroup" jdbcType="VARCHAR"/>
+        <result column="job_key" property="job_key" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="expTaskMap" type="java.util.Map">
+        <result column="task_key" property="task_key" jdbcType="VARCHAR"/>
+        <result column="job_key" property="job_key" jdbcType="VARCHAR"/>
+        <result column="exp_task_count" property="exp_task_count" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <resultMap id="taskInfoMap" type="java.util.Map">
+        <result column="ggroup" property="ggroup" jdbcType="VARCHAR"/>
+        <result column="task_num" property="task_num" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <select id="getNearestTime" resultType="java.util.Date">
+      select max(last_time) from skyworld_portal_stat;
+    </select>
+
+    <select id="getDbTime" resultType="java.lang.String">
+        select DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s') as times;
+    </select>
+
+
+    <select id="getAllCount" resultType="java.util.HashMap">
+        select
+        (select count(job_id) from skyworld_basic_job) as jobAllCount,
+        (select count(task_id) from skyworld_basic_task) as taskAllCount;
+    </select>
+
+    <select id="getNewJobInfo" resultMap="newJobInfoMap" parameterType="java.util.HashMap">
+        select
+        job_key, job_group, job_alarm_email
+        from skyworld_basic_job where job_create_time >= str_to_date(#{startTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+        and job_create_time &lt;= str_to_date(#{endTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s');
+    </select>
+
+    <select id="getNewTaskInfo" resultMap="newTaskInfoMap" parameterType="java.util.HashMap">
+        select
+        task_key, task_group_name, task_app_name
+        from skyworld_basic_task where create_time >= str_to_date(#{startTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+        and create_time &lt;= str_to_date(#{endTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s');
+    </select>
+
+    <select id="selectJobLogCallForReport" resultMap="jobLogInfoResultMap" parameterType="java.util.HashMap">
+        select
+        job_trigger_msg as scheduler,
+        job_handle_code,
+        trace_id
+        from skyworld_job_log
+        where trace_id is not null
+        and create_time >= str_to_date(#{startTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+        and create_time &lt;= str_to_date(#{endTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+    </select>
+
+    <select id="selectTaskLogCallForReport" resultMap="taskLogInfoResultMap" parameterType="java.util.HashMap">
+        select
+        task_log_id,
+        task_key,
+        task_status,
+        trace_id
+        from skyworld_task_log
+        where task_key != 'endTask'
+        and trace_id is not null
+        and create_time >= str_to_date(#{startTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+        and create_time &lt;= str_to_date(#{endTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+    </select>
+
+    <select id="selectProjectInfo" resultMap="projectInfoMap" parameterType="java.util.HashMap">
+        select
+        job_group as ggroup,
+        count(distinct job_key) as job_num,
+        count(distinct trace_id) as call_num
+        from skyworld_job_log
+        where create_time >= str_to_date(#{startTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+        and create_time &lt;= str_to_date(#{endTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+        group by ggroup
+        order by call_num desc
+    </select>
+
+    <select id="getTaskInfo" resultMap="taskInfoMap">
+        select
+        task_group_name ggroup, count(task_id) task_num
+        from skyworld_basic_task
+        group by task_group_name
+    </select>
+
+    <select id="selectExpJobs" resultMap="expJobsMap" parameterType="java.util.HashMap">
+        select
+        sbj.job_group as ggroup,
+        sbj.job_key as job_key
+        from skyworld_basic_job sbj
+        where sbj.job_key in (select
+        sjl.job_key as job_key
+        from skyworld_job_log sjl
+        where sjl.job_handle_code='LOG_JOB_HANDLE_FAIL_STOP' and sjl.create_time >= str_to_date(#{startTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+        and sjl.create_time &lt;= str_to_date(#{endTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s'))
+    </select>
+
+    <select id="getExpTaskInfo" resultMap="expTaskMap" parameterType="java.util.HashMap">
+        select
+        stl_tmp.task_key as task_key,
+        stl_tmp.job_key as job_key,
+        count(task_key) as exp_task_count
+        from (select sjl.trace_id, sjl.create_time from skyworld_job_log sjl) sjl_tmp
+        right join (select stl.task_log_id, stl.task_key, stl.job_key, stl.trace_id from skyworld_task_log stl where stl.task_status='FAIL' and stl.task_key!="endTask") stl_tmp
+        on stl_tmp.trace_id=sjl_tmp.trace_id
+        where sjl_tmp.create_time >= str_to_date(#{startTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+        and sjl_tmp.create_time &lt;= str_to_date(#{endTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')
+        group by task_key
+        order by exp_task_count desc
+        limit 0, 10
+    </select>
+
+    <delete id="deletePortalDataByDate" parameterType="java.lang.String">
+        delete from skyworld_portal_stat
+        where create_time &lt;= str_to_date(#{create_time,jdbcType=TIMESTAMP},'%Y-%m-%d %H:%i:%s')
+    </delete>
+
+</mapper>

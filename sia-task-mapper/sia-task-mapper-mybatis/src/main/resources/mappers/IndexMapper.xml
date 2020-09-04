@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sia.task.mapper.IndexMapper">
+
+    <select id="homePageStatistics4Manager" resultType="com.sia.task.pojo.Index4ManagerVo">
+        select *
+        from
+        (select count(distinct task_group_name)    as taskGroups,
+                count(distinct task_app_name)      as taskApps,
+                count(skyworld_basic_task.task_id) as taskCount
+            from skyworld_basic_task
+         ) as systemStatistics
+        ,(select count(skyworld_basic_job.job_id) as jobCount
+             from skyworld_basic_job
+        ) as taskMeteData
+        ,(select max(job_log_id) as schedulingCount4Historical,count(job_log_id) schedulingCount4Daily
+             from skyworld_job_log
+             where create_time between date_sub(now(), interval 1 day) and now()
+         ) as schedulercount;
+    </select>
+    <select id="taskTrackerHealthStatus4Manager" resultType="HashMap">
+        select *
+          from (select count(job_log_id) as schedulerTotal
+                from skyworld_job_log
+                where create_time between date_sub(now(), interval 1 day) and now()) as total,
+               (select count(job_log_id) as misTriggerCount
+                from skyworld_job_log
+                where create_time between date_sub(now(), interval 1 day) and now()
+                  and job_handle_code = 'LOG_JOB_EXECUTION_MISFIRE') as misTrigger,
+               (select count(job_log_id) as schedulerError
+                from skyworld_job_log
+                where job_handle_code not in
+                      ('SUCCESS', 'LOG_JOB_EXECUTION_VETOED','LOG_STATUS_JOB_FINISHED', 'LOG_STATUS_JOB_SCHEDULING', 'FINISHED', 'LOG_JOB_EXECUTION_MISFIRE')
+                  and create_time between date_sub(now(), interval 1 day) and now()) as jobError,
+                (select count(task_log_id) as executeError
+                  from skyworld_task_log
+                  where create_time between date_sub(now(), interval 1 day) and now()
+                    and task_status = 'FAIL') as taskError,
+                 (select count(task_log_id) as executeTotal
+                  from skyworld_task_log
+                  where create_time between date_sub(now(), interval 1 day) and now()) as taskExecuteTotal;
+    </select>
+    <select id="homePageStatistics4User"  parameterType="string"  resultType="com.sia.task.pojo.Index4UserVo">
+         select *
+          from (select count(task_id) as taskCount from skyworld_basic_task where task_group_name = #{group,jdbcType=VARCHAR}) as task_temp,
+               (select count(job_id) as jobCount from skyworld_basic_job where job_group = #{group,jdbcType=VARCHAR}) as job_temp,
+               (select max(job_log_id) as schedulingCount4Historical,count(job_log_id) schedulingCount4Daily
+                from skyworld_job_log
+                where create_time between date_sub(now(), interval 1 day) and now()
+                  and job_group = #{group,jdbcType=VARCHAR}) as scheduler_temp,
+               (select count(stl.task_log_id) as taskErrorCount4Daily
+                from skyworld_task_log stl
+                where stl.create_time between date_sub(now(), interval 1 day) and now()
+                  and stl.task_status != 'SUCCESS'
+                  and stl.task_key like concat(#{group,jdbcType=VARCHAR},'%')) as task_error,
+               (select count(job_log_id) as jobErrorCount4Daily
+                from skyworld_job_log
+                where create_time between date_sub(now(), interval 1 day) and now()
+                  and job_handle_code not in ('LOG_JOB_EXECUTION_VETOED','LOG_STATUS_JOB_FINISHED', 'LOG_STATUS_JOB_SCHEDULING', 'FINISHED', 'LOG_JOB_EXECUTION_MISFIRE')
+                  and job_group = #{group,jdbcType=VARCHAR}) as job_error
+    </select>
+    <select id="taskTrackerHealthStatus4User" resultType="hashmap">
+        select *
+          from (select count(job_log_id) as schedulerTotal
+                from skyworld_job_log
+                where create_time between date_sub(now(), interval 1 day) and now()
+                  and job_group = #{group,jdbcType=VARCHAR}) as total,
+               (select count(job_log_id) as misTriggerCount
+                from skyworld_job_log
+                where create_time between date_sub(now(), interval 1 day) and now()
+                  and job_handle_code = 'LOG_JOB_EXECUTION_MISFIRE'
+                  and job_group = #{group,jdbcType=VARCHAR}) as misTrigger,
+               (select count(job_log_id) as schedulerError
+                from skyworld_job_log
+                where job_handle_code not in
+                    ('LOG_JOB_EXECUTION_VETOED','LOG_STATUS_JOB_FINISHED', 'LOG_STATUS_JOB_SCHEDULING', 'FINISHED', 'LOG_JOB_EXECUTION_MISFIRE')
+                  and create_time between date_sub(now(), interval 1 day) and now()
+                  and job_group = #{group,jdbcType=VARCHAR}) as jobError,
+               (select count(task_log_id) as executeError
+                from skyworld_task_log
+                where create_time between date_sub(now(), interval 1 day) and now()
+                  and task_status = 'FAIL'
+                  and task_key like concat(#{group,jdbcType=VARCHAR},'%')) as taskError,
+               (select count(task_log_id) as executeTotal
+                from skyworld_task_log
+                where create_time between date_sub(now(), interval 1 day) and now()
+                  and task_key like concat(#{group,jdbcType=VARCHAR},'%')) as taskExecuteTotal;
+    </select>
+    <select id="warningLogTop" parameterType="string" resultType="com.sia.task.pojo.TaskErrorLogVo">
+        select * from (select task_key as taskKey, count(task_key) as errorCount,job_key as jobKey ,create_time as errorTime
+            from skyworld_task_log stl
+            where create_time between date_sub(now(), interval 1 day) and now()
+              and task_key like concat(#{group,jdbcType=VARCHAR}, '%')
+              and task_status != 'SUCCESS'
+              group by task_key limit 10) temp
+              order by errorCount desc;
+    </select>
+    <select id="jobSchedulingStatistics" parameterType="string" resultType="hashmap">
+        select  DATE_FORMAT(create_time, '%Y-%m-%d %H:00:00') as schedulerTime, count(*) as schedulerCount
+            from skyworld_job_log
+            where
+            job_group = #{group,jdbcType=VARCHAR}
+            and create_time between date_sub(now(), interval 1 day) and now()
+            GROUP BY DATE_FORMAT(create_time, '%Y-%m-%d %H');
+    </select>
+    <select id="taskExecutionStatistics" resultType="map">
+         select  DATE_FORMAT(create_time, '%Y-%m-%d %H:00:00') as schedulerTime, count(*) as schedulerCount
+            from skyworld_task_log stl
+            inner join skyworld_basic_job sbj on sbj.job_key = stl.job_key
+            where sbj.job_group =  #{group,jdbcType=VARCHAR}
+            and stl.task_key != 'endTask'
+            and create_time between date_sub(now(), interval 1 day) and now()
+            GROUP BY DATE_FORMAT(create_time, '%Y-%m-%d %H');
+    </select>
+
+
+</mapper>

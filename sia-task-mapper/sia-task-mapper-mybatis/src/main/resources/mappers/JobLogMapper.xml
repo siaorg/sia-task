@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sia.task.mapper.JobLogMapper">
+    <resultMap id="BaseResultMap" type="com.sia.task.core.entity.JobLog">
+        <id column="job_log_id" property="jobLogId" jdbcType="INTEGER"/>
+        <result column="job_id" property="jobId" jdbcType="INTEGER"/>
+        <result column="job_trigger_code" property="jobTriggerCode" jdbcType="VARCHAR"/>
+        <result column="job_trigger_msg" property="jobTriggerMsg" jdbcType="VARCHAR"/>
+        <result column="job_trigger_time" property="jobTriggerTime" jdbcType="TIMESTAMP"/>
+        <result column="job_handle_code" property="jobHandleCode" jdbcType="VARCHAR"/>
+        <result column="job_handle_msg" property="jobHandleMsg" jdbcType="VARCHAR"/>
+        <result column="job_handle_time" property="jobHandleTime" jdbcType="TIMESTAMP"/>
+        <result column="job_handle_finished_time" property="jobHandleFinishedTime" jdbcType="TIMESTAMP"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    job_log_id, job_id, job_trigger_code, job_trigger_msg, job_trigger_time, job_handle_code, 
+    job_handle_msg, job_handle_time, job_handle_finished_time, createTime
+  </sql>
+
+    <resultMap id="Logs4SiaDagTaskResultMap" type="com.sia.task.pojo.JobLogVO">
+        <id column="job_log_id" property="jobLogId" jdbcType="INTEGER"/>
+        <result column="job_id" property="jobId" jdbcType="INTEGER"/>
+        <result column="trace_id" property="traceId" jdbcType="INTEGER"/>
+        <result column="job_key" property="jobKey" jdbcType="VARCHAR"/>
+        <result column="job_trigger_code" property="jobTriggerCode" jdbcType="VARCHAR"/>
+        <result column="job_trigger_msg" property="jobTriggerMsg" jdbcType="VARCHAR"/>
+        <result column="job_trigger_time" property="jobTriggerTime" jdbcType="TIMESTAMP"/>
+        <result column="job_handle_code" property="jobHandleCode" jdbcType="VARCHAR"/>
+        <result column="job_handle_msg" property="jobHandleMsg" jdbcType="VARCHAR"/>
+        <result column="job_handle_time" property="jobHandleTime" jdbcType="TIMESTAMP"/>
+        <result column="job_handle_finished_time" property="jobHandleFinishedTime" jdbcType="TIMESTAMP"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <collection property="taskLogList" column="trace_id"
+                    select="com.sia.task.mapper.TaskLogMapper.selectByTraceId"/>
+    </resultMap>
+
+    <resultMap id="JobLogAndTaskLogPage" type="com.sia.task.pojo.JobLogVO">
+        <result column="job_id" property="jobId" jdbcType="INTEGER"/>
+        <result column="job_key" property="jobKey" jdbcType="VARCHAR"/>
+        <result column="job_group" property="jobGroup" jdbcType="VARCHAR"/>
+        <result column="job_trigger_code" property="jobTriggerCode" jdbcType="VARCHAR"/>
+        <result column="job_trigger_msg" property="jobTriggerMsg" jdbcType="VARCHAR"/>
+        <result column="job_trigger_time" property="jobTriggerTime" jdbcType="TIMESTAMP"/>
+        <result column="job_handle_code" property="jobHandleCode" jdbcType="VARCHAR"/>
+        <result column="job_handle_msg" property="jobHandleMsg" jdbcType="VARCHAR"/>
+        <result column="job_handle_time" property="jobHandleTime" jdbcType="TIMESTAMP"/>
+        <result column="job_handle_finished_time" property="jobHandleFinishedTime" jdbcType="TIMESTAMP"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="trace_id" property="traceId" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="jobStatisticsMap" type="java.util.Map">
+        <result column="times" property="times" jdbcType="VARCHAR"/>
+        <result column="fail_job_num" property="failJobNum" jdbcType="VARCHAR"/>
+        <result column="start_job_num" property="startJobNum" jdbcType="VARCHAR"/>
+        <result column="success_job_num" property="successJobNum" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="jobCallStatisticsMap" type="java.util.Map">
+        <!--<result column="scheduler"  property="scheduler" jdbcType="VARCHAR"/>-->
+        <result column="times" property="times" jdbcType="VARCHAR"/>
+        <result column="job_call_num" property="jobCallNum" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="countGroupsJobLogsMap" type="java.util.Map">
+        <result column="groups" property="groups" jdbcType="VARCHAR"/>
+        <result column="job_log_count" property="jobLogCount" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="selectLogs4SiaDagTask" resultMap="Logs4SiaDagTaskResultMap" parameterType="java.lang.String">
+        SELECT sbl.*,bj.job_key
+
+        FROM skyworld_job_log sbl
+        inner join skyworld_basic_job bj on sbl.job_id = bj.job_id
+        where
+        1=1
+        <if test="jobGroup != null and jobGroup != '' ">
+            and bj.job_group = #{jobGroup,jdbcType=VARCHAR}
+        </if>
+        <if test="jobKey != null and jobKey != '' ">
+            and bj.job_key = #{jobKey,jdbcType=VARCHAR}
+        </if>
+
+        <if test="traceId != null">
+            and sbl.trace_id = #{traceId,jdbcType=VARCHAR}
+        </if>
+
+        ORDER by sbl.job_handle_time DESC
+    </select>
+
+    <select id="selectCount4JobLogs" resultType="java.lang.Integer" parameterType="java.lang.Integer">
+        select
+        count(job_log_id)
+        from skyworld_job_log
+        where job_key in (
+        select
+        sbj.job_key
+        from
+        skyworld_basic_job sbj
+        where
+        1=1
+        <if test="jobGroup != null and jobGroup != '' ">
+            and sbj.job_group = #{jobGroup,jdbcType=VARCHAR}
+        </if>
+        <if test="jobKey != null and jobKey != '' ">
+            and sbj.job_key = #{jobKey,jdbcType=VARCHAR}
+        </if>
+        )
+    </select>
+
+    <!--    <select id="getJobStatistics" parameterType="java.lang.String" resultMap="jobStatisticsMap">-->
+    <!--        SET @start := 0;-->
+    <!--        SET @success := 0;-->
+    <!--        SET @fail := 0;-->
+    <!--        SELECT times,start_job_num,success_job_num,fail_job_num,-->
+    <!--        (@start := @start + start_job_num) AS startJobTotal,-->
+    <!--        (@success := @success + success_job_num) AS successJobTotal,-->
+    <!--        (@fail := @fail + fail_job_num) AS failJobTotal FROM-->
+    <!--        (select-->
+    <!--        DATE_FORMAT(job_handle_time,'%Y-%m-%d %H:%i') as times,-->
+    <!--        count(job_log_id) as start_job_num,-->
+    <!--        count(case when job_handle_code='SUCCESS' then job_log_id else null end) as success_job_num,-->
+    <!--        count(case when job_handle_code='FAIL' then job_log_id else null end) as fail_job_num-->
+    <!--        from skyworld_job_log-->
+    <!--        where job_handle_time >= str_to_date(#{startTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')-->
+    <!--        and job_handle_time &lt;= str_to_date(#{endTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')-->
+    <!--        <if test="scheduler != null and scheduler != '' ">-->
+    <!--            and job_trigger_msg = #{scheduler,jdbcType=VARCHAR}-->
+    <!--        </if>-->
+    <!--        group by times) a-->
+    <!--    </select>-->
+
+    <!--    <select id="getJobCallStatistics" parameterType="java.lang.String" resultMap="jobCallStatisticsMap">-->
+    <!--        select-->
+    <!--        DATE_FORMAT(job_handle_time,'%Y-%m-%d %H:%i') as times,-->
+    <!--        count(job_log_id) as job_call_num-->
+    <!--        from skyworld_job_log-->
+    <!--        where job_handle_time >= str_to_date(#{startTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')-->
+    <!--        and job_handle_time &lt;= str_to_date(#{endTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')-->
+    <!--        <if test="scheduler != null and scheduler != '' ">-->
+    <!--            and job_trigger_msg = #{scheduler,jdbcType=VARCHAR}-->
+    <!--        </if>-->
+    <!--        group by times-->
+    <!--    </select>-->
+
+    <!--    <select id="getJobCallScheduler" parameterType="java.lang.String" resultType="java.lang.String">-->
+    <!--    select-->
+    <!--    job_trigger_msg as scheduler-->
+    <!--    from skyworld_job_log-->
+    <!--    where job_handle_time >= str_to_date(#{startTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')-->
+    <!--    and job_handle_time &lt;= str_to_date(#{endTime,jdbcType=VARCHAR},'%Y-%m-%d %H:%i:%s')-->
+    <!--    group by scheduler-->
+    <!--  </select>-->
+
+    <!--schedulerMapper-->
+    <insert id="insertSelective" parameterType="com.sia.task.core.entity.JobLog" timeout="30">
+        <selectKey resultType="int" order="AFTER" keyProperty="jobLogId">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into skyworld_job_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="jobId != null">
+                job_id,
+            </if>
+            <if test="jobKey != null">
+                job_key,
+            </if>
+            <if test="jobGroup != null">
+                job_group,
+            </if>
+            <if test="jobTriggerCode != null">
+                job_trigger_code,
+            </if>
+            <if test="jobTriggerMsg != null">
+                job_trigger_msg,
+            </if>
+            <if test="jobTriggerTime != null">
+                job_trigger_time,
+            </if>
+            <if test="jobHandleCode != null">
+                job_handle_code,
+            </if>
+            <if test="jobHandleMsg != null">
+                job_handle_msg,
+            </if>
+            <if test="jobHandleTime != null">
+                job_handle_time,
+            </if>
+            <if test="jobHandleFinishedTime != null">
+                job_handle_finished_time,
+            </if>
+            <if test="traceId != null">
+                trace_id,
+            </if>
+            create_time
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="jobId != null">
+                #{jobId,jdbcType=INTEGER},
+            </if>
+            <if test="jobKey != null">
+                #{jobKey,jdbcType=INTEGER},
+            </if>
+            <if test="jobGroup != null">
+                #{jobGroup,jdbcType=INTEGER},
+            </if>
+            <if test="jobTriggerCode != null">
+                #{jobTriggerCode,jdbcType=VARCHAR},
+            </if>
+            <if test="jobTriggerMsg != null">
+                #{jobTriggerMsg,jdbcType=VARCHAR},
+            </if>
+            <if test="jobTriggerTime != null">
+                #{jobTriggerTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="jobHandleCode != null">
+                #{jobHandleCode,jdbcType=VARCHAR},
+            </if>
+            <if test="jobHandleMsg != null">
+                #{jobHandleMsg,jdbcType=VARCHAR},
+            </if>
+            <if test="jobHandleTime != null">
+                #{jobHandleTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="jobHandleFinishedTime != null">
+                #{jobHandleFinishedTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="traceId != null">
+                #{traceId,jdbcType=TIMESTAMP},
+            </if>
+            NOW()
+        </trim>
+    </insert>
+    <update id="updataJobLogByTraceId" parameterType="com.sia.task.core.entity.JobLog" timeout="30">
+        update skyworld_job_log
+        <set>
+            <if test="jobId != null">
+                job_id = #{jobId,jdbcType=INTEGER},
+            </if>
+            <if test="jobTriggerCode != null">
+                job_trigger_code = #{jobTriggerCode,jdbcType=VARCHAR},
+            </if>
+            <if test="jobTriggerMsg != null">
+                job_trigger_msg = #{jobTriggerMsg,jdbcType=VARCHAR},
+            </if>
+            <if test="jobTriggerTime != null">
+                job_trigger_time = #{jobTriggerTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="jobHandleCode != null">
+                job_handle_code = #{jobHandleCode,jdbcType=VARCHAR},
+            </if>
+            <if test="jobHandleMsg != null">
+                job_handle_msg = #{jobHandleMsg,jdbcType=VARCHAR},
+            </if>
+            <if test="jobHandleTime != null">
+                job_handle_time = #{jobHandleTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="jobHandleFinishedTime != null">
+                job_handle_finished_time = #{jobHandleFinishedTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP}
+            </if>
+        </set>
+        where trace_id = #{traceId,jdbcType=VARCHAR}
+    </update>
+
+
+    <delete id="deleteJobLogByDate" parameterType="java.lang.String">
+    delete from skyworld_job_log
+    where create_time &lt;= str_to_date(#{create_time,jdbcType=TIMESTAMP},'%Y-%m-%d %H:%i:%s')
+     </delete>
+
+    <select id="selectLogCount4Groups2" resultMap="countGroupsJobLogsMap" parameterType="java.lang.String">
+        SELECT
+        bj.job_group AS groups,
+        SUM(temp.joblogTraceIdCount) AS job_log_count
+        FROM skyworld_basic_job bj
+        LEFT JOIN
+        (SELECT jl.job_key AS jobKey,
+        COUNT(jl.`job_key`) AS joblogTraceIdCount
+        FROM skyworld_job_log jl
+        GROUP BY job_key) temp
+        ON bj.job_key = temp.jobKey
+        WHERE
+        bj.job_group IN
+        <foreach item="group" collection="groups" separator="," open="(" close=")" index="">
+            #{group, jdbcType=VARCHAR}
+        </foreach>
+        GROUP BY groups;
+    </select>
+    <select id="selectLogCount4Groups" resultMap="countGroupsJobLogsMap" parameterType="java.lang.String">
+        SELECT
+        bj.job_group AS groups,
+        SUM(temp.joblogTraceIdCount) AS job_log_count
+        FROM skyworld_basic_job bj
+        LEFT JOIN
+        (SELECT jl.job_key AS jobKey,
+        COUNT(jl.`job_key`) AS joblogTraceIdCount
+        FROM skyworld_job_log jl
+        GROUP BY jobKey) temp
+        ON bj.job_key = temp.jobKey
+        WHERE
+        bj.job_group IN
+        <foreach item="group" collection="groups" separator="," open="(" close=")" index="">
+            #{group, jdbcType=VARCHAR}
+        </foreach>
+        GROUP BY groups;
+    </select>
+
+    <select id="selectLogs4Page" resultMap="JobLogAndTaskLogPage" parameterType="java.lang.String">
+        SELECT sbl.*
+        FROM skyworld_job_log sbl
+        where
+        1=1
+        <if test="jobGroup != null and jobGroup != '' ">
+            and sbl.job_group = #{jobGroup,jdbcType=VARCHAR}
+        </if>
+        <if test="jobKey != null and jobKey != '' ">
+            and sbl.job_key = #{jobKey,jdbcType=VARCHAR}
+        </if>
+        ORDER by sbl.job_log_id DESC
+        LIMIT #{start,jdbcType=INTEGER},#{size,jdbcType=INTEGER}
+    </select>
+
+</mapper>
