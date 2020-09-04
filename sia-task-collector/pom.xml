@@ -11,10 +11,9 @@
 
     <artifactId>sia-task-collector</artifactId>
     <packaging>pom</packaging>
+
     <modules>
         <module>sia-task-collector-log</module>
         <module>sia-task-collector-actuator</module>
     </modules>
-
-
 </project>
