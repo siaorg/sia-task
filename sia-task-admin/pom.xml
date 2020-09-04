@@ -10,13 +10,124 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>sia-task-admin</artifactId>
 
+	<dependencies>
+		<dependency>
+			<groupId>com.sia</groupId>
+			<artifactId>sia-task-mapper-mybatis</artifactId>
+			<version>${sia-task-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sia</groupId>
+			<artifactId>sia-task-integration-zookeeper</artifactId>
+			<version>${sia-task-version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>com.fasterxml.jackson.core</groupId>
+					<artifactId>jackson-databind</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.9.10.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>2.9.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>2.9.8</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjrt</artifactId>
+			<version>1.9.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<version>1.9.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.35</version>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid-spring-boot-starter</artifactId>
+			<version>1.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.github.pagehelper</groupId>
+			<artifactId>pagehelper-spring-boot-starter</artifactId>
+			<version>1.1.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+			<version>RELEASE</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.mchange</groupId>
+					<artifactId>c3p0</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.16.10</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+			<version>4.1.0.RELEASE</version>
+		</dependency>
+	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>spring-releases</id>
+			<name>Spring Releases</name>
+			<url>https://repo.spring.io/libs-release</url>
+		</repository>
+	</repositories>
 
 	<profiles>
 		<profile>
-			<!-- 本地环境 -->
-			<id>open</id>
+			<!-- 开发环境 -->
+			<id>dev</id>
 			<properties>
-				<envFlag>open</envFlag>
+				<envFlag>dev</envFlag>
+			</properties>
+		</profile>
+		<profile>
+			<!-- 测试环境 -->
+			<id>test</id>
+			<properties>
+				<envFlag>test</envFlag>
+			</properties>
+		</profile>
+		<profile>
+			<!-- 生产环境 -->
+			<id>pro</id>
+			<properties>
+				<envFlag>pro</envFlag>
 			</properties>
 		</profile>
 	</profiles>
@@ -28,7 +139,9 @@
 				<filtering>true</filtering>
 				<excludes>
 					<exclude>application.yml</exclude>
-					<exclude>application-open.yml</exclude>
+					<exclude>application-dev.yml</exclude>
+					<exclude>application-test.yml</exclude>
+					<exclude>application-pro.yml</exclude>
 				</excludes>
 			</resource>
 			<resource>
@@ -36,7 +149,7 @@
 				<filtering>true</filtering>
 				<includes>
 					<include>application.yml</include>
-					<include>application-open.yml</include>
+					<include>application-${envFlag}.yml</include>
 				</includes>
 			</resource>
 		</resources>
