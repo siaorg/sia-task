@@ -3,16 +3,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>sia-task</artifactId>
+        <artifactId>sia-task-register</artifactId>
         <groupId>com.sia</groupId>
         <version>${sia-task-version}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>sia-task-register</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>sia-task-register-zookeeper</module>
-    </modules>
+    <artifactId>sia-task-register-zookeeper</artifactId>
+
 
 </project>
