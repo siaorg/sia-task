@@ -35,8 +35,8 @@ import com.sia.task.integration.curator.properties.ZookeeperConstant;
 import com.sia.task.mapper.BasicJobMapper;
 import com.sia.task.mapper.BasicTaskMapper;
 import com.sia.task.mapper.DagTaskMapper;
+import com.sia.task.quartz.core.CronExpression;
 import lombok.extern.slf4j.Slf4j;
-import org.quartz.CronExpression;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
