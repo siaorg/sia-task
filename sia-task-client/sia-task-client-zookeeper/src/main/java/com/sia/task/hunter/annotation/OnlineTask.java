@@ -30,9 +30,7 @@ import java.lang.annotation.*;
  *
  * @author maozhengwei
  * @version V1.0.0
- * @description
  * @data 2020/5/11 11:31 上午
- * @see
  **/
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
