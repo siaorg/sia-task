@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,7 +20,6 @@
 
 package com.sia.task.collector.log.email;
 
-import com.google.common.collect.Lists;
 import com.sia.task.core.util.Constant;
 import com.sia.task.core.util.JsonHelper;
 import com.sia.task.core.util.StringHelper;
@@ -28,15 +27,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -111,46 +103,7 @@ public class WeCatMessageService {
      * @throws Exception
      */
     public void sendWeChatMessage(String sendTo, String content, String subject, String jobKey, String warningType, String alarmTime) throws Exception {
-
-        if (StringHelper.isEmpty(sendTo) && StringHelper.isEmpty(weChatPushServiceId)) {
-            log.error(" Failed to send email by method sendWeChatMessage : Early warning weChatPushServiceId address is empty");
-        }
-        Map<String, String> CE_ID = JsonHelper.toObject(weChatCeId, Map.class);
-        String token = new StringBuilder(buildToken()).append(CE_ID.get("CE_ID")).toString();
-
-        Md5PasswordEncoder md5 = new Md5PasswordEncoder();
-
-        String md5Token = md5.encodePassword(token, null);
-        String[] all = EmailMessageService.concatAll(sendTo.split(","), adminEmailers.split(","));
-        Lists.newArrayList(all).forEach(email -> {
-            Map<String, String> ceParam = new HashMap<>();
-            ceParam.put("TOKEN", md5Token);
-            ceParam.put("sysId", weChatSysId);
-            ceParam.put("busnEmail", email);
-            ceParam.put("msgTitle", subject);
-            ceParam.put("warningType", warningType);
-            ceParam.put("warningRange", weChatWarningRange);
-            ceParam.put("warningContent", content);
-            ceParam.put("sndDttm", alarmTime);
-            ceParam.put("remark", jobKey);
-            log.info(Constant.LOG_PREFIX + JsonHelper.toString(ceParam));
-            String CE_PARAM = null;
-            try {
-                CE_PARAM = URLEncoder.encode(JsonHelper.toString(ceParam), "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                log.error(Constant.LOG_EX_PREFIX + " An exception occurred encode ceParam：", e.getMessage());
-            }
-            Map<String, String> body = new HashMap<>();
-            body.put("CE_ID", CE_ID.get("CE_ID"));
-            body.put("CE_FUNC", weChatPostCeFunc);
-            body.put("CE_PARAM", CE_PARAM);
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-            headers.add("Accept", MediaType.APPLICATION_JSON.toString());
-            String result = restTemplate.postForEntity(weChatPushServiceId, new HttpEntity<>(JsonHelper.toString(body), headers), String.class).getBody();
-            log.info("weChat send finished: " + result);
-        });
+        // to something
     }
 }
 
