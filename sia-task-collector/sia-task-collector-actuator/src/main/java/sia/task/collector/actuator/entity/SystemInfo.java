@@ -22,6 +22,13 @@ package sia.task.collector.actuator.entity;
 
 import lombok.Data;
 
+/**
+ * SystemInfo 进程监控信息Info
+ *
+ * @author maozhengwei
+ * @date 2020/9/7 4:33 下午
+ * @version V1.0.0
+ **/
 @Data
 public class SystemInfo {
 
