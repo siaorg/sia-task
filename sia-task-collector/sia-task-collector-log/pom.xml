@@ -59,7 +59,7 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
-            <version>4.1.0.RELEASE</version>
+            <version>4.2.17.RELEASE</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
