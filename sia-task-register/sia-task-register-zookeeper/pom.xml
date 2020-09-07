@@ -11,5 +11,28 @@
 
     <artifactId>sia-task-register-zookeeper</artifactId>
 
-
+    <dependencies>
+        <dependency>
+            <groupId>com.sia</groupId>
+            <artifactId>sia-task-integration-zookeeper</artifactId>
+            <version>${sia-task-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sia</groupId>
+            <artifactId>sia-task-mapper-mybatis</artifactId>
+            <version>${sia-task-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>4.3.15.RELEASE</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+            <version>1.5.11.RELEASE</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 </project>
