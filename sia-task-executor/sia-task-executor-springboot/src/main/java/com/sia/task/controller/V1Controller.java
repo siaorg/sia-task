@@ -70,7 +70,7 @@ public class V1Controller {
     }
 
     @RequestMapping("/task5-12s")
-    @OnlineTask(description = "在线任务示例5", enableSerial = true)
+    @OnlineTask(description = "在线任务示例5")
     public String runTask5(@RequestBody String param) throws InterruptedException {
         log.info("run task ---> " + param);
         TimeUnit.SECONDS.sleep(12);
