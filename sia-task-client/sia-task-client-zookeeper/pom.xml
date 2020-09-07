@@ -10,5 +10,39 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>sia-task-client-zookeeper</artifactId>
+    <dependencies>
+        <dependency>
+            <groupId>com.sia</groupId>
+            <artifactId>sia-task-register-zookeeper</artifactId>
+            <version>${sia-task-version}</version>
+        </dependency>
 
+        <!-- 以下是SpringBoot无关的依赖包 -->
+        <!-- Spring相关依赖包 -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- 注解抓取工具包 -->
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.11</version>
+        </dependency>
+        <!-- AOP切面编程工具包 -->
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.9.1</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 </project>
