@@ -1,4 +1,4 @@
-spring.application.name: siatest-task-simple
+spring.application.name: sia-task-simple
 spring.application.cnname: 任务调度执行器
 #应用端口号
 server.port: 12129
@@ -7,12 +7,14 @@ sia:
   task:
     zookeeper:
       host-list: 127.0.0.1:2181
-      root-path: SkyWorldOnlineTask
+      root-path: SIA-ROOT
       sleep-ms-between-retries: 5000
       connect-lost-retry-times: 10
       max-wait-seconds: 60
-      root-auth: SIA:SkyWorld
+      root-auth: SIA:ROOT
       create-auth: guest:guest
       digest-auth: digest
+    hunter:
+      scanBasicPackage: com.sia.task.controller
 
 logging.file: ./logs/${spring.application.name}.log

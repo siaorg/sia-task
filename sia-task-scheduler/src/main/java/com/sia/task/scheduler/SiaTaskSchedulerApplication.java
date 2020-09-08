@@ -40,9 +40,9 @@ import org.springframework.web.client.RestTemplate;
  * @date 2020/6/9 11:23 上午
  **/
 @Slf4j
-@MapperScan({"com.sia.db.mapper"})
+@MapperScan({"com.sia.task.mapper"})
 @EnableSiaTaskScheduler
-@EnableDiscoveryClient
+//@EnableDiscoveryClient
 @SpringBootApplication(scanBasePackages = {"com.sia.task"})
 public class SiaTaskSchedulerApplication {
 

@@ -113,4 +113,15 @@
     where create_time &lt;= str_to_date(#{createTime,jdbcType=TIMESTAMP},'%Y-%m-%d %H:%i:%s')
   </delete>
 
+  <select id="selectByBatchTraceId" resultMap="TaskLogsVOMap">
+    select
+    tl.*
+    FROM skyworld_task_log tl
+    where
+    tl.trace_id IN
+    <foreach collection="list" item="traceIdList" open="(" separator="," close=")">
+      #{traceIdList}
+    </foreach>
+    order by tl.task_log_id ASC
+  </select>
 </mapper>
