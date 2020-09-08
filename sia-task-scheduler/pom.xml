@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>com.sia</groupId>
-            <artifactId>sia-task-mquartz</artifactId>
+            <artifactId>sia-task-quartz</artifactId>
             <version>${sia-task-version}</version>
             <scope>compile</scope>
         </dependency>

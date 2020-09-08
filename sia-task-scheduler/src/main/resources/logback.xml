@@ -1,6 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- logback 按天循环日志配置 -->
 <configuration>
-	<!-- 日志基本配置 -->
-	<include resource="org/springframework/boot/logging/logback/base.xml" />
-	<jmxConfigurator />
+	<!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径 -->
+	<property name="LOG_HOME" value="./logs" />
+	<!--定义日志文件的文件名 -->
+	<property name="LOG_NAME" value="sia-task-scheduler" />
+	<!-- 控制台输出 -->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度  %caller{1}：方法调用栈 %msg：日志消息，%n是换行符 -->
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %replace(%caller{1}){'\t|Caller.{1}0|\r\n', ''} -%msg%n</pattern>
+		</layout>
+	</appender>
+	<!-- 按照每天生成日志文件 -->
+	<appender name="FILE"
+			  class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_HOME}/${LOG_NAME}.%d{yyyy-MM-dd}.%i.log.zip</fileNamePattern>
+			<!-- 如果按天来回滚，则最大保存时间为180天，180天之前的都将被清理掉 -->
+			<maxHistory>180</maxHistory>
+			<timeBasedFileNamingAndTriggeringPolicy
+					class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<!--文件达到 最大300MB时会被压缩和切割-->
+				<maxFileSize>300MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度  %caller{1}：方法调用栈 %msg：日志消息，%n是换行符 -->
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %replace(%caller{1}){'\t|Caller.{1}0|\r\n', ''} -%msg%n</pattern>
+		</layout>
+
+	</appender>
+
+	<!-- 日志输出级别 -->
+	<root level="INFO">
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="FILE" />
+	</root>
+
 </configuration>
