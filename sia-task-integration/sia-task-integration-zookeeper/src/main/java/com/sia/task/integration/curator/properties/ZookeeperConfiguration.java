@@ -49,7 +49,7 @@ public class ZookeeperConfiguration {
     /**
      * 根路径
      */
-    @Value("${sia.task.zookeeper.root-path:SkyWorldOnlineTask}")
+    @Value("${sia.task.zookeeper.root-path:SIA-ROOT}")
     private String taskRoot;
 
     /**
@@ -104,7 +104,7 @@ public class ZookeeperConfiguration {
     /**
      * 所有权限（创建、读取、写入，删除，赋权）
      */
-    @Value("${sia.task.zookeeper.root-auth:SIA:SkyWorld}")
+    @Value("${sia.task.zookeeper.root-auth:SIA:ROOT}")
     private String allAuth;
 
     /**
