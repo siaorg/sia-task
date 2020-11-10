@@ -119,22 +119,8 @@ public class BasicJob4Service {
      *
      * @return
      */
-    @Deprecated
-    public Map<String, List<String>> selectGroupByAuth() {
-        List<BasicJob> basicJobs = basicJobMapper.selectGroupByAuth(UserService.getCurrentUserAllRoles());
-        Map<String, List<String>> tm = new HashMap<>();
-        for (BasicJob basicJob : basicJobs) {
-            String jobGroupName = basicJob.getJobGroup();
-            String jobKey = basicJob.getJobKey();
-            if (tm.containsKey(jobGroupName)) {
-                tm.get(jobGroupName).add(jobKey);
-            } else {
-                List<String> keyList = new ArrayList<>();
-                keyList.add(jobKey);
-                tm.put(jobGroupName, keyList);
-            }
-        }
-        return tm;
+    public List<String> selectJobKeysByGroup(String group) {
+        return basicJobMapper.selectJobKeysByGroup(group);
     }
 
     /**

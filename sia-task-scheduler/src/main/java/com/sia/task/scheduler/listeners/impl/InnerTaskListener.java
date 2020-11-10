@@ -36,6 +36,8 @@ import com.sia.task.scheduler.log.LogService;
 import com.sia.task.scheduler.task.TriggerOnlineTaskBundle;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author maozhengwei
  * @version V1.0.0
@@ -90,20 +92,20 @@ public class InnerTaskListener implements TaskListener {
             ModifyOnlineJobStatus modifyOnlineJobStatus = taskBundle.getModifyOnlineJobStatus();
             try {
                 if (LoadBalanceHelper.isOffline() || LoadBalanceHelper.getMyJobNum() > LoadBalanceHelper.getJobThreshold()) {
-                    log.info(Constant.LOG_PREFIX + "Job执行完成,  检测调度器实例拥有的任务实例已经超过阈值，进人任务转移： key [{}]", dagTask.getJobKey());
+                    log.info(Constant.LOG_PREFIX + "Job执行完成,  符合任务转移标记，进人任务转移 waitForAMoment: [{}]  key [{}]" , waitForAMoment(60000), dagTask.getJobKey());
                     boolean releaseJob = modifyOnlineJobStatus.releaseJob(dagTask);
                     if (releaseJob) {
-                        log.info(Constant.LOG_PREFIX + " Job执行完成,  检测调度器实例拥有的任务实例已经超过阈值，进人任务转移： key [{}], releaseJob [{}]", dagTask.getJobKey(), releaseJob);
+                        log.info(Constant.LOG_PREFIX + " 进人任务转移： key [{}], releaseJob [{}]", dagTask.getJobKey(), releaseJob);
                         if (SiaTaskSchedulerFactory.getScheduler(dagTask.getJobGroup()).deleteJob(JobKey.jobKey(dagTask.getJobKey(), dagTask.getJobGroup()))) {
-                            log.info(Constant.LOG_PREFIX + " Job执行完成,  检测调度器实例拥有的任务实例已经超过阈值，进人任务转移： key [{}], deleteJob [{true}]", dagTask.getJobKey());
+                            log.info(Constant.LOG_PREFIX + " 进人任务转移： key [{}], deleteJob [{true}]", dagTask.getJobKey());
                             boolean b = LoadBalanceHelper.updateScheduler(-1, "taskExecuted - releaseJob:" + dagTask.getJobKey());
-                            log.info(Constant.LOG_PREFIX + " Job执行完成,  检测调度器实例拥有的任务实例已经超过阈值，进人任务转移： key [{}],  LoadBalanceHelper.updateScheduler [-1]", dagTask.getJobKey());
+                            log.info(Constant.LOG_PREFIX + " 进人任务转移： key [{}],  LoadBalanceHelper.updateScheduler [-1]", dagTask.getJobKey());
                         }
                     }
-                    log.info(Constant.LOG_PREFIX + "Job执行完成,  检测调度器实例拥有的任务实例已经超过阈值，释放任务： key [{}], releaseJob [{}]", dagTask.getJobKey(), releaseJob);
+                    log.info(Constant.LOG_PREFIX + "释放任务： key [{}], releaseJob [{}]", dagTask.getJobKey(), releaseJob);
                 }
             } catch (Exception ex) {
-                log.info(Constant.LOG_PREFIX + "Job执行完成,  检测调度器实例拥有的任务实例已经超过阈值，释放出现错误： key [{}]", dagTask.getJobKey());
+                log.info(Constant.LOG_PREFIX + "Job执行完成, 释放出现错误： key [{}]", dagTask.getJobKey());
             }
         }
         //  日志
@@ -178,4 +180,15 @@ public class InnerTaskListener implements TaskListener {
             log.error(Constant.LOG_EX_PREFIX + " InnerTaskListener --- executedError [{}]", dagTask, e);
         }
     }
+
+    private long waitForAMoment(long mills) {
+        try {
+            TimeUnit.MILLISECONDS.sleep(mills);
+            log.info(Constant.LOG_PREFIX + " releaseJob waitForAMoment...");
+        } catch (InterruptedException e) {
+            log.error(Constant.LOG_PREFIX + " releaseJob waitForAMoment - {}", e);
+        }
+        return mills;
+    }
+
 }

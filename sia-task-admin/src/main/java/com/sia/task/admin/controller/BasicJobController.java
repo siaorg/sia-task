@@ -98,10 +98,9 @@ public class BasicJobController {
      *
      * @return
      */
-    @RequestMapping(value = "/selectAuth", method = RequestMethod.GET)
-    @Deprecated
-    public String selectAuth() {
-        return SiaResponseBody.success(basicJob4Service.selectGroupByAuth());
+    @RequestMapping(value = "/selectJobKeysByGroup", method = RequestMethod.GET)
+    public String selectJobKeysByGroup(@RequestParam String jobGroupName) {
+        return SiaResponseBody.success(basicJob4Service.selectJobKeysByGroup(jobGroupName));
     }
 
     /**

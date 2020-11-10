@@ -9,10 +9,10 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>../sia-task-config</module>
+        <module>../sia-task-admin</module>
         <module>../sia-task-core</module>
         <module>../sia-task-scheduler</module>
-        <module>../sia-task-hunter</module>
+        <module>../sia-task-client/sia-task-client-zookeeper</module>
     </modules>
 
     <build>
@@ -59,11 +59,11 @@
                                 <mkdir dir="target/build/thirdparty" />
 
                                 <copy todir="target/build/bin" >
-                                    <fileset file="../sia-task-config/target/sia-task-config-1.0.0.jar" ></fileset>
+                                    <fileset file="../sia-task-admin/target/sia-task-admin-0.0.1.jar" ></fileset>
                                 </copy>
 
                                 <copy todir="target/build/bin" >
-                                    <fileset file="../sia-task-scheduler/target/sia-task-scheduler-1.0.0.jar" ></fileset>
+                                    <fileset file="../sia-task-scheduler/target/sia-task-scheduler-0.0.1.jar" ></fileset>
                                 </copy>
 
                                 <copy todir="target/build/config" >
