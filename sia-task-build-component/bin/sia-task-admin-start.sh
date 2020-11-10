@@ -43,13 +43,13 @@ if [ "$1" == "--no-watch" ]; then
 fi
 
 # Third, choose profile
-task_config="task_scheduler_open.yml"
+sia_task_admin_config="sia-task-admin.yml"
 
 echo "using workspace $working_directory"
 echo "proc_watch:  $proc_watcher"
 
 javaOpts="-server -Xms128m -Xmx256m -Xss256k -XX:+UseConcMarkSweepGC -XX:+CMSIncrementalMode -XX:+CMSIncrementalPacing -XX:CMSIncrementalDutyCycleMin=0 -XX:CMSIncrementalDutyCycle=10 -XX:+UseParNewGC -XX:+UseCMSCompactAtFullCollection -XX:-CMSParallelRemarkEnabled -XX:CMSFullGCsBeforeCompaction=0 -XX:CMSInitiatingOccupancyFraction=70 -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=."
-java $javaOpts -XX:OnOutOfMemoryError='kill -9 %p'  -Dspring.config.location=../config/$task_config  -jar  $working_directory/$2 &
+java $javaOpts -XX:OnOutOfMemoryError='kill -9 %p'  -Dspring.config.location=../config/$sia_task_admin_config  -jar  $working_directory/$2 &
 
 # Fourth, add crontab process watcher
 if [ "$proc_watcher" == "yes" ]; then
@@ -57,7 +57,7 @@ if [ "$proc_watcher" == "yes" ]; then
     # add crontab
     cronfile=$(pwd)/$1".cron.run"
     crontab -l | grep -v "$1" 1>$cronfile 2>/dev/null
-    echo "*/1 * * * * sh $working_directory/task_proc_watcher.sh \"$1\" \"$working_directory\" \"sh run4scheduler.sh --no-watch $1 $2 \"  >/dev/null 2>&1" >> $cronfile
+    echo "*/1 * * * * sh $working_directory/task_proc_watcher.sh \"$1\" \"$working_directory\" \"sh sia-task-admin-start.sh --no-watch $1 $2 \"  >/dev/null 2>&1" >> $cronfile
     crontab $cronfile
     rm $cronfile
     exit 0

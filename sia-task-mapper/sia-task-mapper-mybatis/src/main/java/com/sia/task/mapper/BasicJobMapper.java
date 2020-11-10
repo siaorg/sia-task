@@ -77,8 +77,12 @@ public interface BasicJobMapper {
      *
      * @param roleNames
      * @return
+     * @see BasicJobMapper#selectJobKeysByGroup(String groupName)
      */
+    @Deprecated
     List<BasicJob> selectGroupByAuth(List<String> roleNames);
+
+    List<String> selectJobKeysByGroup(String groupName);
 
     /**
      * 查询符合指定过滤条件的Job数量

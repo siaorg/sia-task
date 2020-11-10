@@ -37,8 +37,10 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Task 管理API service
@@ -189,9 +191,15 @@ public class BasicTask4Service {
      * @throws Exception
      * @See BasicTask4Service#selectTasks
      */
-    public List<BasicTask> selectTasks4WithoutActuators(String taskAppName, String taskGroupName, String taskKey) throws Exception {
+    public Map<String, List<BasicTask>> selectTasks4WithoutActuators(String taskAppName, String taskGroupName, String taskKey) throws Exception {
         List<String> allRoles = UserService.getCurrentUserAllRoles();
-        return basicTaskMapper.selectTasksByCondition(allRoles, taskAppName, taskKey, null);
+        List<BasicTask> lists = basicTaskMapper.selectTasksByCondition(allRoles, taskAppName, taskKey, null);
+
+        Map<String, List<BasicTask>> resultMap = new HashMap<>();
+        if (lists != null && lists.size() > 0) {
+            resultMap = lists.stream().collect(Collectors.groupingBy(BasicTask::getTaskGroupName));
+        }
+        return resultMap;
     }
 
     /**

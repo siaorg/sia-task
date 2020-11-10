@@ -49,6 +49,12 @@
         group by job_key
     </select>
 
+    <select id="selectJobKeysByGroup" resultType="java.lang.String" parameterType="java.lang.String">
+        SELECT job_key
+        FROM skyworld_basic_job
+        where  job_group = #{jobGroup,jdbcType=VARCHAR}
+    </select>
+
 
     <select id="selectJobCountByCondition" resultType="java.lang.Integer" parameterType="java.util.HashMap">
         select count(*)
