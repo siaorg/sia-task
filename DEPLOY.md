@@ -115,6 +115,7 @@ create table if not exists skyworld_portal_stat
 -- task-log 日志表，task 调度日志
 -- ----------------------------
 create table if not exists skyworld_task_log
+(
   `task_log_id` int(11) NOT NULL AUTO_INCREMENT,
   `job_log_id` int(11) DEFAULT NULL COMMENT 'task计数',
   `job_key` varchar(255) DEFAULT NULL,
@@ -135,6 +136,7 @@ create table if not exists skyworld_task_log
 -- 编排关系 job-task 关系表
 -- ----------------------------
 create table if not exists task_mapping_job
+(
   `task_map_job_id` int(11) NOT NULL AUTO_INCREMENT,
   `job_id` int(11) NOT NULL,
   `job_key` varchar(255) NOT NULL,
