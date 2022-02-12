@@ -175,7 +175,7 @@ zookeeper的安装和配置详见官方文档，至少部署三个节点。
 
 ### 前端项目打包
 进入本地的项目,在~/sia-task/sia-task-admin-display目录下执行如下命令进行前端代码打包：
-- npm install 或 cnpm install(推荐) cnpm安装命令：npm install -g cnpm --registry=https://registry.npm.taobao.org
+- npm install 或 cnpm install(推荐) cnpm安装命令：npm install -g cnpm --registry=https://registry.npmmirror.com
 - npm run build
 
 > 1、打包完成在当前目录下面生成dist文件夹，把dist文件夹放在nginx所在机器的app目录下 </br>
